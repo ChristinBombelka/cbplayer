@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+
+	<link rel="stylesheet" type="text/css" media="all" href="styles/cbplayer.css" />
+</head>
+
+<style type="text/css">
+	h1{
+		font-size: 30px;
+		line-height: 1;
+	}
+
+	div + h1{
+		margin-top: 20px;
+	}
+
+	.js-player-4{
+		position: fixed;
+		right: 0;
+		top: 0;
+		width: 300px;
+	}
+
+	.block-video{
+		width: 50%;
+	}
+
+	.inline-video-buttons{
+		display: none;
+	}
+
+	@media only screen and (max-width: 600px) {
+		.js-player-4{
+			display: none;
+		}
+
+		.block-video{
+			width: 100%;
+		}
+	}
+</style>
+
+<div class="block-video">
+
+	<h1>Livestream 1 N24</h1>
+	<video class="js-player2" poster="images/poster.jpg">
+		<source data-src="https://live2weltcms-lh.akamaihd.net/i/Live2WeltCMS_1@444563/index_1_av-b.m3u8" type="video/mp4">
+	</video>
+
+	<h1>Livestream 2 zdf</h1>
+	<video class="js-player" poster="images/poster.jpg">
+		<source data-src="http://zdf1314-lh.akamaihd.net/i/de13_v1@392877/master.m3u8" type="video/mp4">
+	</video>
+
+	<h1>Vimeo file mp4</h1>
+	<video class="js-player" preload="metadata">
+		<source data-src="https://player.vimeo.com/external/230411464.hd.mp4?s=ddabd78b1f514d542c3ba6a8f57122f376e6e84c&profile_id=175" type="video/mp4">
+	</video>
+
+	<h1>Viemo Stream</h1>
+	<div class="cb-player js-player-3">
+		<video playsinline muted loop poster="images/poster.jpg">
+			<source data-src="https://player.vimeo.com/external/230411608.m3u8?s=1d0eaeb65c9173f07ac504c6c46bf27f23e90ef7" type="video/mp4">
+		</video>
+	</div>
+
+	<h1>File not exist</h1>
+	<div class="cb-player js-player-3">
+		<video playsinline muted loop poster="images/poster.jpg">
+			<source data-src="ffwgrgw.mp4" type="video/mp4">
+		</video>
+	</div>
+</div>
+
+<body>
+	<script type="text/javascript" src="scripts/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="scripts/hls.light.min.js"></script>
+	<script type="text/javascript" src="scripts/cbplayer.js"></script>
+	<script type="text/javascript" src="scripts/main.js"></script>
+</body>
+</html>
