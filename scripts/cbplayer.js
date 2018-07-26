@@ -654,7 +654,7 @@
 				displaytime = player[0].duration * position / 100;
 			}
 
-			if(displaytime < 0){
+			if(displaytime < 0 && !container.data('is-livestream')){
 				displaytime = 0;
 			}
 
