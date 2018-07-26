@@ -149,7 +149,7 @@
 					nudgeMaxRetry : 3,
 					maxFragLookUpTolerance: 0.2,
 					liveSyncDurationCount: 3,
-					liveMaxLatencyDurationCount: 10,
+					// liveMaxLatencyDurationCount: 10,
 					enableWorker: true,
 					enableSoftwareAES: true,
 					manifestLoadingTimeOut: 10000,
