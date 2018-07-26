@@ -1250,8 +1250,8 @@
 
 			el.on('durationchange', function(e){
 				var container = $(this).closest(".cb-player"),
-					progress = container.find(".cb-player-progress");
-					slider = progress.find(".cb-player-progress-hide")
+					progress = container.find(".cb-player-progress"),
+					slider = progress.find(".cb-player-progress-hide");
 
 				if(container.data('pause') && container.data('is-livestream') && container.data('backtracking')){
 
