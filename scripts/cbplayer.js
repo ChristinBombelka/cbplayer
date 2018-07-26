@@ -1354,10 +1354,6 @@
 				}
 			});
 
-			el.on('error', function(e){
-				console.log('xx', e);
-			});
-
 			wrap.mouseenter(function(){
 				var container = $(this);
 
