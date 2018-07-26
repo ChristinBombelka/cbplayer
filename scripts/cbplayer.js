@@ -58,7 +58,7 @@
 						duration = player.duration;
 					}
 				}
-				
+
 				container.data({
 					'duration': Math.round(duration),
 				});
@@ -79,7 +79,7 @@
 
 		function displayError(container, message){
 			container.find('.cb-player-error-message').text(message);
-			container.addClass('cb-video-is-error');
+			container.addClass('cb-media-is-error');
 		}
 
 		function fileExists(url){
