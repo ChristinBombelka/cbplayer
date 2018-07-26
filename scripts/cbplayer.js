@@ -357,11 +357,6 @@
 
 						player.pause();
 					}
-					else{
-						//audio item
-						//player.pause();
-						//container.removeClass('cb-player-is-playing');
-					}
 				}
 			});
 		}
