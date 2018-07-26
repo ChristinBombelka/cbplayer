@@ -545,12 +545,12 @@ video::-webkit-media-controls-enclosure {
 	height: 100%;
 	background: $colorBackground;
 
-	.cb-video-is-error &{
+	.cb-media-is-error &{
 		display: block;
 	}
 }
 
-.cb-video-is-error{
+.cb-media-is-error{
 	.cb-player-overlayer-button{
 		display: none;
 	}

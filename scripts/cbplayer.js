@@ -244,7 +244,7 @@
 			 		setVolume(container, container.data('volume'));
 
 			 		if(autostart){
-			 			toggleVideoStartSTopp(container);
+			 			toggleMediaStartSTopp(container);
 			 		}
 
 			 		container.data({
@@ -307,8 +307,8 @@
 				container.addClass("cb-player-is-loaded");
 
 				media.on('loadedmetadata', function(){
-					var videoDuration = formatTime(media[0].duration, media.closest(".cb-player"));
-					media.closest(".cb-player").find(".cb-player-time-duration").text(videoDuration);
+					var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"));
+					media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration);
 
 					container.addClass("cb-media-is-ready");
 					container.removeClass('cb-player-initialized');
@@ -316,7 +316,7 @@
 					setVolume(container, container.data('volume'));
 
 					if(autostart){
-						toggleVideoStartSTopp(container);
+						toggleMediaStartSTopp(container);
 					}
 				});
 			}else if (mediaSrc.match(/(.mp3)/)){
@@ -326,15 +326,15 @@
 				container.addClass("cb-player-is-loaded");
 
 				media.on('loadedmetadata', function(){
-					var videoDuration = formatTime(media[0].duration, media.closest(".cb-player"));
+					var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"));
 
-					media.closest(".cb-player").find(".cb-player-time-duration").text(videoDuration);
+					media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration);
 
 					container.addClass("cb-media-is-ready");
 					container.removeClass('cb-player-initialized');
 
 					if(autostart){
-						toggleVideoStartSTopp(container);
+						toggleMediaStartSTopp(container);
 					}
 				});
 
@@ -366,7 +366,7 @@
 			});
 		}
 
-		function toggleVideoStartSTopp(container){
+		function toggleMediaStartSTopp(container){
 			var player = container.find('.cb-player-media')[0];
 
 			if(!container.data('backgroundMode')){
@@ -381,7 +381,7 @@
 
 				player.play();
 
-				//check if video playing - android
+				//check if media playing - android
 				if(!player.paused){
 					container.addClass("cb-player-is-playing");
 
@@ -410,7 +410,7 @@
 			container.addClass('cb-player-initialized');
 
 			if(container.hasClass("cb-media-is-ready")){
-				toggleVideoStartSTopp(container);
+				toggleMediaStartSTopp(container);
 			}else{
 				getPlayerSrc(container);
 			}
@@ -653,11 +653,9 @@
 		function displayTime(container, position){
 			if(container.data('is-livestream')){
 				var duration = container.data('duration');
-
 				displaytime = (position / 100 * duration) - duration;
 			}else{
 				var player = container.find('.cb-player-media');
-
 				displaytime = player[0].duration * position / 100;
 			}
 
@@ -718,7 +716,7 @@
 			}
 		}
 
-		if (!$(document).data('cb-video-initialized')) {
+		if (!$(document).data('cb-media-initialized')) {
 
 			var touchtimer = false;
 			$(document).on('touchstart', '.cb-player-toggle-play, .cb-player-media', function(e){
@@ -977,7 +975,7 @@
 				$(this).closest('.cb-player-overlayer').css('display', 'none');
 			});
 
-			$(document).data('cb-video-initialized', true);
+			$(document).data('cb-media-initialized', true);
 		}
 
 		if (options == "stopPlaying") {
@@ -996,7 +994,7 @@
 			return;
 		}
 
-		if(options == "videoToggle"){
+		if(options == "mediaToggle"){
 			var container = $(this);
 
 			initPlayer(container);
@@ -1078,14 +1076,14 @@
 				/* video muted*/
 				loop: false,
 				/* video loop*/
-				videoIsInit: false,
-				/* callback video container create */
-				videoIsPlay: false,
-				/* callback video start play */
-				videoIsPause: false,
-				/* callback video stop */
-				videoIsEnd: false,
-				/* callback video end play*/
+				mediaIsInit: false,
+				/* callback media container create */
+				mediaIsPlay: false,
+				/* callback media start play */
+				mediaIsPause: false,
+				/* callback media stop */
+				mediaIsEnd: false,
+				/* callback media end play*/
 			}
 
 			settings = $.extend(settings, options);
@@ -1223,9 +1221,9 @@
 			});
 
 			function getbacktrackingPosition(container){
-				var video = container.find('video, audio'),
-					durationTime = Math.round((video[0].duration) - container.data('duration')),
-					playTime = Math.round(video[0].currentTime - container.data('duration'));
+				var media = container.find('video, audio'),
+					durationTime = Math.round((media[0].duration) - container.data('duration')),
+					playTime = Math.round(media[0].currentTime - container.data('duration'));
 
 				return durationTime - playTime;
 			}
@@ -1258,7 +1256,7 @@
 				if(container.data('pause') && container.data('is-livestream') && container.data('backtracking')){
 
 					if(slider.length){
-						//video backtracking duration - current duration - current playtime / backtracking duration * 100
+						//media backtracking duration - current duration - current playtime / backtracking duration * 100
 						var position = (container.data('duration') - getbacktrackingPosition(container)) / container.data('duration') * 100,
 							position = position.toFixed(4);
 
@@ -1277,7 +1275,7 @@
 
 				container.find('.cb-player-poster').remove();
 
-				//is current position behind video duration, set new position
+				//is current position behind media duration, set new position
 				if(getbacktrackingPosition(container) >= container.data('duration') && container.data('backtracking') && container.data('is-livestream')){
 					position = 0.01;
 
@@ -1285,8 +1283,8 @@
 					playPosition(el, position);
 				}
 
-				if ($.isFunction(settings.videoIsPlay)) {
-				    settings.videoIsPlay.call(this, wrap);
+				if ($.isFunction(settings.mediaIsPlay)) {
+				    settings.mediaIsPlay.call(this, wrap);
 				}
 			});
 
@@ -1302,11 +1300,11 @@
 
 				clearTimeout(watchControlHide);
 
-				//set new current position for livestreaming after video stoped
+				//set new current position for livestreaming after media stoped
 				container.data('pause', true);
 
-				if ($.isFunction(settings.videoIsPause)) {
-				    settings.videoIsPause.call(this, wrap);
+				if ($.isFunction(settings.mediaIsPause)) {
+				    settings.mediaIsPause.call(this, wrap);
 				}
 
 				if(container.hasClass('cb-player-is-seeking')){
@@ -1347,12 +1345,12 @@
 
 				container.removeClass("cb-player-is-playing cb-player-control-hide").addClass("cb-payer-is-replay");
 
-				if ($.isFunction(settings.videoIsEnd)) {
-				    settings.videoIsEnd.call(this, wrap);
+				if ($.isFunction(settings.mediaIsEnd)) {
+				    settings.mediaIsEnd.call(this, wrap);
 				}
 
 				if(wrap.data('loop')){
-					toggleVideoStartSTopp(wrap);
+					toggleMediaStartSTopp(wrap);
 				}
 			});
 
@@ -1382,8 +1380,8 @@
 				startWatchControlHide(container);
 			});
 
-			if ($.isFunction(settings.videoIsInit)) {
-			    settings.videoIsInit.call(this, wrap);
+			if ($.isFunction(settings.mediaIsInit)) {
+			    settings.mediaIsInit.call(this, wrap);
 			}
 
 			setTimeout(function(){
