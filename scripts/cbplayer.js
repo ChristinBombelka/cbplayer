@@ -8,8 +8,8 @@
 		var playerVersion = '1.2.4',
 			hls,
 			watchProgress,
-			watchFullscreen;
-
+			watchFullscreen,
+			timeoutMeta;
 
 		function isTouchDevice(){
 			return 'ontouchstart' in window || navigator.maxTouchPoints;
@@ -77,18 +77,7 @@
 		function displayError(container, message){
 			container.find('.cb-player-error-message').text(message);
 			container.addClass('cb-media-is-error');
-		}
-
-		function fileExists(url){
-			var tempUrl = $('<a href="' + url + '"></a>');
-			if(location.hostname == tempUrl[0].hostname){
-				var http = new XMLHttpRequest();
-				http.open('HEAD', url, false);
-				http.send();
-				return http.status!=404;
-			}
-
-			return true;
+			container.removeClass('cb-player-is-loaded');
 		}
 
 		function getPlayerSrc(container, autostart){
@@ -124,8 +113,6 @@
 				return
 			}
 
-			if(!mediaSrc.match(/(.m3u8)/) && fileExists(mediaSrc) === false){
-				displayError(container, 'The file ist not exist - 404.');
 			if(mediaSrc.match(/(.m3u8)/) && typeof Hls === 'undefined'){
 				displayError(container, 'hls.js ist not found');
 				return;
@@ -305,7 +292,16 @@
 
 				container.addClass("cb-player-is-loaded");
 
+				media.on('loadstart', function(){
+					timeoutMeta = setTimeout(function(){
+						displayError(container, 'Timeout - File cant loaded');
+					}, 3000);
+				});
+
 				media.on('loadedmetadata', function(){
+
+					clearTimeout(timeoutMeta);
+
 					var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"));
 					media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration);
 
@@ -318,14 +314,23 @@
 						toggleMediaStartSTopp(container);
 					}
 				});
+
 			}else if (mediaSrc.match(/(.mp3)/)){
 				mediaSrcEl.attr("src", mediaSrc);
 				media.load();
 
 				container.addClass("cb-player-is-loaded");
 
+				media.on('loadstart', function(){
+					timeoutMeta = setTimeout(function(){
+						displayError(container, 'Timeout - File cant loaded');
+					}, 3000);
+				});
+
 				media.on('loadedmetadata', function(){
 					var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"));
+
+					clearTimeout(timeoutMeta);
 
 					media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration);
 
@@ -336,7 +341,7 @@
 						toggleMediaStartSTopp(container);
 					}
 				});
-
+	
 			}else{
 				displayError(container, 'File Type not Supported.');
 			}
