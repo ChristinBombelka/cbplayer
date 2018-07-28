@@ -10,9 +10,6 @@
 			watchProgress,
 			watchFullscreen;
 
-		// if(typeof Hls === undefined){
-		// 	Hls = true;
-		// }
 
 		function isTouchDevice(){
 			return 'ontouchstart' in window || navigator.maxTouchPoints;
@@ -129,6 +126,8 @@
 
 			if(!mediaSrc.match(/(.m3u8)/) && fileExists(mediaSrc) === false){
 				displayError(container, 'The file ist not exist - 404.');
+			if(mediaSrc.match(/(.m3u8)/) && typeof Hls === 'undefined'){
+				displayError(container, 'hls.js ist not found');
 				return;
 			}
 
