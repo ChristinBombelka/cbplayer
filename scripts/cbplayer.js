@@ -707,7 +707,7 @@
 				position = (x - progress.offset().left) / progress.width() * 100,
 				position = position.toFixed(4);
 
-			container.find('.cb-player-poster').remove();
+			// container.find('.cb-player-poster').remove();
 
 			if(position < 0){
 				position = 0;
@@ -1161,9 +1161,9 @@
 				return;
 			}
 
-			if(el.attr('poster')){
-				$('<div class="cb-player-poster" style="background-image: url("' + el.attr('poster') + '")"></div>').appendTo(wrap);
-			}
+			// if(el.attr('poster')){
+			// 	$('<div class="cb-player-poster" style="background-image: url('" + el.attr('poster') + "')"></div>').appendTo(wrap);
+			// }
 
 			var control = $('<div class="cb-player-controls"></div>');
 			var play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span><span class="cb-player-button-replay"></span></div>');
@@ -1310,7 +1310,7 @@
 				var container = $(this).closest(".cb-player"),
 					progress = container.find(".cb-player-progress");
 
-				container.find('.cb-player-poster').remove();
+				//container.find('.cb-player-poster').remove();
 
 				//is current position behind media duration, set new position
 				if(getbacktrackingPosition(container) >= container.data('duration') && container.data('backtracking') && container.data('is-livestream')){
