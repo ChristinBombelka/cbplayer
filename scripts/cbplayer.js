@@ -400,7 +400,7 @@
 			clearInterval(watchProgress);
 		}
 
-		function toggleVideoStartSTopp(container){
+		function toggleMediaStartSTopp (container){
 			var player = container.find('.cb-player-media')[0];
 
 			if(!container.data('backgroundMode')){
