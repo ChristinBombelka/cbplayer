@@ -30,114 +30,86 @@ $(".js-cbplayer").cbplayer();
 
 ## Options:
 
-### tpl
-
-(default: 'default')
-
-Add a other Value to use your coustom template, based of the basic template.
-
-### controlBar
-
-(default: true)
-
-Show or hide controllbar
-
-### controlTime
-
-(default: true)
-
-Show timer in controlls    
-
-### controlProgress
-
-(default: true)
-
-Show progressbar in controlls
-
-### controlFullscreen
-
-(default: true)
-
-Show fullscreen button in video controlls
-
-### controlAudio
-
-(default: true)
-
-Show Audio bar in controlls  
-
-### overlayButton
-
-(default: true)
-
-Show overlayer play button on video player
-
-### controlHide
-
-(default: true)
-
-Hide controls on leave player, or mouse stop moving longer as 3 seconds (controlHideTimeout)
-
-### controlHideTimeout
-
-(default: 3000)
-
-Duration for hide controls on stop mouse moving
-
-### backtracking
-
-(default: true)
-
-Disable backtracking in progressbar
-
-### hlsStopLoad
-
-(default: false)
-
-Stopp buffering livestreaming on stop video
-
-### volume
-
-(default: 100)
-
-Set default volume
-
-### volumeOrientation
-
-(default: 'vertical')
-
-Set volume bar orientation
-
-### contextInfo
-
-(default: false)
-
-Show Debug info in context menu
-
-### backgroundMode
-
-(default: false)
-
-Video start in background mode, the video is muted, looped and automatically started. All controls be hidden and the Video not stop if started a other Video.
-
-### autoplay
-
-(dafault: false)
-
-Simular with "autoplay" in HTML5 Video Tag
-
-### muted
-
-(default: false)
-
-Simular with "muted" in HTML5 Video Tag
-
-### loop
-
-(default: false)
-
-Simular with "loop" in HTML5 Video Tag
-
+```js
+{
+    tpl: 'default',
+    /*  Values: text,
+     *  Add a other Value to use your coustom template, based of the basic template.
+     */
+    controlBar: true,
+    /*  Values: true, false
+     *  Show or hide controllbar
+     */
+    controlTime: true,
+    /*  Values: true, false
+     *  Show timer in controlls  
+     */
+    controlProgress: true,
+    /*  Values: true, false
+     *   Show progressbar in controlls
+     */
+    controlFullscreen: true,
+    /*  Values: true, false
+     *   Show fullscreen button in video controlls
+     */
+    controlAudio: true,
+    /*  Values: true, false
+     *   Show Audio bar in controlls
+     */
+    overlayButton: true,
+    /*  Values: true, false
+     *   Show overlayer play button on video player
+     */
+    controlHide: true,
+    /*  Values: true, false
+     *   Hide controls on leave player, or mouse stop moving longer as 3 seconds (controlHideTimeout)
+     */
+    controlHideTimeout: 3000,
+    /*  Values: Number
+     *   Duration for hide controls on stop mouse moving
+     */
+    controlHideTimeout: true,
+    /*  Values: true, false
+     *  Disable backtracking in progressbar
+     */
+    hlsStopLoad: true,
+    /*  Values: true, false
+    *   Stopp buffering livestreaming on stop video
+    */
+    volume: 100,
+    /*  Values: 0-100
+    *   Set default volume
+    */
+    volumeOrientation: 'vertical',
+    /*  Values: 'vertical', 'horizontal'
+    *   Set volume bar orientation
+    */
+    contextInfo: true,
+    /*  Values: true, false
+    *   Show Debug info in context menu
+    */
+    backgroundMode: false,
+    /*  Values: true, false
+    *   Video start in background mode, the video is muted, looped and automatically started. All controls be hidden and the Video not stop if started a other Video.
+    */
+    autoplay: false,
+    /*  Values: true, false
+    *   Simular with "autoplay" in HTML5 Video Tag
+    */
+    muted: false,
+    /*  Values: true, false
+    *   Simular with "muted" in HTML5 Video Tag
+    */
+    loop: false,
+    /*  Values: true, false
+    *   Simular with "loop" in HTML5 Video Tag
+    */
+    loop: false,
+    /*  Values: true, false
+    *   Simular with "loop" in HTML5 Video Tag
+    */
+}
+```
 
 
 ## Events
