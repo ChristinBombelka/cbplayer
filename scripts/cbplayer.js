@@ -237,6 +237,8 @@
 						'levels': data.levels,
 						'level': hls.currentLevel + 1,
 						'is_hls': true,
+						'videowidth': data.levels[0].width,
+						'videoheight': data.levels[0].height
 					});
 			 	});
 
@@ -307,6 +309,11 @@
 
 					container.addClass("cb-media-is-ready");
 					container.removeClass('cb-player-initialized');
+
+					container.data({
+						'videowidth': media[0].videoWidth,
+						'videoheight': media[0].videoHeight
+					});
 
 					setVolume(container, container.data('volume'));
 
