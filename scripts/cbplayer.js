@@ -782,7 +782,7 @@
 				}
 
 				if(container.data('backtracking') && e.type == "mouseenter"){
-					container.find('.cb-player-progress-tooltip').fadeIn(250);
+					container.find('.cb-player-progress-tooltip').stop().fadeIn(250);
 				}
 			});
 
@@ -793,7 +793,7 @@
 					return;
 				}
 
-				container.find('.cb-player-progress-tooltip').fadeOut(250);
+				container.find('.cb-player-progress-tooltip').stop().fadeOut(250);
 			});
 
 			$(document).on('mousemove', '.cb-player-progress-hide', function(e){
