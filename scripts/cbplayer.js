@@ -827,6 +827,8 @@
 				video = container.find('.cb-player-media')[0];
 
 				videoStop(video);
+
+				return;
 			}
 
 			if(options == 'mediaPlay'){
@@ -842,6 +844,8 @@
 					video = container.find('.cb-player-media')[0];
 					videoStart(container, video);
 				}
+
+				return;
 			}
 
 			if (options == "mediaRestart") {
