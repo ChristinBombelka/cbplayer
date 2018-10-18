@@ -824,6 +824,13 @@
 					container = container.closest('.cb-player');
 				}
 
+				if(container.data('loop')){
+					container.data({
+						'loop' : false,
+						'loopDefault' : true
+					});
+				}
+
 				video = container.find('.cb-player-media')[0];
 
 				videoStop(video);
@@ -836,6 +843,10 @@
 
 				if(container.is("video")){
 					container = container.closest('.cb-player');
+				}
+
+				if(container.data('loopDefault') && container.data('loopDefault') != container.data('loop')){
+					container.data('loop', container.data('loopDefault'));
 				}
 
 				if(!container.hasClass('cb-media-is-ready')){
