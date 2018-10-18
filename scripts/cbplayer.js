@@ -433,13 +433,13 @@
 		var promise = player.play();
 
 		if (promise !== undefined) {
-			promise.then(_ => {
+			promise.then( function() {
 				clearInterval(watchProgress);
 
 				watchProgress = setInterval(function(){
 					watchProgressLoading(player);
 				}, 500);
-			}).catch(error => {
+			}).catch( function() {
 				console.log(promise);
 			});
 		}
