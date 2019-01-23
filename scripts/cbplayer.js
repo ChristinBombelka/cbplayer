@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.0
- * 2018-10-03
+ * jQuery CBplayer 1.3.1
+ * 2019-01-23
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.0',
+	 	playerVersion = '1.3.1',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -64,7 +64,9 @@
 		mediaStopAll: $,
 		mediaStop: $,
 		mediaPlay: $,
-		mediaRestart: $
+		mediaRestart: $,
+		mediaSetVolume : $,
+		mediaSetTime : $
 	}
 
 	function isTouchDevice(){
@@ -316,6 +318,7 @@
 					}
 
 					container.find('.cb-player-time-duration').text(formatTime(data.details.totalduration, container));
+					container.data('duration', data.details.totalduration);
 
 					if(!mediaSrcEl.attr('video')){
 						mediaSrcEl.remove();
@@ -367,7 +370,8 @@
 
 				container.data({
 					'videowidth': media[0].videoWidth,
-					'videoheight': media[0].videoHeight
+					'videoheight': media[0].videoHeight,
+					'duration': media[0].duration
 				});
 
 				setVolume(container, container.data('volume'));
@@ -398,6 +402,10 @@
 
 				container.addClass("cb-media-is-ready");
 				container.removeClass('cb-player-initialized');
+
+				container.data({
+					'duration': media[0].duration
+				});
 
 				if(autostart){
 					toggleMediaStartSTopp(container);
@@ -435,6 +443,8 @@
 		if (promise !== undefined) {
 			promise.then( function() {
 				clearInterval(watchProgress);
+
+				stopPlayingAll(container);
 
 				watchProgress = setInterval(function(){
 					watchProgressLoading(player);
@@ -1445,6 +1455,71 @@
 	}
 
 	$.fn.cbplayer = function(options) {
+
+		if (options == "mediaSetVolume") {
+			var container = $(this).closest('.cb-player'),
+				media = container.find('.cb-player-media');
+
+			var volume = Array.prototype.slice.call( arguments, 1 );
+
+			if(volume.length){
+				volume = volume.toString();
+
+				if(volume >= 0 && volume <= 100){
+					console.log(volume);
+
+					setVolume(container, volume);
+				}else{
+					console.warn('Wrong value in mediaSetVolume');
+				}
+			}
+
+			return;
+		}
+
+		if (options == "mediaSetTime") {
+			var container = $(this).closest('.cb-player'),
+				media = container.find('.cb-player-media');
+
+			var time = Array.prototype.slice.call( arguments, 1 );
+
+			if(time.length){
+				time = time.toString();
+
+				if(time.match(/(:)/)){
+
+					time = time.split(':');
+
+					if(time.length == 3){
+
+						var h = time[0] * 60 * 60,
+							m = time[1] * 60,
+							s = time[2];
+
+						time = parseFloat(h) + parseFloat(m) + parseFloat(s);
+
+					}else if(time.length == 2){
+
+						var m = time[0] * 60,
+							s = time[1];
+
+						time = parseFloat(m) + parseFloat(s);
+
+					}else{
+						time = time[0];
+					}
+				}
+
+				if(time <= container.data('duration')){
+					setCurrentTime(container, time);
+				}else{
+					console.warn('Wrong value in mediaSetTime: Video duration ' +  container.data('duration') + ', your set time ' + time);
+				}
+			}
+
+			return;
+		}
+
         return this.each(function() {
             if (!$.data(this, 'plugin_' + pluginName)) {
                 $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
