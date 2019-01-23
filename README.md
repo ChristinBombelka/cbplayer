@@ -162,9 +162,21 @@ Call to start a selected media initialLiveManifestSize
 
 ### mediaRestart
 
-call to restart a media item, set the current time to beginning and play the media
+Call to restart a media item, set the current time to beginning and play the media
 
 `$('classname').cbplayer('mediaRestart')`
+
+### mediaSetVolume
+
+Set new Volume size (0-100)
+
+`$('.classname').cbplayer('mediaSetVolume', 50);`
+
+### mediaSetTime
+
+Set new time in hh:mm:ss or ss
+
+`$('.classname').cbplayer('mediaSetTime', '01:12');`
 
 
 
