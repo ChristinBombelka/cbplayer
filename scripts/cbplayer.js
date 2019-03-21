@@ -1332,10 +1332,9 @@
 			});
 
 			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-toggle-mute', function(){
-				var player = container.find('.cb-player-media'),
-					volume = player[0].volume;
+				var player = container.find('.cb-player-media');
 
-				if(volume == 0){
+				if(player.prop('muted')){
 					volumevalue = 100;
 				}else{
 					volumevalue = 0;
