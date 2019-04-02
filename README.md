@@ -140,7 +140,7 @@ Return video is end
 
 
 
-## Callbacks
+## Methods
 
 ### mediaStopAll
 
