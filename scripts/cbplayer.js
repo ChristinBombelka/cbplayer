@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.1
- * 2019-01-23
+ * jQuery CBplayer 1.3.2
+ * 2019-04-02
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.1',
+	 	playerVersion = '1.3.2',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -806,80 +806,6 @@
 
 	Plugin.prototype = {
 		init: function(options) {
-			if(options == 'initSource'){
-				var el = $(this),
-					container = el;
-
-				if(el.is("video")){
-					container = el.closest('.cb-player');
-				}
-
-				if(container.data('is-livestream')){
-					return;
-				}
-
-				getPlayerSrc(container, false);
-				return;
-			}
-
-			if (options == "mediaStopAll") {
-				stopPlayingAll();
-				return;
-			}
-
-			if(options == 'mediaStop'){
-				var container = $(this);
-
-				if(container.is("video")){
-					container = container.closest('.cb-player');
-				}
-
-				if(container.data('loop')){
-					container.data({
-						'loop' : false,
-						'loopDefault' : true
-					});
-				}
-
-				video = container.find('.cb-player-media')[0];
-
-				videoStop(video);
-
-				return;
-			}
-
-			if(options == 'mediaPlay'){
-				var container = $(this);
-
-				if(container.is("video")){
-					container = container.closest('.cb-player');
-				}
-
-				if(container.data('loopDefault') && container.data('loopDefault') != container.data('loop')){
-					container.data('loop', container.data('loopDefault'));
-				}
-
-				if(!container.hasClass('cb-media-is-ready')){
-					initPlayer(container);
-				}else{
-					video = container.find('.cb-player-media')[0];
-					videoStart(container, video);
-				}
-
-				return;
-			}
-
-			if (options == "mediaRestart") {
-				var container = $(this),
-					media = container.find('.cb-player-media');
-
-				media[0].currentTime = 0;
-
-				initPlayer(container);
-
-				return;
-			}
-
 			var el = $(this.element),
 				watchControlHide;
 
@@ -1454,78 +1380,136 @@
 	}
 
 	$.fn.cbplayer = function(options) {
-
 		if (options == "mediaSetVolume") {
-			var container = $(this).closest('.cb-player'),
-				media = container.find('.cb-player-media');
-
 			var volume = Array.prototype.slice.call( arguments, 1 );
 
-			if(volume.length){
-				volume = volume.toString();
+			$(this).each(function(){
+				var container = $(this).closest('.cb-player'),
+					media = container.find('.cb-player-media');
 
-				if(volume >= 0 && volume <= 100){
-					console.log(volume);
+				if(volume.length){
+					volume = volume.toString();
 
-					setVolume(container, volume);
-				}else{
-					console.warn('Wrong value in mediaSetVolume');
+					if(volume >= 0 && volume <= 100){
+						setVolume(container, volume);
+					}else{
+						console.warn('Wrong value in mediaSetVolume');
+					}
 				}
-			}
-
+			});
 			return;
 		}
 
 		if (options == "mediaSetTime") {
-			var container = $(this).closest('.cb-player'),
-				media = container.find('.cb-player-media');
-
 			var time = Array.prototype.slice.call( arguments, 1 );
 
-			if(time.length){
-				time = time.toString();
+			$(this).each(function(){
+				var container = $(this).closest('.cb-player'),
+					media = container.find('.cb-player-media');
 
-				if(time.match(/(:)/)){
+				if(time.length && container.hasClass('cb-media-is-ready')){
+					time = time.toString();
 
-					time = time.split(':');
+					if(time.match(/(:)/)){
 
-					if(time.length == 3){
+						time = time.split(':');
 
-						var h = time[0] * 60 * 60,
-							m = time[1] * 60,
-							s = time[2];
+						if(time.length == 3){
 
-						time = parseFloat(h) + parseFloat(m) + parseFloat(s);
+							var h = time[0] * 60 * 60,
+								m = time[1] * 60,
+								s = time[2];
 
-					}else if(time.length == 2){
+							time = parseFloat(h) + parseFloat(m) + parseFloat(s);
 
-						var m = time[0] * 60,
-							s = time[1];
+						}else if(time.length == 2){
 
-						time = parseFloat(m) + parseFloat(s);
+							var m = time[0] * 60,
+								s = time[1];
 
+							time = parseFloat(m) + parseFloat(s);
+
+						}else{
+							time = time[0];
+						}
+					}
+
+					if(time <= container.data('duration')){
+						setCurrentTime(container, time);
 					}else{
-						time = time[0];
+						console.warn('Wrong value in mediaSetTime: Video duration ' +  container.data('duration') + ', your set time ' + time);
 					}
 				}
+			});
+			return;
+		}
 
-				if(time <= container.data('duration')){
-					setCurrentTime(container, time);
-				}else{
-					console.warn('Wrong value in mediaSetTime: Video duration ' +  container.data('duration') + ', your set time ' + time);
-				}
-			}
-
+		if (options == "mediaStopAll") {
+			stopPlayingAll();
 			return;
 		}
 
         return this.each(function() {
+			var container = $(this);
+
+			if($(this).is("video") || $(this).is("audio")){
+				container = container.closest('.cb-player');
+			}
+
             if (!$.data(this, 'plugin_' + pluginName)) {
                 $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
             }
             else if ($.isFunction(Plugin.prototype[options])) {
                 $.data(this, 'plugin_' + pluginName)[options]();
             }
+
+			if(options == 'initSource'){
+				if(container.data('is-livestream')){
+					return;
+				}
+
+				getPlayerSrc(container, false);
+				return;
+			}
+
+			if(options == 'mediaStop'){
+				if(container.data('loop')){
+					container.data({
+						'loop' : false,
+						'loopDefault' : true
+					});
+				}
+
+				var media = container.find('.cb-player-media')[0];
+
+				videoStop(media);
+				return;
+			}
+
+			if(options == 'mediaPlay'){
+				if(container.data('loopDefault') && container.data('loopDefault') != container.data('loop')){
+					container.data('loop', container.data('loopDefault'));
+				}
+
+				if(!container.hasClass('cb-media-is-ready')){
+					initPlayer(container);
+				}else{
+					var media = container.find('.cb-player-media')[0];
+					videoStart(container, media);
+				}
+				return;
+			}
+
+			if (options == "mediaRestart") {
+				var media = container.find('.cb-player-media')[0];
+
+				media.currentTime = 0;
+				if(!container.hasClass('cb-media-is-ready')){
+					initPlayer(container);
+				}else{
+					videoStart(container, media);
+				}
+			}
         });
     }
 })( jQuery, window, document );
