@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.2
- * 2019-04-02
+ * jQuery CBplayer 1.3.3
+ * 2019-05-03
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.2',
+	 	playerVersion = '1.3.3',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -153,7 +153,8 @@
 
 		container.removeClass("cb-payer-is-replay");
 
-		var media = container.find(".cb-player-media");
+		var media = container.find(".cb-player-media"),
+			timeoutMeta;
 
 		if(media.attr('src')){
 			mediaSrcEl = media;
