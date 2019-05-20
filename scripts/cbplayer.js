@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.3
- * 2019-05-03
+ * jQuery CBplayer 1.3.4
+ * 2019-05-20
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.3',
+	 	playerVersion = '1.3.4',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -928,24 +928,20 @@
 			$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(wrap);
 
 			var volume = settings.volume;
-			if(settings.muted || settings.backgroundMode || el.attr('muted')){
+			if(settings.muted || settings.backgroundMode || el.is('[muted]') ){
 				el.prop('muted', true);
 				volume = 0;
 			}
 
 			var autoplay = settings.autoplay;
-			if(el.attr('autoplay')){
-
+			if(el.is('[autoplay]')){
 				el.removeAttr('autoplay');
-
 				autoplay = true;
 			}
 
 			var loop = settings.loop;
-			if(settings.backgroundMode || el.attr('loop')){
-
+			if(settings.backgroundMode || el.is('[loop]')){
 				el.removeAttr('loop');
-
 				loop = true;
 			}
 
