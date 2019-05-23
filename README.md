@@ -42,7 +42,7 @@ $(".js-cbplayer").cbplayer();
      */
     controlTime: true,
     /*  Values: true, false
-     *  Show timer in controlls  
+     *  Show timer in controlls
      */
     controlProgress: true,
     /*  Values: true, false
@@ -120,9 +120,15 @@ Return the initialized media element.
 
 `mediaIsInit: function(container){}`
 
+### mediaIsReady
+
+Media source is set and video can play
+
+`mediaIsReady: function(container){}`
+
 ### mediaIsPlay
 
-Return video is start stopPlayingAll
+Return video is start
 
 `mediaIsPlay: function(container){}`
 
@@ -136,7 +142,7 @@ Return video is paused
 
 Return video is end
 
-`mediaIsEnd: function(container){}`    
+`mediaIsEnd: function(container){}`
 
 
 
@@ -264,8 +270,8 @@ Set new time in hh:mm:ss or ss
     </div>
 
     <div class="cb-player-error">
-        <div class="cb-player-error-message"></div>    
-    </div>  
+        <div class="cb-player-error-message"></div>
+    </div>
 </div>
 
 ```

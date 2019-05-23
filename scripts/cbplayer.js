@@ -54,6 +54,8 @@
 		/* video loop*/
 		mediaIsInit: false,
 		/* callback media container create */
+		mediaIsReady: false,
+		/* ballback media is ready to play*/
 		mediaIsPlay: false,
 		/* callback media start play */
 		mediaIsPause: false,
@@ -415,6 +417,11 @@
 
 		}else{
 			displayError(container, 'File Type not Supported.');
+			return;
+		}
+
+		if ($.isFunction(settings.mediaIsReady)) {
+			settings.mediaIsReady.call(this, container);
 		}
 	}
 
