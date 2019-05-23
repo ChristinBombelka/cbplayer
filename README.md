@@ -108,6 +108,10 @@ $(".js-cbplayer").cbplayer();
     /*  Values: true, false
     *   Simular with "loop" in HTML5 Video Tag
     */
+    disableClick: false,
+    /*  Values true, false
+     *  Disable click events to start/stop video
+     */
 }
 ```
 

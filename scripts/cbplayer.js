@@ -52,6 +52,8 @@
 		/* video muted*/
 		loop: false,
 		/* video loop*/
+		disableClick: false,
+		/* disable click events on media */
 		mediaIsInit: false,
 		/* callback media container create */
 		mediaIsReady: false,
@@ -1135,7 +1137,7 @@
 				container = $(el).closest('.cb-player');
 
 			container.on('touchstart', '.cb-player-toggle-play, .cb-player-media', function(e){
-				if(container.data('backgroundMode')){
+				if(container.data('backgroundMode') || options.disableClick){
 					return;
 				}
 
@@ -1153,7 +1155,7 @@
 			});
 
 			container.on(isTouchDevice() ? 'touchend' : 'click', '.cb-player-toggle-play, .cb-player-media, .cb-player-overlayer-button', function(e){
-				if(container.hasClass('cb-player-is-loaded') || container.data('backgroundMode')){
+				if(container.hasClass('cb-player-is-loaded') || container.data('backgroundMode') || options.disableClick){
 					return;
 				}
 
