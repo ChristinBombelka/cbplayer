@@ -856,15 +856,12 @@
 				el.addClass('cb-player-media');
 			}
 
-			if(el.is("video")){
+			if(!wrap.find('.cb-player-spinner-wrap').length){
+				spinner.appendTo(wrap);
+			}
 
-				if(!wrap.find('.cb-player-spinner-wrap').length){
-					spinner.appendTo(wrap);
-				}
-
-				if(settings.overlayButton && !wrap.find('.cb-player-overlayer-button').length){
-					overlayerButton.appendTo(wrap);
-				}
+			if(settings.overlayButton && !wrap.find('.cb-player-overlayer-button').length){
+				overlayerButton.appendTo(wrap);
 			}
 
 			if(!el.find("source").data("src") && !el.find("source").attr('src') && !el.attr('src') && !el.data('src')){
@@ -1132,7 +1129,6 @@
 			});
 		},
 		attachEvents: function(el, options) {
-
 			var touchtimer = false,
 				container = $(el).closest('.cb-player');
 
