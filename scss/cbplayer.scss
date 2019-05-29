@@ -61,6 +61,10 @@ video::-webkit-media-controls-enclosure {
 	display:none !important;
 }
 
+audio{
+	display: block !important;
+}
+
 .cb-player{
 	-webkit-user-select: none;
 	user-select: none;
