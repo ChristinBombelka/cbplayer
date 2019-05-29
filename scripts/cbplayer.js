@@ -1454,7 +1454,7 @@
         return this.each(function() {
 			var container = $(this);
 
-			if($(this).is("video") || $(this).is("audio")){
+			if(($(this).is("video") || $(this).is("audio")) &&  $(this).closest('.cb-player').length){
 				container = container.closest('.cb-player');
 			}
 
