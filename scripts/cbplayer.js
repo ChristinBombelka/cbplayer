@@ -1,5 +1,5 @@
 /*!
- * jQuery CBplayer 1.3.4
+ * jQuery CBplayer 1.3.5
  * 2019-05-20
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
@@ -7,7 +7,7 @@
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.4',
+	 	playerVersion = '1.3.5',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1200,6 +1200,26 @@
 
 				if(container.data('backtracking')){
 					tooltip(container, position);
+				}
+			});
+
+			container.on('click', '.cb-player-progress-hide', function(e){
+				var position = e;
+
+				if(!container.hasClass('cb-media-is-ready')){
+					getPlayerSrc(container, false);
+
+					function checkIsReady(container){
+						if(container.hasClass('cb-media-is-ready')){
+							seeking(position, container);
+						}else{
+							setTimeout(function(){
+								checkIsReady(container);
+							}, 100);
+						}
+					}
+
+					checkIsReady(container);
 				}
 			});
 
