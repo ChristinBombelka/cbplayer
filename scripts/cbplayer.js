@@ -962,6 +962,11 @@
 				'hlsStopLoad': settings.hlsStopLoad,
 			});
 
+			//duation from data
+			if(el.data('duration')){
+				wrap.find('.cb-player-time-duration').text(formatTime(el.data('duration'), el));
+			}
+
 			function getbacktrackingPosition(container){
 				var media = container.find('video, audio'),
 					durationTime = Math.round((media[0].duration) - container.data('duration')),
