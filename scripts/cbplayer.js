@@ -359,7 +359,7 @@
 
 			media.on('loadstart', function(){
 				timeoutMeta = setTimeout(function(){
-					displayError(container, 'Timeout - File cannot loaded');
+					//displayError(container, 'Timeout - File cannot loaded');
 				}, 3000);
 			});
 
