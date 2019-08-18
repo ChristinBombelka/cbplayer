@@ -61,6 +61,10 @@ video::-webkit-media-controls-enclosure {
 	display:none !important;
 }
 
+audio{
+	display: block !important;
+}
+
 .cb-player{
 	-webkit-user-select: none;
 	user-select: none;
@@ -274,7 +278,7 @@ video::-webkit-media-controls-enclosure {
 .cb-player-button-replay{
 	width: 20px;
 	height: 20px;
-	background-image: url("../scripts/cbplayer/icon_replay.svg");
+	background-image: url("../elements/icon_replay.svg");
 	background-repeat: no-repeat;
 	background-size: contain;
 }
@@ -360,11 +364,11 @@ video::-webkit-media-controls-enclosure {
 }
 
 .cb-player-button-sound{
-	background-image: url("../scripts/cbplayer/icon_sound_on.svg");
+	background-image: url("../elements/icon_sound_on.svg");
 }
 
 .cb-player-button-mute{
-	background-image: url("../scripts/cbplayer/icon_sound_off.svg");
+	background-image: url("../elements/icon_sound_off.svg");
 }
 
 .cb-player-is-muted{
@@ -385,7 +389,7 @@ video::-webkit-media-controls-enclosure {
 .cb-player-button-fullscreen-on{
 	width: 16px;
 	height: 16px;
-	background-image: url("../scripts/cbplayer/icon_fullscreen_on.svg");
+	background-image: url("../elements/icon_fullscreen_on.svg");
 	background-repeat: no-repeat;
 	background-size: contain;
 }
@@ -393,7 +397,7 @@ video::-webkit-media-controls-enclosure {
 .cb-player-button-fullscreen-off{
 	width: 16px;
 	height: 16px;
-	background-image: url("../scripts/cbplayer/icon_fullscreen_off.svg");
+	background-image: url("../elements/icon_fullscreen_off.svg");
 	background-repeat: no-repeat;
 	background-size: contain;
 }
@@ -545,12 +549,12 @@ video::-webkit-media-controls-enclosure {
 	height: 100%;
 	background: $colorBackground;
 
-	.cb-video-is-error &{
+	.cb-media-is-error &{
 		display: block;
 	}
 }
 
-.cb-video-is-error{
+.cb-media-is-error{
 	.cb-player-overlayer-button{
 		display: none;
 	}

@@ -1,1026 +1,822 @@
 /*!
-* Jquery CBplayer 1.2.4
-* Copyright 2018 Christin Bombelka
-*/
+ * jQuery CBplayer 1.3.6
+ * 2019-08-18
+ * Copyright Christin Bombelka
+ * https://github.com/ChristinBombelka/cbplayer
+ */
 
-(function($){
-	$.fn.cbplayer = function(options){
-		var playerVersion = '1.2.4',
-			hls,
-			watchProgress,
-			watchFullscreen;
+;(function ( $, window, document, undefined ) {
+	var pluginName = 'cbplayer',
+	 	playerVersion = '1.3.6',
+		hls,
+		watchProgress,
+		watchFullscreen,
+		timeoutMeta,
+		defaults = {
+		tpl : 'default',
+		/*
+			use custom player template
+			settings: default, false
+		*/
+		controlBar: true,
+		/* enable/disable complete controls */
+		controlTime: true,
+		/* enable/disable  current/duration time */
+		controlProgress: true,
+		/* enable/disable progress bar */
+		controlFullscreen: true,
+		/* enable/disable fullscreen button */
+		controlAudio: true,
+		/* enable/disable mute/volume */
+		overlayButton: true,
+		/* enable/disable overlay play button*/
+		controlHide: true,
+		/* hide controls on leave container or mousemove stop longer as 'controlHideTimeout' */
+		controlHideTimeout: 3000,
+		/* timeout to hide control on mousemove */
+		backtracking: true,
+		/* disable duratuon/progressbar */
+		hlsStopLoad: false,
+		/* stop buffering hls stream on video stop*/
+		volume: 100,
+		/* set volume */
+		volumeOrientation: 'vertical',
+		/* set volumeslider orientation - vertival/horizontal */
+		contextInfo: false,
+		/* set context info - debug mode */
+		backgroundMode: false,
+		/* video autostart/loop/muted - never stop on start other videos */
+		autoplay: false,
+		/* video autoplay */
+		muted: false,
+		/* video muted*/
+		loop: false,
+		/* video loop*/
+		disableClick: false,
+		/* disable click events on media */
+		mediaIsInit: false,
+		/* callback media container create */
+		mediaIsReady: false,
+		/* ballback media is ready to play*/
+		mediaIsPlay: false,
+		/* callback media start play */
+		mediaIsPause: false,
+		/* callback media stop */
+		mediaIsEnd: false,
+		/* callback media end play*/
+		initSource: $,
+		mediaStopAll: $,
+		mediaStop: $,
+		mediaPlay: $,
+		mediaRestart: $,
+		mediaSetVolume : $,
+		mediaSetTime : $
+	}
 
-		// if(typeof Hls === undefined){
-		// 	Hls = true;
-		// }
+	function isTouchDevice(){
+		return 'ontouchstart' in window || navigator.maxTouchPoints;
+	}
 
-		function isTouchDevice(){
-			return 'ontouchstart' in window || navigator.maxTouchPoints;
+	function timeRangesToString(r) {
+		var log = [];
+		for (var i = 0; i < r.length; i++) {
+			log.push(Math.round(r.start(i)) + "," + Math.round(r.end(i)));
 		}
+		return log;
+	}
 
-		function timeRangesToString(r) {
-		  var log = [];
-		  for (var i = 0; i < r.length; i++) {
-		    log.push(Math.round(r.start(i)) + "," + Math.round(r.end(i)));
-		  }
-		  return log;
-		}
+	function videoBuffer(container) {
+		var player = container.find('.cb-player-media')[0];
+		var buffer = player.buffered;
+		var bufferingDuration;
 
-		function videoBuffer(container) {
-		    var player = container.find('.cb-player-media')[0];
-		    var buffer = player.buffered;
-		    var bufferingDuration;
-
-	   		if (buffer) {
-	    		var pos = player.currentTime,bufferLen;
-			      for (var i=0, bufferLen=0; i < buffer.length; i++) {
-			      	var start = buffer.start(i) / player.duration;
-	        		var end = buffer.end(i) / player.duration;
-			        if(pos >= buffer.start(i) && pos < buffer.end(i)) {
-			          bufferLen = buffer.end(i) - pos;
-			        }
-			    }
-
-				container.data({
-					'buffer' : bufferLen,
-			  	});
-		  	}
-
-			if(!container.data('duration')){
-				var timeRanges = timeRangesToString(player.played),
-			 		duration = 0;
-
-				if(timeRanges.length){
-					var t = timeRanges[0];
-					duration = t.split(',')[0];
-
-					if(duration == 0){
-						duration = player.duration;
-					}
+		if (buffer) {
+			var pos = player.currentTime,bufferLen;
+			  for (var i=0, bufferLen=0; i < buffer.length; i++) {
+				var start = buffer.start(i) / player.duration;
+				var end = buffer.end(i) / player.duration;
+				if(pos >= buffer.start(i) && pos < buffer.end(i)) {
+				  bufferLen = buffer.end(i) - pos;
 				}
-				
-				container.data({
-					'duration': Math.round(duration),
-				});
 			}
 
-			var timeRanges = timeRangesToString(player.seekable),
-			 	currentDuration = 0;
+			container.data({
+				'buffer' : bufferLen,
+			});
+		}
+
+		if(!container.data('duration')){
+			var timeRanges = timeRangesToString(player.played),
+				duration = 0;
 
 			if(timeRanges.length){
 				var t = timeRanges[0];
-				currentDuration = t.split(',')[1];
+				duration = t.split(',')[0];
+
+				if(duration == 0){
+					duration = player.duration;
+				}
 			}
 
-		  	container.data({
-				'currentDuration' : currentDuration,
-		  	});
+			container.data({
+				'duration': Math.round(duration),
+			});
 		}
 
-		function displayError(container, message){
-			container.find('.cb-player-error-message').text(message);
-			container.addClass('cb-video-is-error');
+		var timeRanges = timeRangesToString(player.seekable),
+			currentDuration = 0;
+
+		if(timeRanges.length){
+			var t = timeRanges[0];
+			currentDuration = t.split(',')[1];
 		}
 
-		function fileExists(url){
-			var tempUrl = $('<a href="' + url + '"></a>');
-			if(location.hostname == tempUrl[0].hostname){
-				var http = new XMLHttpRequest();
-				http.open('HEAD', url, false);
-				http.send();
-				return http.status!=404;
-			}
+		container.data({
+			'currentDuration' : currentDuration,
+		});
+	}
 
-			return true;
+	function displayError(container, message){
+		container.find('.cb-player-error-message').text(message);
+		container.addClass('cb-media-is-error');
+		container.removeClass('cb-player-is-loaded');
+	}
+
+	function getPlayerSrc(container, autostart){
+		if(container.hasClass('cb-player-is-loaded') || container.hasClass('cb-media-is-ready')){
+			return;
 		}
 
-		function getPlayerSrc(container, autostart){
-			if(container.hasClass('cb-player-is-loaded') || container.hasClass('cb-media-is-ready')){
-				return;
+		if (typeof autostart === 'undefined' || autostart === null) {
+			var autostart = true;
+		}
+
+		if(!container.data('backtracking')){
+			container.addClass("cb-player-progressbar-off");
+		}
+
+		container.removeClass("cb-payer-is-replay");
+
+		var media = container.find(".cb-player-media"),
+			timeoutMeta;
+
+		if(media.attr('src')){
+			mediaSrcEl = media;
+			mediaSrc = mediaSrcEl.attr('src');
+		}else if(media.data('src')){
+			mediaSrcEl = media;
+			mediaSrc = mediaSrcEl.data('src');
+		}else if(media.find("source").attr('src')){
+			mediaSrcEl = media.find("source");
+			mediaSrc = mediaSrcEl.attr('src');
+		}else if(media.find("source").data('src')){
+			mediaSrcEl = media.find("source");
+			mediaSrc = media.find("source").data('src');
+		}else{
+			return
+		}
+
+		if(mediaSrc.match(/(.m3u8)/) && typeof Hls === 'undefined'){
+			displayError(container, 'hls.js ist not found');
+			return;
+		}
+
+		if(mediaSrc.match(/(.m3u8)/) && Hls.isSupported()){
+			var config = {
+				startPosition : -1,
+				capLevelToPlayerSize: false,
+				debug: false,
+				defaultAudioCodec: undefined,
+				initialLiveManifestSize: 1,
+				maxBufferLength: 30,
+				maxMaxBufferLength: 600,
+				maxBufferSize: 60*1000*1000,
+				maxBufferHole: 0.5,
+				lowBufferWatchdogPeriod: 0.5,
+				highBufferWatchdogPeriod: 3,
+				nudgeOffset: 0.1,
+				nudgeMaxRetry : 3,
+				maxFragLookUpTolerance: 0.2,
+				liveSyncDurationCount: 3,
+				enableWorker: true,
+				enableSoftwareAES: true,
+				manifestLoadingTimeOut: 10000,
+				manifestLoadingMaxRetry: 1,
+				manifestLoadingRetryDelay: 500,
+				manifestLoadingMaxRetryTimeout : 64000,
+				startLevel: undefined,
+				levelLoadingTimeOut: 10000,
+				levelLoadingMaxRetry: 4,
+				levelLoadingRetryDelay: 500,
+				levelLoadingMaxRetryTimeout: 64000,
+				fragLoadingTimeOut: 20000,
+				fragLoadingMaxRetry: 6,
+				fragLoadingRetryDelay: 500,
+				fragLoadingMaxRetryTimeout: 64000,
+				startFragPrefetch: false,
+				appendErrorMaxRetry: 3,
+				enableWebVTT: true,
+				enableCEA708Captions: true,
+				stretchShortVideoTrack: false,
+				maxAudioFramesDrift : 1,
+				forceKeyFrameOnDiscontinuity: true,
+				abrEwmaFastLive: 5.0,
+				abrEwmaSlowLive: 9.0,
+				abrEwmaFastVoD: 4.0,
+				abrEwmaSlowVoD: 15.0,
+				abrEwmaDefaultEstimate: 500000,
+				abrBandWidthFactor: 0.95,
+				abrBandWidthUpFactor: 0.7,
+				minAutoBitrate: 0
 			}
 
-			if (typeof autostart === 'undefined' || autostart === null) {
-				var autostart = true;
-			}
+			hls = new Hls(config);
+			hls.attachMedia(media[0]);
+			hls.loadSource(mediaSrc);
+			container.addClass("cb-media-is-ready");
 
-			if(!container.data('backtracking')){
-				container.addClass("cb-player-progressbar-off");
-			}
-
-			container.removeClass("cb-payer-is-replay");
-
-			var media = container.find(".cb-player-media");
-
-			if(media.attr('src')){
-				mediaSrcEl = media;
-				mediaSrc = mediaSrcEl.attr('src');
-			}else if(media.data('src')){
-				mediaSrcEl = media;
-				mediaSrc = mediaSrcEl.data('src');
-			}else if(media.find("source").attr('src')){
-				mediaSrcEl = media.find("source");
-				mediaSrc = mediaSrcEl.attr('src');
-			}else if(media.find("source").data('src')){
-				mediaSrcEl = media.find("source");
-				mediaSrc = media.find("source").data('src');
-			}else{
-				return
-			}
-
-			if(!mediaSrc.match(/(.m3u8)/) && fileExists(mediaSrc) === false){
-				displayError(container, 'The file ist not exist - 404.');
-				return;
-			}
-
-			if(mediaSrc.match(/(.m3u8)/) && Hls.isSupported()){
-				var config = {
-					startPosition : -1,
-					capLevelToPlayerSize: false,
-					debug: false,
-					defaultAudioCodec: undefined,
-					initialLiveManifestSize: 1,
-					maxBufferLength: 30,
-					maxMaxBufferLength: 600,
-					maxBufferSize: 60*1000*1000,
-					maxBufferHole: 0.5,
-					lowBufferWatchdogPeriod: 0.5,
-					highBufferWatchdogPeriod: 3,
-					nudgeOffset: 0.1,
-					nudgeMaxRetry : 3,
-					maxFragLookUpTolerance: 0.2,
-					liveSyncDurationCount: 3,
-					liveMaxLatencyDurationCount: 10,
-					enableWorker: true,
-					enableSoftwareAES: true,
-					manifestLoadingTimeOut: 10000,
-					manifestLoadingMaxRetry: 1,
-					manifestLoadingRetryDelay: 500,
-					manifestLoadingMaxRetryTimeout : 64000,
-					startLevel: undefined,
-					levelLoadingTimeOut: 10000,
-					levelLoadingMaxRetry: 4,
-					levelLoadingRetryDelay: 500,
-					levelLoadingMaxRetryTimeout: 64000,
-					fragLoadingTimeOut: 20000,
-					fragLoadingMaxRetry: 6,
-					fragLoadingRetryDelay: 500,
-					fragLoadingMaxRetryTimeout: 64000,
-					startFragPrefetch: false,
-					appendErrorMaxRetry: 3,
-					enableWebVTT: true,
-					enableCEA708Captions: true,
-					stretchShortVideoTrack: false,
-					maxAudioFramesDrift : 1,
-					forceKeyFrameOnDiscontinuity: true,
-					abrEwmaFastLive: 5.0,
-					abrEwmaSlowLive: 9.0,
-					abrEwmaFastVoD: 4.0,
-					abrEwmaSlowVoD: 15.0,
-					abrEwmaDefaultEstimate: 500000,
-					abrBandWidthFactor: 0.95,
-					abrBandWidthUpFactor: 0.7,
-					minAutoBitrate: 0
+			hls.on(Hls.Events.ERROR,function(event, data) {
+				if(container.hasClass('cb-player-is-playing')){
+					return;
 				}
 
-				hls = new Hls(config);
-				hls.attachMedia(media[0]);
-				hls.loadSource(mediaSrc);
-				container.addClass("cb-media-is-ready");
-
-				hls.on(Hls.Events.ERROR,function(event, data) {
-					if(container.hasClass('cb-player-is-playing')){
-						return;
+				switch(data.details) {
+					case Hls.ErrorDetails.MANIFEST_LOAD_ERROR:
+						try {
+							displayError(container, 'cannot Load Manifest' + data.context.url);
+							if(data.response.code === 0) {
+								displayError(container, "this might be a CORS issue, consider installing <a href=\"https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi\">Allow-Control-Allow-Origin</a> Chrome Extension");
+							}
+						} catch(err) {
+							displayError(container, 'cannot Load' + data.context.url);
 					}
+					break;
+				case Hls.ErrorDetails.MANIFEST_LOAD_TIMEOUT:
+					displayError(container, 'timeout while loading manifest');
+					break;
+				case Hls.ErrorDetails.MANIFEST_PARSING_ERROR:
+					displayError(container, 'error while parsing manifest:' + data.reason);
+					break;
+				case Hls.ErrorDetails.LEVEL_LOAD_TIMEOUT:
+					displayError(container, 'timeout while loading level playlist');
+					break;
+				case Hls.ErrorDetails.FRAG_LOAD_ERROR:
+					displayError(container, 'error while loading fragment');
+					break;
+				case Hls.ErrorDetails.FRAG_LOAD_TIMEOUT:
+					displayError(container, 'timeout while loading fragment');
+					break;
+				case Hls.ErrorDetails.BUFFER_APPEND_ERROR:
+					displayError(container, 'Buffer Append Error');
+					break;
+				default:
+					break;
+				}
 
-					switch(data.details) {
-						case Hls.ErrorDetails.MANIFEST_LOAD_ERROR:
-							try {
-								displayError(container, 'cannot Load Manifest' + data.context.url);
-							    if(data.response.code === 0) {
-							    	displayError(container, "this might be a CORS issue, consider installing <a href=\"https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi\">Allow-Control-Allow-Origin</a> Chrome Extension");
-							    }
-							} catch(err) {
-							  	displayError(container, 'cannot Load' + data.context.url);
-						}
-						break;
-					case Hls.ErrorDetails.MANIFEST_LOAD_TIMEOUT:
-						displayError(container, 'timeout while loading manifest');
-						break;
-					case Hls.ErrorDetails.MANIFEST_PARSING_ERROR:
-						displayError(container, 'error while parsing manifest:' + data.reason);
-						break;
-					case Hls.ErrorDetails.LEVEL_LOAD_TIMEOUT:
-						displayError(container, 'timeout while loading level playlist');
-						break;
-					case Hls.ErrorDetails.FRAG_LOAD_ERROR:
-						displayError(container, 'error while loading fragment');
-						break;
-					case Hls.ErrorDetails.FRAG_LOAD_TIMEOUT:
-						displayError(container, 'timeout while loading fragment');
-						break;
-					case Hls.ErrorDetails.BUFFER_APPEND_ERROR:
-						displayError(container, 'Buffer Append Error');
-						break;
-					default:
-            			break;
-					}
-
-					if(data.fatal){
-						displayError(container, 'The Livestream is not available.');
-
-						container.removeClass("cb-player-is-loaded");
-						hls.destroy();
-						return;
-					}
-				});
-
-				hls.on(Hls.Events.MEDIA_ATTACHED, function (event, data){
-			 		container.addClass("cb-player-is-loaded");
-				});
-
-				hls.on(Hls.Events.MANIFEST_PARSED,function(event, data) {
-			 		container.removeClass('cb-player-initialized');
-
-			 		setVolume(container, container.data('volume'));
-
-			 		if(autostart){
-			 			toggleVideoStartSTopp(container);
-			 		}
-
-			 		container.data({
-						'levels': data.levels,
-						'level': hls.currentLevel + 1,
-						'is_hls': true,
-					});
-			 	});
-
-				var firstLoad = true,
-					watchLiveDuration = 0;
-				hls.on(Hls.Events.LEVEL_LOADED,function(event,data) {
-
-					if(data.details.live){
-						container.addClass('cb-player-is-livestream');
-						container.data({
-							'is-livestream': data.details.live,
-							'fragmentDuration': data.details.averagetargetduration,
-						});
-					}
-
-					if(firstLoad){
-
-						if(container.data('is-livestream')){
-							container.find('.cb-player-progress').attr('aria-valuenow', 100);
-						}
-
-						container.find('.cb-player-time-duration').text(formatTime(data.details.totalduration, container));
-
-						if(!mediaSrcEl.attr('video')){
-							mediaSrcEl.remove();
-						}
-
-						firstLoad = false;
-					}
-				});
-
-				hls.on(Hls.Events.FRAG_BUFFERED,function(event, data) {
-
-			 		if(!container.data('bufferTimer')){
-			            container.data('bufferTimer', true);
-
-			            hls.bufferTimer = window.setInterval(function(){
-			            	videoBuffer(container);
-			            }, 200);
-			        }
-
-			        container.data({
-						'level': hls.currentLevel + 1,
-					});
+				if(data.fatal){
+					displayError(container, 'The Livestream is not available.');
 
 					container.removeClass("cb-player-is-loaded");
-			 	});
+					hls.destroy();
+					return;
+				}
+			});
 
-			}else if(mediaSrc.match(/(.mp4)/) || (mediaSrc.match(/(.m3u8)/) && Hls) ){
-				// (Hls && (!isSupported() && mediaSrc.match(/(.m3u8)/)) || mediaSrc.match(/(.mp4)/)
-				mediaSrcEl.attr("src", mediaSrc);
-				media.load();
-
+			hls.on(Hls.Events.MEDIA_ATTACHED, function (event, data){
 				container.addClass("cb-player-is-loaded");
+			});
 
-				media.on('loadedmetadata', function(){
-					var videoDuration = formatTime(media[0].duration, media.closest(".cb-player"));
-					media.closest(".cb-player").find(".cb-player-time-duration").text(videoDuration);
+			hls.on(Hls.Events.MANIFEST_PARSED,function(event, data) {
+				container.removeClass('cb-player-initialized');
 
-					container.addClass("cb-media-is-ready");
-					container.removeClass('cb-player-initialized');
+				setVolume(container, container.data('volume'));
 
-					setVolume(container, container.data('volume'));
+				if(autostart){
+					toggleMediaStartSTopp(container);
+				}
 
-					if(autostart){
-						toggleVideoStartSTopp(container);
-					}
+				container.data({
+					'levels': data.levels,
+					'level': hls.currentLevel + 1,
+					'is_hls': true,
+					'videowidth': data.levels[0].width,
+					'videoheight': data.levels[0].height
 				});
-			}else if (mediaSrc.match(/(.mp3)/)){
-				mediaSrcEl.attr("src", mediaSrc);
-				media.load();
-
-				container.addClass("cb-player-is-loaded");
-
-				media.on('loadedmetadata', function(){
-					var videoDuration = formatTime(media[0].duration, media.closest(".cb-player"));
-
-					media.closest(".cb-player").find(".cb-player-time-duration").text(videoDuration);
-
-					container.addClass("cb-media-is-ready");
-					container.removeClass('cb-player-initialized');
-
-					if(autostart){
-						toggleVideoStartSTopp(container);
-					}
-				});
-
-			}else{
-				displayError(container, 'File Type not Supported.');
-			}
-		}
-
-		function stopPlayingAll(el){
-			$('.cb-player-is-playing').not(el).each(function(){
-				var container = $(this),
-					player = container.find('.cb-player-media')[0];
-
-				if(!container.data('backgroundMode')){
-					if(container.hasClass('cb-media-is-ready') && !player.paused){
-						//video item
-
-						//Fix Clear DOM before call pause
-						$('body').height();
-
-						player.pause();
-					}
-					else{
-						//audio item
-						//player.pause();
-						//container.removeClass('cb-player-is-playing');
-					}
-				}
-			});
-		}
-
-		function toggleVideoStartSTopp(container){
-			var player = container.find('.cb-player-media')[0];
-
-			if(!container.data('backgroundMode')){
-				stopPlayingAll(container);
-			};
-
-			if (player.paused) {
-
-				if(typeof hls !== 'undefined' && container.data('hlsStopLoad')){
-					hls.startLoad();
-				}
-
-				player.play();
-
-				//check if video playing - android
-				if(!player.paused){
-					container.addClass("cb-player-is-playing");
-
-					clearInterval(watchProgress);
-
-					watchProgress = setInterval(function(){
-						watchProgressLoading(player);
-					}, 500);
-				}
-
-			} else {
-
-				player.pause();
-
-				clearInterval(watchProgress);
-			}
-
-			container.removeClass('cb-player-initialized');
-		}
-
-		function initPlayer(container) {
-			if(container.hasClass('cb-player-initialized')){
-				return;
-			}
-
-			container.addClass('cb-player-initialized');
-
-			if(container.hasClass("cb-media-is-ready")){
-				toggleVideoStartSTopp(container);
-			}else{
-				getPlayerSrc(container);
-			}
-		}
-
-		function watchProgressLoading(player){
-			var container = $(player).closest(".cb-player");
-
-			if(container.data('backtracking') == true){
-				for (var i = 0; i < player.buffered.length; i++) {
-					var buffer = player.buffered,
-		    			time = player.currentTime;
-
-					if(buffer.start(i) <= time && time <= buffer.end(i)){
-						var loadPercentage = buffer.end(i) / player.duration * 100;
-					}
-				}
-
-				container.find('.cb-player-progress-load').css('width', loadPercentage + '%');
-			}
-		}
-
-		function setVolume(container, volume) {
-			var player = container.find('.cb-player-media'),
-				slider = container.find(".cb-player-volume-hide"),
-				progress = container.find(".cb-player-volume-bar");
-
-			if(volume.target){
-				var e = volume;
-
-				var sliderContainerV = container.find(".cb-player-volume-vertical"),
-					sliderContainerH = container.find(".cb-player-volume-horizontal");
-
-				if(sliderContainerH.length){
-					volume =(e.pageX - slider.offset().left) / slider.width() * 100;
-				}else if(sliderContainerV.length){
-					volume = ((e.pageY - slider.offset().top - slider.width()) / slider.width()) * -1;
-					volume = volume  * 100;
-				}
-
-				volume = Math.round(volume);
-
-				if(volume < 0){
-					volume = 0;
-				}
-
-				if(volume > 100){
-					volume = 100;
-				}
-			}
-
-			if(typeof volume === 'undefined'){
-				return;
-			}
-
-			player[0].volume = volume / 100;
-
-			if(slider.length && progress.length){
-				slider.attr('aria-valuenow', volume);
-				progress.css('width', volume + '%');
-			}
-
-			if(volume == 0){
-				container.addClass("cb-player-is-muted");
-				player.prop('muted', false);
-			}else{
-				container.removeClass("cb-player-is-muted");
-				player.prop('muted', false);
-			}
-		}
-
-		function formatTime(time, el){
-			var time = time,
-				timeNegative = false;
-
-			if(typeof el === 'undefined'){
-				el = false;
-			}
-
-			if(time < 0){
-				//negative time
-				time = Math.abs(time);
-				timeNegative = true;
-			}
-
-			h = Math.floor(time / 3600);
-			h = (h >= 10) ? h : "0" + h;
-
-			m = Math.floor(time / 60) % 60;
-			m = (m >= 10) ? m : "0" + m;
-
-			s = Math.floor(time % 60);
-			s = (s >= 10) ? s : "0" + s;
-
-			if(el && !el.data('timeformat')){
-				if(h > 0){
-					el.data('timeformat', 'hh:mm:ss');
-				}else{
-					el.data('timeformat', 'mm:ss');
-				}
-			}
-
-			var t = timeNegative ? '-' : '';
-			if(el && (el.data('timeformat') == 'hh:mm:ss' || (el.data('is-livestream') && h > 0))){
-				t = t + h + ':' + m + ':' + s;
-			}else{
-				t = t + m + ':' + s;
-			}
-
-			return t;
-		}
-
-		function setCurrentTime(container, time){
-			var player = container.find('.cb-player-media');
-
-			player[0].currentTime = time;
-		}
-
-		function playPosition(player, value) {
-			var container = player.closest('.cb-player');
-
-			if(container.data('is-livestream')){
-
-				var totalDuration = container.data('duration'),
-					duration = Math.ceil(totalDuration * (value / 100));
-
-				playbacktime = totalDuration - duration
-				currentDuration = container.data('currentDuration');
-
-				setCurrentTime(container, currentDuration - playbacktime);
-
-			}else{
-				setCurrentTime(container, player[0].duration * (value / 100));
-			}
-		}
-
-		function watchTimer(container) {
-			var player = container.find('.cb-player-media'),
-				progress = container.find('.cb-player-progress');
-				progressVisibile = container.find('.cb-player-progress-play');
-
-
-			if(container.data('is-livestream')){
-				var duration = container.data('duration');
-				var progresstime = (container.data('currentDuration') / duration) * 100;
-
-				var playtime = player[0].currentTime;
-
-				if(container.data('backtracking')){
-					playtime = playtime - duration;
-				}
-
-			}else{
-				var progresstime = player[0].currentTime * (100 / player[0].duration);
-				var playtime = player[0].currentTime;
-			}
-
-			if(container.data('contextInfo') && container.data('is_hls')){
-				container.find('.cb-debug-resolution').text(player[0].videoWidth + 'x' + player[0].videoHeight);
-				container.find('.cb-debug-levels').text(container.data('level') + ' of ' + container.data('levels').length);
-				container.find('.cb-debug-buffer').text(Math.round(container.data('buffer')) + 's');
-				container.find('.cb-debug-duration').text(container.data('duration') + 's');
-				container.find('.cb-debug-current').text(Math.round(player[0].currentTime) + 's');
-			}
-
-			if(container.data('is-livestream')){
-				ariaValue = progress.attr('aria-valuenow');
-
-				var value = ariaValue;
-					progressTime = Math.ceil(duration / 100 * value);
-					progressPercentage = progressTime / duration * 100;
-
-				if(container.data('backtracking')){
-					//check livestream position
-					progressVisibile.css('width', progressPercentage + '%');
-
-					if(Math.round(ariaValue) >= 99){
-						playtime = 'Live';
-					}else{
-						playtime = -Math.abs((progressPercentage - 100) / 100 * duration);
-					}
-				}
-			}else{
-				progressVisibile.css('width', progresstime + '%');
-				container.find('.cb-player-progress').attr('aria-valuenow', progresstime);
-			}
-
-			if($.isNumeric(playtime)){
-				var playtime = formatTime(playtime, player.closest(".cb-player"))
-			}
-
-			player.closest(".cb-player").find(".cb-player-time-current").text(playtime);
-		}
-
-		function watchFullscreenStart(){
-			if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.webkitDisplayingFullscreen) {
-				$(".cb-player-is-fullscreen").removeClass("cb-player-is-fullscreen cb-player-control-hide");
-
-				clearInterval(watchFullscreen);
-			}
-		}
-
-		function toggleFullscreen(container, player){
-			if(!$('.cb-player-is-fullscreen').length){
-
-				if (player.requestFullScreen) {
-				    player.requestFullScreen();
-				} else if (player.mozRequestFullScreen) {
-				    container[0].mozRequestFullScreen();
-				} else if (player.webkitRequestFullscreen) {
-					if(isTouchDevice()){
-						player.webkitEnterFullScreen();
-					}else{
-						// container[0].webkitEnterFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-						container[0].webkitRequestFullscreen();
-					}
-				} else if (player.msRequestFullscreen) {
-				    player.msRequestFullscreen();
-				}else if(player.webkitSupportsFullscreen){
-					//fullscreen support for ios
-					player.webkitEnterFullScreen();
-				}
-
-				watchFullscreen = setInterval(watchFullscreenStart, 250);
-				container.addClass("cb-player-is-fullscreen");
-
-			} else {
-				if (document.cancelFullScreen) {
-				    document.cancelFullScreen();
-				} else if (document.mozCancelFullScreen) {
-				    document.mozCancelFullScreen();
-				} else if (document.webkitCancelFullScreen) {
-				    document.webkitCancelFullScreen();
-				} else if (document.msExitFullscreen) {
-				    document.msExitFullscreen();
-				}
-			}
-		};
-
-		function displayTime(container, position){
-			if(container.data('is-livestream')){
-				var duration = container.data('duration');
-
-				displaytime = (position / 100 * duration) - duration;
-			}else{
-				var player = container.find('.cb-player-media');
-
-				displaytime = player[0].duration * position / 100;
-			}
-
-			if(displaytime < 0){
-				displaytime = 0;
-			}
-
-			return displaytime;
-		}
-
-		function tooltip(container, position){
-			var tip = container.find('.cb-player-progress-tooltip');
-
-			tip.css('left', position + '%').text(formatTime(displayTime(container, position), container));
-		}
-
-		var lastTouchCoordinate = null;
-		function seeking(e, container){
-			if(e.type == 'touchmove' || e.type == 'touchstart'){
-				var x = e.originalEvent.touches[0].pageX;
-
-				lastTouchCoordinate = x;
-			}else if(e.type == 'touchend'){
-				x = lastTouchCoordinate;
-
-				lastTouchCoordinate = null;
-			}else{
-				var x = e.pageX;
-			}
-
-			var progress = container.find('.cb-player-progress'),
-				position = (x - progress.offset().left) / progress.width() * 100,
-				position = position.toFixed(4);
-
-			container.find('.cb-player-poster').remove();
-
-			if(position < 0){
-				position = 0;
-			}
-
-			if(position > 100){
-				position = 100
-			}
-
-			if(container.hasClass('cb-media-is-ready') && container.data('backtracking')){
-				progress.attr('aria-valuenow', position);
-				container.find('.cb-player-time-current').text(formatTime(displayTime(container, position), container));
-
-				tooltip(container, position);
-
-				if(e.type != 'touchmove'){
-					playPosition(container.find(".cb-player-media"), position);
-				}
-
-				if(e.type == 'touchmove'){
-					container.find('.cb-player-progress-play').css('width', position + '%');
-				}
-			}
-		}
-
-		if (!$(document).data('cb-video-initialized')) {
-
-			var touchtimer = false;
-			$(document).on('touchstart', '.cb-player-toggle-play, .cb-player-media', function(e){
-				var container = $(this).closest(".cb-player");
-
-				if(container.data('backgroundMode')){
-					return;
-				}
-
-				if(container.hasClass('cb-player-control-hide')){
-					//show controls on tocuh start
-					container.removeClass('cb-player-control-hide');
-
-				}else{
-					touchtimer = true
-
-					setTimeout(function(){
-						touchtimer = false;
-					}, 300);
-				}
 			});
 
-			$(document).on(isTouchDevice() ? 'touchend' : 'click', '.cb-player-toggle-play, .cb-player-media, .cb-player-overlayer-button', function(e){
-				var container = $(this).closest(".cb-player");
+			var firstLoad = true,
+				watchLiveDuration = 0;
+			hls.on(Hls.Events.LEVEL_LOADED,function(event,data) {
 
-				if(container.hasClass('cb-player-is-loaded') || container.data('backgroundMode')){
-					return;
+				if(data.details.live){
+					container.addClass('cb-player-is-livestream');
+					container.data({
+						'is-livestream': data.details.live,
+						'fragmentDuration': data.details.averagetargetduration,
+					});
 				}
 
-				if(e.type == 'touchend'){
-					if(touchtimer){
-				        initPlayer(container);
-
-				        touchtimer = false;
-					}
-				}else{
-					initPlayer(container);
-				}
-			});
-
-			$(document).on(isTouchDevice() ? 'touchstart' : 'mouseenter', '.cb-player-progress-hide', function(e){
-				var container = $(this).closest('.cb-player');
-
-				if(!container.hasClass('cb-media-is-ready')){
-					return;
-				}
-
-				if(container.data('backtracking') && e.type == "mouseenter"){
-					container.find('.cb-player-progress-tooltip').fadeIn(250);
-				}
-			});
-
-			$(document).on('mouseleave', '.cb-player-progress-hide', function(e){
-				var container = $(this).closest('.cb-player');
-
-				if(container.hasClass('cb-player-is-seeking')){
-					return;
-				}
-
-				container.find('.cb-player-progress-tooltip').fadeOut(250);
-			});
-
-			$(document).on('mousemove', '.cb-player-progress-hide', function(e){
-				var progress = $(this).closest('.cb-player-progress');
-					container = progress.closest('.cb-player'),
-					position = (e.pageX - progress.offset().left) / progress.width() * 100,
-					position = position.toFixed(4);
-
-				if(!container.hasClass('cb-media-is-ready')){
-					return;
-				}
-
-				if(container.data('backtracking')){
-					tooltip(container, position);
-				}
-			});
-
-			$(document).on(isTouchDevice() ? 'touchstart' : 'mousedown' ,'.cb-player-progress', function(e){
-				if(e.type == "mousedown"){
-					if(e.which != 1){
-						return false;
-					}
-				}
-
-				var progress = $(this),
-					container = $(this).closest('.cb-player'),
-					player = container.find('.cb-player-media');
-
-				container.addClass("cb-player-is-seeking");
-
-				seeking(e, container);
-
-				$(document).bind('mousemove.cbplayer-seeking touchmove.cbplayer-seeking', function(e){
-					var e = e;
+				if(firstLoad){
 
 					if(container.data('is-livestream')){
-
-						//fire seeking after mouseup
-
-					}else{
-
-						if(container.hasClass('cb-player-is-playing') && !player[0].paused && !container.hasClass('cb-player-is-loaded')){
-							container.data('stopTemporary', true);
-							player[0].pause();
-						}
-
-						seeking(e, container);
+						container.find('.cb-player-progress').attr('aria-valuenow', 100);
 					}
+
+					container.find('.cb-player-time-duration').text(formatTime(data.details.totalduration, container));
+					container.data('duration', data.details.totalduration);
+
+					if(!mediaSrcEl.attr('video')){
+						mediaSrcEl.remove();
+					}
+
+					firstLoad = false;
+				}
+			});
+
+			hls.on(Hls.Events.FRAG_BUFFERED,function(event, data) {
+
+				if(!container.data('bufferTimer')){
+					container.data('bufferTimer', true);
+
+					hls.bufferTimer = window.setInterval(function(){
+						videoBuffer(container);
+					}, 200);
+				}
+
+				container.data({
+					'level': hls.currentLevel + 1,
 				});
 
-				e.stopPropagation();
-				//e.preventDefault();
+				container.removeClass("cb-player-is-loaded");
 			});
 
-			$(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function(e){
-				var container = $('.cb-player-is-seeking'),
-					progress = container.find('.cb-player-progress'),
-					player = container.find('.cb-player-media');
+		}else if(mediaSrc.match(/(.mp4)/) || (mediaSrc.match(/(.m3u8)/) && Hls) ){
+			// (Hls && (!isSupported() && mediaSrc.match(/(.m3u8)/)) || mediaSrc.match(/(.mp4)/)
+			mediaSrcEl.attr("src", mediaSrc);
+			media[0].load();
 
-				if((e.type == 'touchend' || e.type == "mouseup") && container.hasClass("cb-player-is-seeking")){
-					if(e.which != 1 && e.type == "mouseup"){
-						return false;
-					}
+			container.addClass("cb-player-is-loaded");
 
-					$(this).unbind("mousemove.cbplayer-seeking");
-					$(this).unbind("touchmove.cbplayer-seeking");
-
-					container.removeClass("cb-player-is-seeking");
-
-					if(!$(e.target).hasClass('cb-player-progress-hide')){
-						container.find('.cb-player-progress-tooltip').fadeOut(250);
-					}
-
-					if(container.data('stopTemporary') && player[0].paused && !container.hasClass('cb-player-is-loaded')){
-						container.data('stopTemporary', false);
-						player[0].play();
-					}
-
-					if(e.type == 'touchend'){
-						seeking(e, container);
-					}
-
-					e.stopPropagation();
-				}
+			media.on('loadstart', function(){
+				timeoutMeta = setTimeout(function(){
+					//displayError(container, 'Timeout - File cannot loaded');
+				}, 3000);
 			});
 
-			$(document).on('mousedown','.cb-player-volume-hide', function(e){
-				if(e.type == "mousedown"){
-					if(e.which != 1){
-						return false;
-					}
-				}
+			media.on('loadedmetadata', function(){
 
-				var progress = $(this),
-					container = $(this).closest('.cb-player');
+				clearTimeout(timeoutMeta);
 
-				container.addClass("cb-player-is-setvolume");
+				var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"));
+				media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration);
 
-				setVolume(container, e);
+				container.addClass("cb-media-is-ready");
+				container.removeClass('cb-player-initialized');
 
-				$(document).bind('mousemove.cbplayer-setvolume', function(e){
-					var e = e;
-
-					setVolume(container, e);
+				container.data({
+					'videowidth': media[0].videoWidth,
+					'videoheight': media[0].videoHeight,
+					'duration': media[0].duration
 				});
 
-				e.preventDefault();
-				e.stopPropagation();
-			});
+				setVolume(container, container.data('volume'));
 
-			$(document).on('mouseup', function(e){
-				var container = $('.cb-player-is-setvolume');
-
-				if(e.type == "mouseup" && container.hasClass("cb-player-is-setvolume")){
-					if(e.which != 1){
-						return false;
-					}
-
-					$(this).unbind("mousemove.cbplayer-setvolume");
-
-					container.removeClass("cb-player-is-setvolume");
-				}
-
-				e.stopPropagation();
-				e.preventDefault();
-			});
-
-			$(document).on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-toggle-mute', function(){
-				var container = $(this).closest(".cb-player"),
-					player = container.find('.cb-player-media'),
-					volume = player[0].volume;
-
-				if(volume == 0){
-					volumevalue = 100;
-				}else{
-					volumevalue = 0;
-				}
-
-				setVolume(container, volumevalue);
-			});
-
-			$(document).on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-toggle-fullscreen', function(){
-				var container = $(this).closest(".cb-player");
-					player = container.find(".cb-player-media")[0];
-
-				toggleFullscreen(container, player);
-			});
-
-			$(document).on('contextmenu', function(e){
-				var container = $(e.target).closest('.cb-player');
-
-				if(container.length){
-					var context = container.find('.cb-player-context');
-
-					if(context.hasClass('cb-player-context-active')){
-						context.removeClass('cb-player-context-active');
-						return false;
-					}
-
-					context.addClass('cb-player-context-active');
-
-					var cursorX = e.pageX - container.offset().left,
-						cursorY = e.pageY - container.offset().top,
-						contextXEnd = cursorX + context.width(),
-						contextYEnd = cursorY + context.height();
-
-					if(container.width() > contextXEnd){
-						context.css('left', cursorX);
-					}else{
-						context.css('left', cursorX - context.width());
-					}
-
-					if(container.height() > contextYEnd){
-						context.css('top', cursorY);
-					}else{
-						context.css('top', cursorY - context.height());
-					}
-					return false;
+				if(autostart){
+					toggleMediaStartSTopp(container);
 				}
 			});
 
-			$(document).on('click', function(){
-				if($('.cb-player-context-active').length){
-					$('.cb-player-context-active').removeClass('cb-player-context-active');
+		}else if (mediaSrc.match(/(.mp3)/)){
+			mediaSrcEl.attr("src", mediaSrc);
+			media[0].load();
+
+			container.addClass("cb-player-is-loaded");
+
+			media.on('loadstart', function(){
+				timeoutMeta = setTimeout(function(){
+					displayError(container, 'Timeout - File cant loaded');
+				}, 3000);
+			});
+
+			media.on('loadedmetadata', function(){
+				var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"));
+
+				clearTimeout(timeoutMeta);
+
+				media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration);
+
+				container.addClass("cb-media-is-ready");
+				container.removeClass('cb-player-initialized');
+
+				container.data({
+					'duration': media[0].duration
+				});
+
+				if(autostart){
+					toggleMediaStartSTopp(container);
 				}
 			});
 
-			$(document).on('click', '.cb-player-context-item.link', function(){
-				var item = $(this),
-					container = item.closest('.cb-player');
-
-				container.find('.cb-player-' + item.data('link')).css('display', 'block');
-			});
-
-			$(document).on('click', '.cb-player-overlayer-close', function(){
-				$(this).closest('.cb-player-overlayer').css('display', 'none');
-			});
-
-			$(document).data('cb-video-initialized', true);
-		}
-
-		if (options == "stopPlaying") {
-			stopPlayingAll();
+		}else{
+			displayError(container, 'File Type not Supported.');
 			return;
 		}
 
-		if (options == "mediaRestart") {
+		if ($.isFunction(settings.mediaIsReady)) {
+			settings.mediaIsReady.call(this, container);
+		}
+	}
+
+	function stopPlayingAll(el){
+		$('.cb-player-is-playing').not(el).each(function(){
 			var container = $(this),
-				media = container.find('.cb-player-media');
+				player = container.find('.cb-player-media')[0];
 
-			media[0].currentTime = 0;
+			if(!container.data('backgroundMode')){
+				if(container.hasClass('cb-media-is-ready') && !player.paused){
+					//Fix Clear DOM before call pause
+					$('body').height();
 
-			initPlayer(container);
+					player.pause();
+				}
+			}
+		});
+	}
 
+	function videoStart(container, player){
+		if(typeof hls !== 'undefined' && container.data('hlsStopLoad')){
+			hls.startLoad();
+		}
+
+		var promise = player.play();
+
+		if (promise !== undefined) {
+			promise.then( function() {
+				clearInterval(watchProgress);
+
+				stopPlayingAll(container);
+
+				watchProgress = setInterval(function(){
+					watchProgressLoading(player);
+				}, 500);
+			}).catch( function() {
+				console.log(promise);
+			});
+		}
+	}
+
+	function videoStop(player){
+		player.pause();
+
+		clearInterval(watchProgress);
+	}
+
+	function toggleMediaStartSTopp (container){
+		var player = container.find('.cb-player-media')[0];
+
+		if(!container.data('backgroundMode')){
+			stopPlayingAll(container);
+		};
+
+		if (player.paused) {
+
+			videoStart(container, player);
+
+		} else {
+
+			videoStop(player);
+		}
+
+		container.removeClass('cb-player-initialized');
+	}
+
+	function initPlayer(container) {
+
+		if(container.hasClass('cb-player-initialized')){
 			return;
 		}
 
-		if(options == "videoToggle"){
-			var container = $(this);
+		container.addClass('cb-player-initialized');
 
-			initPlayer(container);
-			return;
+		if(container.hasClass("cb-media-is-ready")){
+			toggleMediaStartSTopp(container);
+		}else{
+			getPlayerSrc(container);
 		}
+	}
 
-		if(options == 'initSource'){
-			var el = $(this),
-				container = el;
+	function watchProgressLoading(player){
+		var container = $(player).closest(".cb-player");
 
-			if(el.is("video")){
-				container = el.closest('.cb-player');
+		if(container.data('backtracking') == true){
+			for (var i = 0; i < player.buffered.length; i++) {
+				var buffer = player.buffered,
+					time = player.currentTime;
+
+				if(buffer.start(i) <= time && time <= buffer.end(i)){
+					var loadPercentage = buffer.end(i) / player.duration * 100;
+				}
 			}
 
-			if(container.data('is-livestream')){
-				return;
+			container.find('.cb-player-progress-load').css('width', loadPercentage + '%');
+		}
+	}
+
+	function setVolume(container, volume) {
+		var player = container.find('.cb-player-media'),
+			slider = container.find(".cb-player-volume-hide"),
+			progress = container.find(".cb-player-volume-bar");
+
+		if(volume.target){
+			var e = volume;
+
+			var sliderContainerV = container.find(".cb-player-volume-vertical"),
+				sliderContainerH = container.find(".cb-player-volume-horizontal");
+
+			if(sliderContainerH.length){
+				volume =(e.pageX - slider.offset().left) / slider.width() * 100;
+			}else if(sliderContainerV.length){
+				volume = ((e.pageY - slider.offset().top - slider.width()) / slider.width()) * -1;
+				volume = volume  * 100;
 			}
 
-			getPlayerSrc(container, false);
+			volume = Math.round(volume);
+
+			if(volume < 0){
+				volume = 0;
+			}
+
+			if(volume > 100){
+				volume = 100;
+			}
+		}
+
+		if(typeof volume === 'undefined'){
 			return;
 		}
 
-		return $(this).each(function(){
-			var el = $(this),
+		player[0].volume = volume / 100;
+
+		if(slider.length && progress.length){
+			slider.attr('aria-valuenow', volume);
+			progress.css('width', volume + '%');
+		}
+
+		if(volume == 0){
+			container.addClass("cb-player-is-muted");
+			player.prop('muted', true);
+		}else{
+			container.removeClass("cb-player-is-muted");
+			player.prop('muted', false);
+		}
+	}
+
+	function formatTime(time, el){
+		var time = time,
+			timeNegative = false;
+
+		if(typeof el === 'undefined'){
+			el = false;
+		}
+
+		if(time < 0){
+			//negative time
+			time = Math.abs(time);
+			timeNegative = true;
+		}
+
+		h = Math.floor(time / 3600);
+		h = (h >= 10) ? h : "0" + h;
+
+		m = Math.floor(time / 60) % 60;
+		m = (m >= 10) ? m : "0" + m;
+
+		s = Math.floor(time % 60);
+		s = (s >= 10) ? s : "0" + s;
+
+		if(el && !el.data('timeformat')){
+			if(h > 0){
+				el.data('timeformat', 'hh:mm:ss');
+			}else{
+				el.data('timeformat', 'mm:ss');
+			}
+		}
+
+		var t = timeNegative ? '-' : '';
+		if(el && (el.data('timeformat') == 'hh:mm:ss' || (el.data('is-livestream') && h > 0))){
+			t = t + h + ':' + m + ':' + s;
+		}else{
+			t = t + m + ':' + s;
+		}
+
+		return t;
+	}
+
+	function setCurrentTime(container, time){
+		var player = container.find('.cb-player-media');
+
+		player[0].currentTime = time;
+	}
+
+	function playPosition(player, value) {
+		var container = player.closest('.cb-player');
+
+		if(container.data('is-livestream')){
+
+			var totalDuration = container.data('duration'),
+				duration = Math.ceil(totalDuration * (value / 100));
+
+			playbacktime = totalDuration - duration
+			currentDuration = container.data('currentDuration');
+
+			setCurrentTime(container, currentDuration - playbacktime);
+
+		}else{
+			setCurrentTime(container, player[0].duration * (value / 100));
+		}
+	}
+
+	function watchTimer(container) {
+		var player = container.find('.cb-player-media'),
+			progress = container.find('.cb-player-progress');
+			progressVisibile = container.find('.cb-player-progress-play');
+
+
+		if(container.data('is-livestream')){
+			var duration = container.data('duration');
+			var progresstime = (container.data('currentDuration') / duration) * 100;
+
+			var playtime = player[0].currentTime;
+
+			if(container.data('backtracking')){
+				playtime = playtime - duration;
+			}
+
+		}else{
+			var progresstime = player[0].currentTime * (100 / player[0].duration);
+			var playtime = player[0].currentTime;
+		}
+
+		if(container.data('contextInfo') && container.data('is_hls')){
+			container.find('.cb-debug-resolution').text(player[0].videoWidth + 'x' + player[0].videoHeight);
+			container.find('.cb-debug-levels').text(container.data('level') + ' of ' + container.data('levels').length);
+			container.find('.cb-debug-buffer').text(Math.round(container.data('buffer')) + 's');
+			container.find('.cb-debug-duration').text(container.data('duration') + 's');
+			container.find('.cb-debug-current').text(Math.round(player[0].currentTime) + 's');
+		}
+
+		if(container.data('is-livestream')){
+			ariaValue = progress.attr('aria-valuenow');
+
+			var value = ariaValue;
+				progressTime = Math.ceil(duration / 100 * value);
+				progressPercentage = progressTime / duration * 100;
+
+			if(container.data('backtracking')){
+				//check livestream position
+				progressVisibile.css('width', progressPercentage + '%');
+
+				if(Math.round(ariaValue) >= 99){
+					playtime = 'Live';
+				}else{
+					playtime = -Math.abs((progressPercentage - 100) / 100 * duration);
+				}
+			}
+		}else{
+			progressVisibile.css('width', progresstime + '%');
+			container.find('.cb-player-progress').attr('aria-valuenow', progresstime);
+		}
+
+		if($.isNumeric(playtime)){
+			var playtime = formatTime(playtime, player.closest(".cb-player"))
+		}
+
+		player.closest(".cb-player").find(".cb-player-time-current").text(playtime);
+	}
+
+	function watchFullscreenStart(){
+		if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.webkitDisplayingFullscreen) {
+			$(".cb-player-is-fullscreen").removeClass("cb-player-is-fullscreen cb-player-control-hide");
+
+			clearInterval(watchFullscreen);
+		}
+	}
+
+	function toggleFullscreen(container, player){
+		if(!$('.cb-player-is-fullscreen').length){
+
+			if (player.requestFullScreen) {
+				player.requestFullScreen();
+			} else if (player.mozRequestFullScreen) {
+				container[0].mozRequestFullScreen();
+			} else if (player.webkitRequestFullscreen) {
+				if(isTouchDevice()){
+					player.webkitEnterFullScreen();
+				}else{
+					// container[0].webkitEnterFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+					container[0].webkitRequestFullscreen();
+				}
+			} else if (player.msRequestFullscreen) {
+				player.msRequestFullscreen();
+			}else if(player.webkitSupportsFullscreen){
+				//fullscreen support for ios
+				player.webkitEnterFullScreen();
+			}
+
+			watchFullscreen = setInterval(watchFullscreenStart, 250);
+			container.addClass("cb-player-is-fullscreen");
+
+		} else {
+			if (document.cancelFullScreen) {
+				document.cancelFullScreen();
+			} else if (document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if (document.webkitCancelFullScreen) {
+				document.webkitCancelFullScreen();
+			} else if (document.msExitFullscreen) {
+				document.msExitFullscreen();
+			}
+		}
+	};
+
+	function displayTime(container, position){
+		if(container.data('is-livestream')){
+			var duration = container.data('duration');
+			displaytime = (position / 100 * duration) - duration;
+		}else{
+			var player = container.find('.cb-player-media');
+			displaytime = player[0].duration * position / 100;
+		}
+
+		if(displaytime < 0 && !container.data('is-livestream')){
+			displaytime = 0;
+		}
+
+		return displaytime;
+	}
+
+	function tooltip(container, position){
+		var tip = container.find('.cb-player-progress-tooltip');
+
+		tip.css('left', position + '%').text(formatTime(displayTime(container, position), container));
+	}
+
+	var lastTouchCoordinate = null;
+	function seeking(e, container){
+		if(e.type == 'touchmove' || e.type == 'touchstart'){
+			var x = e.originalEvent.touches[0].pageX;
+
+			lastTouchCoordinate = x;
+		}else if(e.type == 'touchend'){
+			x = lastTouchCoordinate;
+
+			lastTouchCoordinate = null;
+		}else{
+			var x = e.pageX;
+		}
+
+		var progress = container.find('.cb-player-progress'),
+			position = (x - progress.offset().left) / progress.width() * 100,
+			position = position.toFixed(4);
+
+		// container.find('.cb-player-poster').remove();
+
+		if(position < 0){
+			position = 0;
+		}
+
+		if(position > 100){
+			position = 100
+		}
+
+		if(container.hasClass('cb-media-is-ready') && container.data('backtracking')){
+			progress.attr('aria-valuenow', position);
+			container.find('.cb-player-time-current').text(formatTime(displayTime(container, position), container));
+
+			tooltip(container, position);
+
+			if(e.type != 'touchmove'){
+				playPosition(container.find(".cb-player-media"), position);
+			}
+
+			if(e.type == 'touchmove'){
+				container.find('.cb-player-progress-play').css('width', position + '%');
+			}
+		}
+	}
+
+	function Plugin( element, options ) {
+        this.options = $.extend( {}, defaults, options );
+        this._defaults = defaults;
+        this._name = pluginName;
+        this.element = element;
+        this.init(this.options);
+        this.attachEvents(this.element, this.options);
+    }
+
+	Plugin.prototype = {
+		init: function(options) {
+			var el = $(this.element),
 				watchControlHide;
 
 			if(el.is('video') || el.is('audio')){
@@ -1038,57 +834,7 @@
 				}
 			}
 
-			var settings = {
-				tpl : 'default',
-				/*
-					use custom player template
-					settings: default, false
-				*/
-				controlBar: true,
-				/* enable/disable complete controls */
-				controlTime: true,
-				/* enable/disable  current/duration time */
-				controlProgress: true,
-				/* enable/disable progress bar */
-				controlFullscreen: true,
-				/* enable/disable fullscreen button */
-				controlAudio: true,
-				/* enable/disable mute/volume */
-				overlayButton: true,
-				/* enable/disable overlay play button*/
-				controlHide: true,
-				/* hide controls on leave container or mousemove stop longer as 'controlHideTimeout' */
-				controlHideTimeout: 3000,
-				/* timeout to hide control on mousemove */
-				backtracking: true,
-				/* disable duratuon/progressbar */
-				hlsStopLoad: false,
-				/* stop buffering hls stream on video stop*/
-				volume: 100,
-				/* set volume */
-				volumeOrientation: 'vertical',
-				/* set volumeslider orientation - vertival/horizontal */
-				contextInfo: false,
-				/* set context info - debug mode */
-				backgroundMode: false,
-				/* video autostart/loop/muted - never stop on start other videos */
-				autoplay: false,
-				/* video autoplay */
-				muted: false,
-				/* video muted*/
-				loop: false,
-				/* video loop*/
-				videoIsInit: false,
-				/* callback video container create */
-				videoIsPlay: false,
-				/* callback video start play */
-				videoIsPause: false,
-				/* callback video stop */
-				videoIsEnd: false,
-				/* callback video end play*/
-			}
-
-			settings = $.extend(settings, options);
+			settings = options; // $.extend(settings, options);
 
 			var	spinner = $('<div class="cb-player-spinner-wrap"><div class="cb-player-spinner"></div></div>'),
 				overlayerButton = $('<div class="cb-player-overlayer-button"></div>');
@@ -1110,15 +856,12 @@
 				el.addClass('cb-player-media');
 			}
 
-			if(el.is("video")){
+			if(!wrap.find('.cb-player-spinner-wrap').length){
+				spinner.appendTo(wrap);
+			}
 
-				if(!wrap.find('.cb-player-spinner-wrap').length){
-					spinner.appendTo(wrap);
-				}
-
-				if(settings.overlayButton && !wrap.find('.cb-player-overlayer-button').length){
-					overlayerButton.appendTo(wrap);
-				}
+			if(settings.overlayButton && !wrap.find('.cb-player-overlayer-button').length){
+				overlayerButton.appendTo(wrap);
 			}
 
 			if(!el.find("source").data("src") && !el.find("source").attr('src') && !el.attr('src') && !el.data('src')){
@@ -1126,9 +869,9 @@
 				return;
 			}
 
-			if(el.attr('poster')){
-				$('<div class="cb-player-poster" style="background-image: url("' + el.attr('poster') + '")"></div>').appendTo(wrap);
-			}
+			// if(el.attr('poster')){
+			// 	$('<div class="cb-player-poster" style="background-image: url('" + el.attr('poster') + "')"></div>').appendTo(wrap);
+			// }
 
 			var control = $('<div class="cb-player-controls"></div>');
 			var play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span><span class="cb-player-button-replay"></span></div>');
@@ -1191,23 +934,20 @@
 			$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(wrap);
 
 			var volume = settings.volume;
-			if(settings.muted || settings.backgroundMode || el.attr('muted')){
+			if(settings.muted || settings.backgroundMode || el.is('[muted]') ){
+				el.prop('muted', true);
 				volume = 0;
 			}
 
 			var autoplay = settings.autoplay;
-			if(el.attr('autoplay')){
-
+			if(el.is('[autoplay]')){
 				el.removeAttr('autoplay');
-
 				autoplay = true;
 			}
 
 			var loop = settings.loop;
-			if(settings.backgroundMode || el.attr('loop')){
-
+			if(settings.backgroundMode || el.is('[loop]')){
 				el.removeAttr('loop');
-
 				loop = true;
 			}
 
@@ -1222,10 +962,15 @@
 				'hlsStopLoad': settings.hlsStopLoad,
 			});
 
+			//duation from data
+			if(el.data('duration')){
+				wrap.find('.cb-player-time-duration').text(formatTime(el.data('duration'), el));
+			}
+
 			function getbacktrackingPosition(container){
-				var video = container.find('video, audio'),
-					durationTime = Math.round((video[0].duration) - container.data('duration')),
-					playTime = Math.round(video[0].currentTime - container.data('duration'));
+				var media = container.find('video, audio'),
+					durationTime = Math.round((media[0].duration) - container.data('duration')),
+					playTime = Math.round(media[0].currentTime - container.data('duration'));
 
 				return durationTime - playTime;
 			}
@@ -1252,13 +997,13 @@
 
 			el.on('durationchange', function(e){
 				var container = $(this).closest(".cb-player"),
-					progress = container.find(".cb-player-progress");
-					slider = progress.find(".cb-player-progress-hide")
+					progress = container.find(".cb-player-progress"),
+					slider = progress.find(".cb-player-progress-hide");
 
 				if(container.data('pause') && container.data('is-livestream') && container.data('backtracking')){
 
 					if(slider.length){
-						//video backtracking duration - current duration - current playtime / backtracking duration * 100
+						//media backtracking duration - current duration - current playtime / backtracking duration * 100
 						var position = (container.data('duration') - getbacktrackingPosition(container)) / container.data('duration') * 100,
 							position = position.toFixed(4);
 
@@ -1275,9 +1020,9 @@
 				var container = $(this).closest(".cb-player"),
 					progress = container.find(".cb-player-progress");
 
-				container.find('.cb-player-poster').remove();
+				//container.find('.cb-player-poster').remove();
 
-				//is current position behind video duration, set new position
+				//is current position behind media duration, set new position
 				if(getbacktrackingPosition(container) >= container.data('duration') && container.data('backtracking') && container.data('is-livestream')){
 					position = 0.01;
 
@@ -1285,8 +1030,8 @@
 					playPosition(el, position);
 				}
 
-				if ($.isFunction(settings.videoIsPlay)) {
-				    settings.videoIsPlay.call(this, wrap);
+				if ($.isFunction(settings.mediaIsPlay)) {
+				    settings.mediaIsPlay.call(this, wrap);
 				}
 			});
 
@@ -1302,11 +1047,11 @@
 
 				clearTimeout(watchControlHide);
 
-				//set new current position for livestreaming after video stoped
+				//set new current position for livestreaming after media stoped
 				container.data('pause', true);
 
-				if ($.isFunction(settings.videoIsPause)) {
-				    settings.videoIsPause.call(this, wrap);
+				if ($.isFunction(settings.mediaIsPause)) {
+				    settings.mediaIsPause.call(this, wrap);
 				}
 
 				if(container.hasClass('cb-player-is-seeking')){
@@ -1347,17 +1092,13 @@
 
 				container.removeClass("cb-player-is-playing cb-player-control-hide").addClass("cb-payer-is-replay");
 
-				if ($.isFunction(settings.videoIsEnd)) {
-				    settings.videoIsEnd.call(this, wrap);
+				if ($.isFunction(settings.mediaIsEnd)) {
+				    settings.mediaIsEnd.call(this, wrap);
 				}
 
 				if(wrap.data('loop')){
-					toggleVideoStartSTopp(wrap);
+					toggleMediaStartSTopp(wrap);
 				}
-			});
-
-			el.on('error', function(e){
-				console.log('xx', e);
 			});
 
 			wrap.mouseenter(function(){
@@ -1382,15 +1123,420 @@
 				startWatchControlHide(container);
 			});
 
-			if ($.isFunction(settings.videoIsInit)) {
-			    settings.videoIsInit.call(this, wrap);
+			if ($.isFunction(settings.mediaIsInit)) {
+			    settings.mediaIsInit.call(this, wrap);
 			}
 
 			setTimeout(function(){
-				if((wrap.data('autoplay') && $('.cb-player-is-playing').length == 0)){
+				if((wrap.data('autoplay') && $('.cb-player-is-playing').length == 0) || (wrap.data('autoplay') && wrap.data('backgroundMode'))){
 					initPlayer(wrap);
 				}
 			});
-		});
+		},
+		attachEvents: function(el, options) {
+			var touchtimer = false,
+				container = $(el).closest('.cb-player');
+
+			container.on('touchstart', '.cb-player-toggle-play, .cb-player-media', function(e){
+				if(container.data('backgroundMode') || options.disableClick){
+					return;
+				}
+
+				if(container.hasClass('cb-player-control-hide')){
+					//show controls on tocuh start
+					container.removeClass('cb-player-control-hide');
+
+				}else{
+					touchtimer = true
+
+					setTimeout(function(){
+						touchtimer = false;
+					}, 300);
+				}
+			});
+
+			container.on(isTouchDevice() ? 'touchend' : 'click', '.cb-player-toggle-play, .cb-player-media, .cb-player-overlayer-button', function(e){
+				if(container.hasClass('cb-player-is-loaded') || container.data('backgroundMode') || options.disableClick){
+					return;
+				}
+
+				if(e.type == 'touchend'){
+					if(touchtimer){
+				        initPlayer(container);
+
+				        touchtimer = false;
+					}
+				}else{
+					initPlayer(container);
+				}
+			});
+
+			container.on(isTouchDevice() ? 'touchstart' : 'mouseenter', '.cb-player-progress-hide', function(e){
+				if(!container.hasClass('cb-media-is-ready')){
+					return;
+				}
+
+				if(container.data('backtracking') && e.type == "mouseenter"){
+					container.find('.cb-player-progress-tooltip').stop().fadeIn(250);
+				}
+			});
+
+			container.on('mouseleave', '.cb-player-progress-hide', function(e){
+				if(container.hasClass('cb-player-is-seeking')){
+					return;
+				}
+
+				container.find('.cb-player-progress-tooltip').stop().fadeOut(250);
+			});
+
+			container.on('mousemove', '.cb-player-progress-hide', function(e){
+				var progress = $(this).closest('.cb-player-progress');
+					position = (e.pageX - progress.offset().left) / progress.width() * 100,
+					position = position.toFixed(4);
+
+				if(!container.hasClass('cb-media-is-ready')){
+					return;
+				}
+
+				if(container.data('backtracking')){
+					tooltip(container, position);
+				}
+			});
+
+			container.on('click', '.cb-player-progress-hide', function(e){
+				var position = e;
+
+				if(!container.hasClass('cb-media-is-ready')){
+					getPlayerSrc(container, false);
+
+					function checkIsReady(container){
+						if(container.hasClass('cb-media-is-ready')){
+							seeking(position, container);
+						}else{
+							setTimeout(function(){
+								checkIsReady(container);
+							}, 100);
+						}
+					}
+
+					checkIsReady(container);
+				}
+			});
+
+			container.on(isTouchDevice() ? 'touchstart' : 'mousedown' ,'.cb-player-progress', function(e){
+				if(e.type == "mousedown"){
+					if(e.which != 1){
+						return false;
+					}
+				}
+
+				var progress = $(this),
+					container = $(this).closest('.cb-player'),
+					player = container.find('.cb-player-media');
+
+				container.addClass("cb-player-is-seeking");
+
+				seeking(e, container);
+
+				$(document).bind('mousemove.cbplayer-seeking touchmove.cbplayer-seeking', function(e){
+					var e = e;
+
+					if(container.data('is-livestream')){
+
+						//fire seeking after mouseup
+
+					}else{
+
+						if(container.hasClass('cb-player-is-playing') && !player[0].paused && !container.hasClass('cb-player-is-loaded')){
+							container.data('stopTemporary', true);
+							player[0].pause();
+						}
+
+						seeking(e, container);
+					}
+				});
+
+				e.stopPropagation();
+				//e.preventDefault();
+			});
+
+			container.on('mousedown','.cb-player-volume-hide', function(e){
+				if(e.type == "mousedown"){
+					if(e.which != 1){
+						return false;
+					}
+				}
+
+				var progress = $(this),
+					container = $(this).closest('.cb-player');
+
+				container.addClass("cb-player-is-setvolume");
+
+				setVolume(container, e);
+
+				$(document).bind('mousemove.cbplayer-setvolume', function(e){
+					var e = e;
+
+					setVolume(container, e);
+				});
+
+				e.preventDefault();
+				e.stopPropagation();
+			});
+
+			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-toggle-mute', function(){
+				var player = container.find('.cb-player-media');
+
+				if(player.prop('muted')){
+					volumevalue = 100;
+				}else{
+					volumevalue = 0;
+				}
+
+				setVolume(container, volumevalue);
+			});
+
+			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-toggle-fullscreen', function(){
+				var player = container.find(".cb-player-media")[0];
+
+				toggleFullscreen(container, player);
+			});
+
+			container.on('contextmenu', function(e){
+				var container = $(e.target).closest('.cb-player');
+
+				if(container.length){
+					var context = container.find('.cb-player-context');
+
+					if(context.hasClass('cb-player-context-active')){
+						context.removeClass('cb-player-context-active');
+						return false;
+					}
+
+					context.addClass('cb-player-context-active');
+
+					var cursorX = e.pageX - container.offset().left,
+						cursorY = e.pageY - container.offset().top,
+						contextXEnd = cursorX + context.width(),
+						contextYEnd = cursorY + context.height();
+
+					if(container.width() > contextXEnd){
+						context.css('left', cursorX);
+					}else{
+						context.css('left', cursorX - context.width());
+					}
+
+					if(container.height() > contextYEnd){
+						context.css('top', cursorY);
+					}else{
+						context.css('top', cursorY - context.height());
+					}
+					return false;
+				}
+			});
+
+			container.on('click', '.cb-player-context-item.link', function(){
+				var item = $(this);
+
+				container.find('.cb-player-' + item.data('link')).css('display', 'block');
+			});
+
+			container.on('click', '.cb-player-overlayer-close', function(){
+				$(this).closest('.cb-player-overlayer').css('display', 'none');
+			});
+
+			if (!$(document).data('cbplayer-initialized')) {
+				$(document).on('mouseup', function(e){
+					var container = $('.cb-player-is-setvolume');
+
+					if(e.type == "mouseup" && container.hasClass("cb-player-is-setvolume")){
+						if(e.which != 1){
+							return false;
+						}
+
+						$(this).unbind("mousemove.cbplayer-setvolume");
+
+						container.removeClass("cb-player-is-setvolume");
+					}
+
+					e.stopPropagation();
+					e.preventDefault();
+				});
+
+				$(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function(e){
+					var container = $('.cb-player-is-seeking'),
+						progress = container.find('.cb-player-progress'),
+						player = container.find('.cb-player-media');
+
+					if((e.type == 'touchend' || e.type == "mouseup") && container.hasClass("cb-player-is-seeking")){
+						if(e.which != 1 && e.type == "mouseup"){
+							return false;
+						}
+
+						$(this).unbind("mousemove.cbplayer-seeking");
+						$(this).unbind("touchmove.cbplayer-seeking");
+
+						container.removeClass("cb-player-is-seeking");
+
+						if(!$(e.target).hasClass('cb-player-progress-hide')){
+							container.find('.cb-player-progress-tooltip').fadeOut(250);
+						}
+
+						if(container.data('stopTemporary') && player[0].paused && !container.hasClass('cb-player-is-loaded')){
+							container.data('stopTemporary', false);
+							player[0].play();
+						}
+
+						if(e.type == 'touchend'){
+							seeking(e, container);
+						}
+
+						e.stopPropagation();
+					}
+				});
+
+				$(document).on('click', function(){
+					if($('.cb-player-context-active').length){
+						$('.cb-player-context-active').removeClass('cb-player-context-active');
+					}
+				});
+
+				$(document).data('cbplayer-initialized', true);
+			}
+		}
 	}
-})(jQuery);
+
+	$.fn.cbplayer = function(options) {
+		if (options == "mediaSetVolume") {
+			var volume = Array.prototype.slice.call( arguments, 1 );
+
+			$(this).each(function(){
+				var container = $(this).closest('.cb-player'),
+					media = container.find('.cb-player-media');
+
+				if(volume.length){
+					volume = volume.toString();
+
+					if(volume >= 0 && volume <= 100){
+						setVolume(container, volume);
+					}else{
+						console.warn('Wrong value in mediaSetVolume');
+					}
+				}
+			});
+			return;
+		}
+
+		if (options == "mediaSetTime") {
+			var time = Array.prototype.slice.call( arguments, 1 );
+
+			$(this).each(function(){
+				var container = $(this).closest('.cb-player'),
+					media = container.find('.cb-player-media');
+
+				if(time.length && container.hasClass('cb-media-is-ready')){
+					time = time.toString();
+
+					if(time.match(/(:)/)){
+
+						time = time.split(':');
+
+						if(time.length == 3){
+
+							var h = time[0] * 60 * 60,
+								m = time[1] * 60,
+								s = time[2];
+
+							time = parseFloat(h) + parseFloat(m) + parseFloat(s);
+
+						}else if(time.length == 2){
+
+							var m = time[0] * 60,
+								s = time[1];
+
+							time = parseFloat(m) + parseFloat(s);
+
+						}else{
+							time = time[0];
+						}
+					}
+
+					if(time <= container.data('duration')){
+						setCurrentTime(container, time);
+					}else{
+						console.warn('Wrong value in mediaSetTime: Video duration ' +  container.data('duration') + ', your set time ' + time);
+					}
+				}
+			});
+			return;
+		}
+
+		if (options == "mediaStopAll") {
+			stopPlayingAll();
+			return;
+		}
+
+        return this.each(function() {
+			var container = $(this);
+
+			if(($(this).is("video") || $(this).is("audio")) &&  $(this).closest('.cb-player').length){
+				container = container.closest('.cb-player');
+			}
+
+            if (!$.data(this, 'plugin_' + pluginName)) {
+                $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
+            }
+            else if ($.isFunction(Plugin.prototype[options])) {
+                $.data(this, 'plugin_' + pluginName)[options]();
+            }
+
+			if(options == 'initSource'){
+				if(container.data('is-livestream')){
+					return;
+				}
+
+				getPlayerSrc(container, false);
+				return;
+			}
+
+			if(options == 'mediaStop'){
+				if(container.data('loop')){
+					container.data({
+						'loop' : false,
+						'loopDefault' : true
+					});
+				}
+
+				var media = container.find('.cb-player-media')[0];
+
+				videoStop(media);
+				return;
+			}
+
+			if(options == 'mediaPlay'){
+				if(container.data('loopDefault') && container.data('loopDefault') != container.data('loop')){
+					container.data('loop', container.data('loopDefault'));
+				}
+
+				if(!container.hasClass('cb-media-is-ready')){
+					initPlayer(container);
+				}else{
+					var media = container.find('.cb-player-media')[0];
+					videoStart(container, media);
+				}
+				return;
+			}
+
+			if (options == "mediaRestart") {
+				var media = container.find('.cb-player-media')[0];
+
+				media.currentTime = 0;
+				if(!container.hasClass('cb-media-is-ready')){
+					initPlayer(container);
+				}else{
+					videoStart(container, media);
+				}
+			}
+        });
+    }
+})( jQuery, window, document );
