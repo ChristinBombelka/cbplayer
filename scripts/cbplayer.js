@@ -353,7 +353,7 @@
 		}else if(mediaSrc.match(/(.mp4)/) || (mediaSrc.match(/(.m3u8)/) && Hls) ){
 			// (Hls && (!isSupported() && mediaSrc.match(/(.m3u8)/)) || mediaSrc.match(/(.mp4)/)
 			mediaSrcEl.attr("src", mediaSrc);
-			media.load();
+			media[0].load();
 
 			container.addClass("cb-player-is-loaded");
 
@@ -388,7 +388,7 @@
 
 		}else if (mediaSrc.match(/(.mp3)/)){
 			mediaSrcEl.attr("src", mediaSrc);
-			media.load();
+			media[0].load();
 
 			container.addClass("cb-player-is-loaded");
 
