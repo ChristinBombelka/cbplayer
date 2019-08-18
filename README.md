@@ -194,7 +194,7 @@ Set new time in hh:mm:ss or ss
  ```html
 
  <div class="cb-player">
-     <video class="js-player cb-player-media" poster="image.jpg">
+    <video playsinline class="js-player cb-player-media" poster="image.jpg">
  		<source data-src="video_source.m3u8" type="application/x-mpegURL">
  	</video>
 
