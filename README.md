@@ -14,7 +14,7 @@ This player supportet m3u8 live streaming, include [hls.js](https://github.com/v
 
 <body>
 
-<video class="js-cbplayer" poster="image.jpg">
+<video class="js-cbplayer" poster="image.jpg" data-duration="250">
     <source data-src="my/video.mp4" type="video/mp4">
 </video>
 

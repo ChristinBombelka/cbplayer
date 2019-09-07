@@ -953,6 +953,10 @@
 				loop = true;
 			}
 
+			if(wrap.data('duration') && wrap.find('.cb-player-time-duration').length){
+				wrap.find('.cb-player-time-duration').text(formatTime(wrap.data('duration')));
+			}
+
 			wrap.data({
 				'initialized': true,
 				'backtracking': settings.backtracking,
