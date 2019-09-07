@@ -905,7 +905,7 @@
 				wrap.append(context);
 			}
 
-			if(settings.tpl == 'default' && !settings.backgroundMode){
+			if(settings.tpl == 'default' && !settings.backgroundMode && !wrap.find('.cb-player-controls').length){
 
 				control.append(play);
 
@@ -931,7 +931,9 @@
 				}
 			}
 
-			$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(wrap);
+			if(!wrap.find('.cb-player-error').length){
+				$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(wrap);
+			}
 
 			var volume = settings.volume;
 			if(settings.muted || settings.backgroundMode || el.is('[muted]') ){
