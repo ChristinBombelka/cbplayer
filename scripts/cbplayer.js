@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.7
- * 2019-09-07
+ * jQuery CBplayer 1.3.8
+ * 2020-04-14
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.7',
+	 	playerVersion = '1.3.8',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -454,7 +454,9 @@
 			promise.then( function() {
 				clearInterval(watchProgress);
 
-				stopPlayingAll(container);
+				if(!container.data('backgroundMode')){
+					stopPlayingAll(container);
+				}
 
 				watchProgress = setInterval(function(){
 					watchProgressLoading(player);
