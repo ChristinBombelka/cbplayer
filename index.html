@@ -17,13 +17,6 @@
 		margin-top: 20px;
 	}
 
-	.js-player-4{
-		position: fixed;
-		right: 0;
-		top: 0;
-		width: 300px;
-	}
-
 	.block-video{
 		width: 50%;
 	}
@@ -33,9 +26,6 @@
 	}
 
 	@media only screen and (max-width: 600px) {
-		.js-player-4{
-			display: none;
-		}
 
 		.block-video{
 			width: 100%;
@@ -46,22 +36,22 @@
 <div class="block-video">
 
 	<h1>Livestream 1 N24</h1>
-	<video playsinline class="js-player2" poster="images/Foto_171.jpg">
+	<video playsinline class="player js-player-2" poster="images/Foto_171.jpg">
 		<source data-src="https://live2weltcms-lh.akamaihd.net/i/Live2WeltCMS_1@444563/index_1_av-b.m3u8" type="application/x-mpegURL">
 	</video>
 
 	<h1>Livestream 2 zdf</h1>
-	<video playsinline class="js-player" poster="images/Foto_171.jpg">
+	<video playsinline class="player js-player" poster="images/Foto_171.jpg">
 		<source data-src="https://zdf1314-lh.akamaihd.net/i/de13_v1@392877/master.m3u8" type="application/x-mpegURL">
 	</video>
 
 	<h1>Selfhoste mp4</h1>
-	<video playsinline class="js-player" poster="images/Foto_171.jpg">
+	<video playsinline class="player js-player-3" poster="images/Foto_171.jpg">
 		<source data-src="files/SampleVideo_1280x720_2mb.mp4" type="video/mp4">
 	</video>
 
 	<h1>File not exist</h1>
-	<div class="cb-player js-player-3">
+	<div class="cb-player player js-player-4">
 		<video playsinline muted loop poster="images/Foto_171.jpg">
 			<source data-src="ffwgrgw.mp4" type="video/mp4">
 		</video>

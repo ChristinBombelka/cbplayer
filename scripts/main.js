@@ -8,7 +8,7 @@ $(function() {
 		contextInfo: true,
 	});
 
-	$(".js-player2").cbplayer({
+	$(".js-player-2").cbplayer({
 		backtracking: false,
 		contextInfo: true,
 		autoplay: false,
@@ -16,6 +16,14 @@ $(function() {
 
 	$(".js-player-3").cbplayer({
 		volume: 50,
-		contextInfo: true,
+		backgroundMode: true,
+		loop: true,
+		autoplay: true,
+	});
+
+	$(".js-player-4").cbplayer({
+		volume: 50,
+		backgroundMode: true,
+		loop: true,
 	});
 });
