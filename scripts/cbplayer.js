@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.8
- * 2020-04-14
+ * jQuery CBplayer 1.3.9
+ * 2020-0445-13
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.8',
+	 	playerVersion = '1.3.9',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1354,6 +1354,7 @@
 			});
 
 			if (!$(document).data('cbplayer-initialized')) {
+				
 				$(document).on('mouseup', function(e){
 					var container = $('.cb-player-is-setvolume');
 
@@ -1365,10 +1366,10 @@
 						$(this).unbind("mousemove.cbplayer-setvolume");
 
 						container.removeClass("cb-player-is-setvolume");
-					}
 
-					e.stopPropagation();
-					e.preventDefault();
+						e.stopPropagation();
+						e.preventDefault();
+					}
 				});
 
 				$(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function(e){
