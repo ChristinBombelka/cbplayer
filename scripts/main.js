@@ -16,14 +16,14 @@ $(function() {
 
 	$(".js-player-3").cbplayer({
 		volume: 50,
-		backgroundMode: true,
-		loop: true,
-		autoplay: true,
+		backgroundMode: false,
+		loop: false,
+		autoplay: false,
 	});
 
 	$(".js-player-4").cbplayer({
 		volume: 50,
-		backgroundMode: true,
-		loop: true,
+		backgroundMode: false,
+		loop: false,
 	});
 });
