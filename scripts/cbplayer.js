@@ -679,11 +679,14 @@
 				progressVisibile.css('width', progressPercentage + '%');
 
 				if(Math.round(ariaValue) >= 99){
-					playtime = 'Live';
+					
 				}else{
 					playtime = -Math.abs((progressPercentage - 100) / 100 * duration);
 				}
+			}else{
+				playtime = 'Live';	
 			}
+
 		}else{
 			progressVisibile.css('width', progresstime + '%');
 			container.find('.cb-player-progress').attr('aria-valuenow', progresstime);
