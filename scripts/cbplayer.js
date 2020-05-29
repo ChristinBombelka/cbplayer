@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.9
- * 2020-0445-13
+ * jQuery CBplayer 1.3.10
+ * 2020-05:29
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.9',
+	 	playerVersion = '1.3.10',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -573,42 +573,57 @@
 		}
 	}
 
+	function setTimeformat(el, format){
+		if(!el.data('timeformat')){
+			el.data('timeformat', format);
+
+			var time;
+
+			//set current playtime
+			if(format == 'hh:mm:ss'){
+				time = '00:00:00';
+			}
+
+			el.find('.cb-player-time-current').text(time);
+		}
+	}
+
 	function formatTime(time, el){
 		var time = time,
-			timeNegative = false;
+			timeNegative = false,
+			timeArray = []; 
 
 		if(typeof el === 'undefined'){
 			el = false;
 		}
 
+		h = Math.floor(Math.abs(time) / 3600);
+		if(h != 0 || el.data('timeformat') == 'hh:mm:ss'){
+			h = (h >= 10) ? h : "0" + h;
+
+			timeArray.push(h.toString());
+			setTimeformat(el, 'hh:mm:ss');
+		}
+
+		m = Math.floor(Math.abs(time) / 60) % 60;
+		m = (m >= 10) ? m : "0" + m;
+		
+		timeArray.push(m.toString());
+		setTimeformat(el, 'mm:ss');
+	
+
+		s = Math.floor(Math.abs(time) % 60);
+		s = (s >= 10) ? s : "0" + s;
+		timeArray.push(s.toString());
+
+		var t = timeArray.join(':');
+
 		if(time < 0){
 			//negative time
 			time = Math.abs(time);
 			timeNegative = true;
-		}
 
-		h = Math.floor(time / 3600);
-		h = (h >= 10) ? h : "0" + h;
-
-		m = Math.floor(time / 60) % 60;
-		m = (m >= 10) ? m : "0" + m;
-
-		s = Math.floor(time % 60);
-		s = (s >= 10) ? s : "0" + s;
-
-		if(el && !el.data('timeformat')){
-			if(h > 0){
-				el.data('timeformat', 'hh:mm:ss');
-			}else{
-				el.data('timeformat', 'mm:ss');
-			}
-		}
-
-		var t = timeNegative ? '-' : '';
-		if(el && (el.data('timeformat') == 'hh:mm:ss' || (el.data('is-livestream') && h > 0))){
-			t = t + h + ':' + m + ':' + s;
-		}else{
-			t = t + m + ':' + s;
+			t = '-' + t;
 		}
 
 		return t;
@@ -643,6 +658,9 @@
 			progress = container.find('.cb-player-progress');
 			progressVisibile = container.find('.cb-player-progress-play');
 
+		if(!player[0].duration){
+			return;
+		}
 
 		if(container.data('is-livestream')){
 			var duration = container.data('duration');
