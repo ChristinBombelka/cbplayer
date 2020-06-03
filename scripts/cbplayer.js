@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.10
- * 2020-05:29
+ * jQuery CBplayer 1.3.11
+ * 2020-06-03
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.10',
+	 	playerVersion = '1.3.11',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -593,6 +593,10 @@
 			timeNegative = false,
 			timeArray = []; 
 
+		if(!$.isNumeric(Math.ceil(time))){
+			return false;
+		}
+
 		if(typeof el === 'undefined'){
 			el = false;
 		}
@@ -781,7 +785,11 @@
 	function tooltip(container, position){
 		var tip = container.find('.cb-player-progress-tooltip');
 
-		tip.css('left', position + '%').text(formatTime(displayTime(container, position), container));
+		var tooltipTime = formatTime(displayTime(container, position), container);
+
+		if(tooltipTime !== false){
+			tip.css('left', position + '%').text(tooltipTime);
+		}
 	}
 
 	var lastTouchCoordinate = null;
@@ -1203,7 +1211,7 @@
 			container.on(isTouchDevice() ? 'touchstart' : 'mouseenter', '.cb-player-progress-hide', function(e){
 				if(!container.hasClass('cb-media-is-ready')){
 					return;
-				}
+				}		
 
 				if(container.data('backtracking') && e.type == "mouseenter"){
 					container.find('.cb-player-progress-tooltip').stop().fadeIn(250);
