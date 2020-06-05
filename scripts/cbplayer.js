@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.11
- * 2020-06-03
+ * jQuery CBplayer 1.3.12
+ * 2020-06-04
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.11',
+	 	playerVersion = '1.3.12',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -157,7 +157,8 @@
 
 		container.removeClass("cb-payer-is-replay");
 
-		var media = container.find(".cb-player-media"),
+		var settings = container.data('settings'),
+			media = container.find(".cb-player-media"),
 			timeoutMeta;
 
 		if(media.attr('src')){
@@ -865,7 +866,7 @@
 				}
 			}
 
-			settings = options; // $.extend(settings, options);
+			var settings = options; // $.extend(settings, options);
 
 			var	spinner = $('<div class="cb-player-spinner-wrap"><div class="cb-player-spinner"></div></div>'),
 				overlayerButton = $('<div class="cb-player-overlayer-button"></div>');
@@ -997,6 +998,7 @@
 				'volume': volume,
 				'loop': loop,
 				'hlsStopLoad': settings.hlsStopLoad,
+				'settings': settings
 			});
 
 			//duation from data
