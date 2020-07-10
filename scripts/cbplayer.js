@@ -1078,6 +1078,10 @@
 				var container = $(this).closest(".cb-player");
 
 				container.addClass("cb-player-is-playing");
+
+				if($(e.target).closest('.cb-player').length){
+					startWatchControlHide(container);
+				}
 			});
 
 			el.on('pause', function(e){
