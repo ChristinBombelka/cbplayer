@@ -382,8 +382,18 @@ audio{
 }
 
 .cb-player-fullscreen{
+	position: relative;
 	cursor: pointer;
-	margin-right: 10px;
+	width: 36px;
+	height: 36px;
+}
+
+.cb-player-button-fullscreen-on,
+.cb-player-button-fullscreen-off{
+	transform: translate(-50%, -50%);
+	position: absolute;
+	top: 50%;
+	left: 50%;
 }
 
 .cb-player-button-fullscreen-on{
@@ -655,4 +665,68 @@ audio{
 	height: 100%;
 	pointer-events: none;
 	z-index: 1;
+}
+
+.cb-player-subtitle{
+	position: relative;
+	width: 36px;
+    height: 36px;
+
+    &:hover{
+		.cb-player-subtitle-items{
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
+
+.cb-player-subtitle-button{
+	cursor: pointer;
+	background-image: url('../elements/icon_subtitle.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	width: 22px;
+	height: 16px;
+	transform: translate(-50%, -50%);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}
+
+.cb-player-subtitle-items{
+	transition: opacity $transitionHover, visibility $transitionHover;
+	background: rgba(0,0,0,0.8);
+	position: absolute;
+	bottom: 36px;
+	right: 0;
+	opacity: 0;
+	visibility: hidden;
+}
+
+.cb-player-subtitle-item{
+	cursor: pointer;
+	padding: 5px 20px;
+	position: relative;
+}
+
+.cb-player-subtitle-item:hover,
+.cb-player-subtitle--selected{
+	&:before{
+		content: "";
+		display: block;
+		background-color: #fff;
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+		position: absolute;
+		left: 8px;
+		top: 9px;
+	}
+}
+
+//style sublines
+::cue {
+   color:#fff;
+   font: 20px/22px normal Arial;
 }

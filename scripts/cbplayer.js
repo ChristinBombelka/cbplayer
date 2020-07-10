@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.3.12
- * 2020-06-04
+ * jQuery CBplayer 1.4.0
+ * 2020-07-10
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.3.12',
+	 	playerVersion = '1.4.0',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -64,6 +64,8 @@
 		/* callback media stop */
 		mediaIsEnd: false,
 		/* callback media end play*/
+		mediaChangeVolume: false,
+		/* callback change volume*/
 		initSource: $,
 		mediaStopAll: $,
 		mediaStop: $,
@@ -572,6 +574,11 @@
 			container.removeClass("cb-player-is-muted");
 			player.prop('muted', false);
 		}
+
+		settings = container.data('settings');
+		if ($.isFunction(settings.mediaChangeVolume)) {
+		    settings.mediaChangeVolume.call(this, container, volume);
+		}
 	}
 
 	function setTimeformat(el, format){
@@ -963,6 +970,46 @@
 				}
 			}
 
+			function createTrackItem(id, lang, label){
+				var item = $('<li>');
+
+				item.addClass('cb-player-subtitle-item')
+					.attr('data-lang', lang)
+					.text(label);
+
+				return item;
+			}
+
+			var tracks = el.find('track');
+			if(tracks.length){
+				
+				var subtitlesContainer = $('.cb-player-subtitle'),
+					subtitleList = $('.cb-player-subtitle-items');
+
+				if(!subtitlesContainer.length){
+					
+					subtitlesContainer = $('<div class="cb-player-subtitle"></div>');
+					subtitlesContainer.append($('<div class="cb-player-subtitle-button"></div>'));
+
+					subtitleList = $('<ul class="cb-player-subtitle-items"></ul>');
+				}
+
+				var trackSelected;
+				tracks.each(function(i, s){
+					var track = $(s);
+
+					var item = subtitleList.append(createTrackItem('subtitles-' + track.attr('srclang'), track.attr('srclang'), track.attr('label')));
+
+				});
+
+				subtitleList.prepend(createTrackItem('subtitles-off', '', 'OFF'));
+
+				subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
+
+				subtitlesContainer.append(subtitleList);
+				subtitlesContainer.appendTo(wrap.find('.cb-player-controls'));
+			}
+
 			if(!wrap.find('.cb-player-error').length){
 				$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(wrap);
 			}
@@ -1078,10 +1125,6 @@
 				var container = $(this).closest(".cb-player");
 
 				container.addClass("cb-player-is-playing");
-
-				if($(e.target).closest('.cb-player').length){
-					startWatchControlHide(container);
-				}
 			});
 
 			el.on('pause', function(e){
@@ -1386,6 +1429,27 @@
 
 			container.on('click', '.cb-player-overlayer-close', function(){
 				$(this).closest('.cb-player-overlayer').css('display', 'none');
+			});
+
+			container.on('click', '.cb-player-subtitle-item', function(){
+				var item = $(this),
+					video = container.find('.cb-player-media')[0];
+
+				item.closest('.cb-player-subtitle-items').find('.cb-player-subtitle-item').removeClass('cb-player-subtitle--selected');
+				item.addClass('cb-player-subtitle--selected');
+
+				var tracks = container.find('track');
+
+				for (var i = 0; i < video.textTracks.length; i++) {
+
+					var track = video.textTracks[i];
+
+					if(track.language == item.data('lang')){
+						track.mode = 'showing';
+					}else{
+						track.mode = 'hidden';
+					}
+				}
 			});
 
 			if (!$(document).data('cbplayer-initialized')) {
