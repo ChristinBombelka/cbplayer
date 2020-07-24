@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.4.0
- * 2020-07-10
+ * jQuery CBplayer 1.4.1
+ * 2020-07-20
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.4.0',
+	 	playerVersion = '1.4.1',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -142,6 +142,15 @@
 		container.find('.cb-player-error-message').text(message);
 		container.addClass('cb-media-is-error');
 		container.removeClass('cb-player-is-loaded');
+	}
+
+	function fileExist(src){
+		var http = new XMLHttpRequest();
+
+	    http.open('HEAD', src, false);
+	    http.send();
+
+	    return http.status != 404;
 	}
 
 	function getPlayerSrc(container, autostart){
@@ -355,6 +364,12 @@
 
 		}else if(mediaSrc.match(/(.mp4)/) || (mediaSrc.match(/(.m3u8)/) && Hls) ){
 			// (Hls && (!isSupported() && mediaSrc.match(/(.m3u8)/)) || mediaSrc.match(/(.mp4)/)
+
+			if(fileExist(mediaSrc) === false){
+				displayError(container, 'File not exist');
+				return;
+			}
+
 			mediaSrcEl.attr("src", mediaSrc);
 			media[0].load();
 
@@ -389,7 +404,15 @@
 				}
 			});
 
+
+
 		}else if (mediaSrc.match(/(.mp3)/)){
+
+			if(fileExist(mediaSrc) === false){
+				displayError(container, 'File not exist');
+				return;
+			}
+
 			mediaSrcEl.attr("src", mediaSrc);
 			media[0].load();
 
@@ -397,7 +420,7 @@
 
 			media.on('loadstart', function(){
 				timeoutMeta = setTimeout(function(){
-					displayError(container, 'Timeout - File cant loaded');
+					//displayError(container, 'Timeout - File cant loaded');
 				}, 3000);
 			});
 
@@ -599,7 +622,7 @@
 	function formatTime(time, el){
 		var time = time,
 			timeNegative = false,
-			timeArray = []; 
+			timeArray = [];
 
 		if(!$.isNumeric(Math.ceil(time))){
 			return false;
@@ -619,10 +642,10 @@
 
 		m = Math.floor(Math.abs(time) / 60) % 60;
 		m = (m >= 10) ? m : "0" + m;
-		
+
 		timeArray.push(m.toString());
 		setTimeformat(el, 'mm:ss');
-	
+
 
 		s = Math.floor(Math.abs(time) % 60);
 		s = (s >= 10) ? s : "0" + s;
@@ -709,12 +732,12 @@
 				progressVisibile.css('width', progressPercentage + '%');
 
 				if(Math.round(ariaValue) >= 99){
-					
+
 				}else{
 					playtime = -Math.abs((progressPercentage - 100) / 100 * duration);
 				}
 			}else{
-				playtime = 'Live';	
+				playtime = 'Live';
 			}
 
 		}else{
@@ -982,12 +1005,12 @@
 
 			var tracks = el.find('track');
 			if(tracks.length){
-				
+
 				var subtitlesContainer = $('.cb-player-subtitle'),
 					subtitleList = $('.cb-player-subtitle-items');
 
 				if(!subtitlesContainer.length){
-					
+
 					subtitlesContainer = $('<div class="cb-player-subtitle"></div>');
 					subtitlesContainer.append($('<div class="cb-player-subtitle-button"></div>'));
 
@@ -1260,7 +1283,7 @@
 			container.on(isTouchDevice() ? 'touchstart' : 'mouseenter', '.cb-player-progress-hide', function(e){
 				if(!container.hasClass('cb-media-is-ready')){
 					return;
-				}		
+				}
 
 				if(container.data('backtracking') && e.type == "mouseenter"){
 					container.find('.cb-player-progress-tooltip').stop().fadeIn(250);
@@ -1453,7 +1476,7 @@
 			});
 
 			if (!$(document).data('cbplayer-initialized')) {
-				
+
 				$(document).on('mouseup', function(e){
 					var container = $('.cb-player-is-setvolume');
 
