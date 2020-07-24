@@ -161,14 +161,31 @@ audio{
 	display: none;
 }
 
-.vid_wrap-playtime{
-	color: #fff;
-	display: inline-block;
-	vertical-align: middle;
-	min-width: 50px;
-	margin-right: 10px;
-	margin-left: 11px;
-	font-feature-settings: 'tnum';
+.cb-player-button-load{
+    display: none;
+    width: 60%;
+    height: 60%;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+
+    &:after{
+        content: "";
+        box-sizing: border-box;
+        display: block;
+        border: 3px solid transparent;
+        border-top: 3px solid #fff;
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        animation: buttonspin .750s linear infinite;
+    }
+}
+
+@keyframes buttonspin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .cb-player-progress{
@@ -295,6 +312,7 @@ audio{
 }
 
 .cb-player-time{
+    font-feature-settings: 'tnum';
 	margin-right: 10px;
 }
 
@@ -460,11 +478,6 @@ audio{
     opacity: 0;
     width: 80px;
 	height: 80px;
-
-    .cb-player-is-loaded &{
-    	visibility: visible;
-    	opacity: 1;
-    }
 }
 
 .cb-player-spinner{
@@ -479,6 +492,25 @@ audio{
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.cb-player-is-loaded{
+    .cb-player-spinner-wrap{
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .cb-player-with-load{
+        .cb-player-button-play,
+        .cb-player-button-pause,
+        .cb-player-button-replay{
+            display: none;
+        }
+
+        .cb-player-button-load{
+            display: block;
+        }
+    }
 }
 
 .cb-player-overlayer-button{

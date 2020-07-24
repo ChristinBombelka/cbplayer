@@ -72,6 +72,10 @@ $(".js-cbplayer").cbplayer();
     /*  Values: true, false
      *  Disable backtracking in progressbar
      */
+    controlShowLoad: true,
+    /* Values: true, false
+     * Show loading animation on Play/Pause/Replay button position 
+     */
     hlsStopLoad: true,
     /*  Values: true, false
     *   Stopp buffering livestreaming on stop video
@@ -148,7 +152,11 @@ Return video is end
 
 `mediaIsEnd: function(container){}`
 
+### mediaChangeVolume
 
+Return volume ist change
+
+`mediaChangeVolume: function(container, volume){}`
 
 ## Methods
 
@@ -229,7 +237,7 @@ Set new time in hh:mm:ss or ss
     </div>
 
     <ul class="cb-player-context">
-        <li class="cb-player-context-item">CBplayer 1.2.4</li>
+        <li class="cb-player-context-item">CBplayer x.x.x</li>
         <li class="cb-player-context-item link" data-link="debug">Debug-info</li>
     </ul>
 
@@ -238,6 +246,7 @@ Set new time in hh:mm:ss or ss
             <span class="cb-player-button-play"></span>
             <span class="cb-player-button-pause"></span>
             <span class="cb-player-button-replay"></span>
+            <span class="cb-player-button-load"></span>
         </div>
 
         <div class="cb-player-time">

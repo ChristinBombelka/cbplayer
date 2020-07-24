@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.4.1
- * 2020-07-20
+ * jQuery CBplayer 1.4.2
+ * 2020-07-24
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.4.1',
+	 	playerVersion = '1.4.2',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -36,6 +36,8 @@
 		/* timeout to hide control on mousemove */
 		backtracking: true,
 		/* disable duratuon/progressbar */
+		controlShowLoad: true,
+		/* show loading animation on play/pause/replay button*/
 		hlsStopLoad: false,
 		/* stop buffering hls stream on video stop*/
 		volume: 100,
@@ -404,15 +406,12 @@
 				}
 			});
 
-
-
 		}else if (mediaSrc.match(/(.mp3)/)){
 
 			if(fileExist(mediaSrc) === false){
 				displayError(container, 'File not exist');
 				return;
 			}
-
 			mediaSrcEl.attr("src", mediaSrc);
 			media[0].load();
 
@@ -622,7 +621,7 @@
 	function formatTime(time, el){
 		var time = time,
 			timeNegative = false,
-			timeArray = [];
+			timeArray = []; 
 
 		if(!$.isNumeric(Math.ceil(time))){
 			return false;
@@ -642,10 +641,10 @@
 
 		m = Math.floor(Math.abs(time) / 60) % 60;
 		m = (m >= 10) ? m : "0" + m;
-
+		
 		timeArray.push(m.toString());
 		setTimeformat(el, 'mm:ss');
-
+	
 
 		s = Math.floor(Math.abs(time) % 60);
 		s = (s >= 10) ? s : "0" + s;
@@ -732,12 +731,12 @@
 				progressVisibile.css('width', progressPercentage + '%');
 
 				if(Math.round(ariaValue) >= 99){
-
+					
 				}else{
 					playtime = -Math.abs((progressPercentage - 100) / 100 * duration);
 				}
 			}else{
-				playtime = 'Live';
+				playtime = 'Live';	
 			}
 
 		}else{
@@ -936,7 +935,7 @@
 			// }
 
 			var control = $('<div class="cb-player-controls"></div>');
-			var play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span><span class="cb-player-button-replay"></span></div>');
+			var play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span><span class="cb-player-button-replay"></div>');
 			var time = $('<div class="cb-player-time"><span class="cb-player-time-current">00:00</span><span class="cb-player-time-seperator">/</span><span class="cb-player-time-duration">00:00</span></div>');
 			var progress = $('<span class="cb-player-progress" role="slider" aria-valuenow="0"><div class="cb-player-progress-hide"></div><div class="cb-player-progress-play"></div><div class="cb-player-progress-load"></div></span>');
 			var mute = $('<div class="cb-player-volume-wrap"><div class="cb-player-toggle-mute"><span class="cb-player-button-sound"></span><span class="cb-player-button-mute"></span></div></div>');
@@ -970,6 +969,10 @@
 			if(settings.tpl == 'default' && !settings.backgroundMode && !wrap.find('.cb-player-controls').length){
 
 				control.append(play);
+
+				if(settings.controlShowLoad){
+					control.find('.cb-player-play').append($('</span><span class="cb-player-button-load"></span>'));
+				}
 
 				if(settings.controlTime){
 					control.append(time);
@@ -1005,12 +1008,12 @@
 
 			var tracks = el.find('track');
 			if(tracks.length){
-
+				
 				var subtitlesContainer = $('.cb-player-subtitle'),
 					subtitleList = $('.cb-player-subtitle-items');
 
 				if(!subtitlesContainer.length){
-
+					
 					subtitlesContainer = $('<div class="cb-player-subtitle"></div>');
 					subtitlesContainer.append($('<div class="cb-player-subtitle-button"></div>'));
 
@@ -1058,6 +1061,10 @@
 			if(wrap.data('duration') && wrap.find('.cb-player-time-duration').length){
 				wrap.find('.cb-player-time-duration').text(formatTime(wrap.data('duration')));
 			}
+
+            if(wrap.find('.cb-player-button-load').length){
+                wrap.find('.cb-player-play').addClass('cb-player-with-load');
+            }
 
 			wrap.data({
 				'initialized': true,
@@ -1283,7 +1290,7 @@
 			container.on(isTouchDevice() ? 'touchstart' : 'mouseenter', '.cb-player-progress-hide', function(e){
 				if(!container.hasClass('cb-media-is-ready')){
 					return;
-				}
+				}		
 
 				if(container.data('backtracking') && e.type == "mouseenter"){
 					container.find('.cb-player-progress-tooltip').stop().fadeIn(250);
@@ -1476,7 +1483,7 @@
 			});
 
 			if (!$(document).data('cbplayer-initialized')) {
-
+				
 				$(document).on('mouseup', function(e){
 					var container = $('.cb-player-is-setvolume');
 
