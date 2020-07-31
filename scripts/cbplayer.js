@@ -1,5 +1,5 @@
 /*!
- * jQuery CBplayer 1.4.2
+ * jQuery CBplayer 1.4.3
  * 2020-07-24
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
@@ -7,7 +7,7 @@
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.4.2',
+	 	playerVersion = '1.4.3',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -30,6 +30,8 @@
 		/* enable/disable mute/volume */
 		overlayButton: true,
 		/* enable/disable overlay play button*/
+        overlaySpinner: true,
+        /* enable/disable overlay spinner*/
 		controlHide: true,
 		/* hide controls on leave container or mousemove stop longer as 'controlHideTimeout' */
 		controlHideTimeout: 3000,
@@ -917,7 +919,7 @@
 				el.addClass('cb-player-media');
 			}
 
-			if(!wrap.find('.cb-player-spinner-wrap').length){
+			if(settings.overlaySpinner && !wrap.find('.cb-player-spinner-wrap').length){
 				spinner.appendTo(wrap);
 			}
 
