@@ -1,6 +1,6 @@
 /*!
  * jQuery CBplayer 1.4.3
- * 2020-07-24
+ * 2020-08-10
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
@@ -68,9 +68,11 @@
 		mediaIsPause: false,
 		/* callback media stop */
 		mediaIsEnd: false,
-		/* callback media end play*/
+		/* callback media end play */
 		mediaChangeVolume: false,
-		/* callback change volume*/
+		/* callback change volume */
+		mediaTimeupdate: false,
+		/* callback time update */
 		initSource: $,
 		mediaStopAll: $,
 		mediaStop: $,
@@ -624,7 +626,7 @@
 	function formatTime(time, el){
 		var time = time,
 			timeNegative = false,
-			timeArray = []; 
+			timeArray = [];
 
 		if(!$.isNumeric(Math.ceil(time))){
 			return false;
@@ -644,10 +646,10 @@
 
 		m = Math.floor(Math.abs(time) / 60) % 60;
 		m = (m >= 10) ? m : "0" + m;
-		
+
 		timeArray.push(m.toString());
 		setTimeformat(el, 'mm:ss');
-	
+
 
 		s = Math.floor(Math.abs(time) % 60);
 		s = (s >= 10) ? s : "0" + s;
@@ -734,12 +736,12 @@
 				progressVisibile.css('width', progressPercentage + '%');
 
 				if(Math.round(ariaValue) >= 99){
-					
+
 				}else{
 					playtime = -Math.abs((progressPercentage - 100) / 100 * duration);
 				}
 			}else{
-				playtime = 'Live';	
+				playtime = 'Live';
 			}
 
 		}else{
@@ -1034,12 +1036,12 @@
 
 			var tracks = el.find('track');
 			if(tracks.length){
-				
+
 				var subtitlesContainer = $('.cb-player-subtitle'),
 					subtitleList = $('.cb-player-subtitle-items');
 
 				if(!subtitlesContainer.length){
-					
+
 					subtitlesContainer = $('<div class="cb-player-subtitle"></div>');
 					subtitlesContainer.append($('<div class="cb-player-subtitle-button"></div>'));
 
@@ -1111,7 +1113,12 @@
 
 			el.on("timeupdate", function(){
 				var container = $(this).closest(".cb-player"),
-					progress = container.find(".cb-player-progress-play");
+					progress = container.find(".cb-player-progress-play"),
+					media = container.find('video, audio');
+
+				if ($.isFunction(settings.mediaTimeupdate)) {
+				 	settings.mediaTimeupdate.call(this, wrap, media[0].currentTime);
+				}
 
 				if(container.hasClass("cb-media-is-ready") && progress.length){
 					watchTimer(container);
@@ -1297,7 +1304,7 @@
 			container.on(isTouchDevice() ? 'touchstart' : 'mouseenter', '.cb-player-progress-hide', function(e){
 				if(!container.hasClass('cb-media-is-ready')){
 					return;
-				}		
+				}
 
 				if(container.data('backtracking') && e.type == "mouseenter"){
 					container.find('.cb-player-progress-tooltip').stop().fadeIn(250);
@@ -1490,7 +1497,7 @@
 			});
 
 			if (!$(document).data('cbplayer-initialized')) {
-				
+
 				$(document).on('mouseup', function(e){
 					var container = $('.cb-player-is-setvolume');
 

@@ -19,6 +19,9 @@ $(function() {
 		backgroundMode: false,
 		loop: false,
 		autoplay: false,
+		mediaTimeupdate: function(el, time){
+			console.log(el, time);
+		}
 	});
 
 	$(".js-player-4").cbplayer({
