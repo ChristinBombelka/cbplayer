@@ -11,6 +11,7 @@
 		hls,
 		watchProgress,
 		watchFullscreen,
+		watchControlHide,
 		timeoutMeta,
 		defaults = {
 		tpl : 'default',
@@ -868,6 +869,30 @@
 		}
 	}
 
+	function getbacktrackingPosition(container){
+		var media = container.find('video, audio');
+
+		if(container.data('duration')){
+			var durationTime = Math.round((media[0].duration) - container.data('duration')),
+				playTime = Math.round(media[0].currentTime - container.data('duration'));
+
+			return durationTime - playTime;
+		}
+
+		return false;
+	}
+
+	function startWatchControlHide(container){
+		if(container.hasClass("cb-player-is-playing") && settings.controlHide){
+			clearTimeout(watchControlHide);
+			container.removeClass('cb-player-control-hide');
+
+			watchControlHide = setTimeout(function(){
+				container.addClass('cb-player-control-hide');
+			}, settings.controlHideTimeout);
+		}
+	}
+
 	function Plugin( element, options ) {
         this.options = $.extend( {}, defaults, options );
         this._defaults = defaults;
@@ -879,8 +904,7 @@
 
 	Plugin.prototype = {
 		init: function(options) {
-			var el = $(this.element),
-				watchControlHide;
+			var el = $(this.element);
 
 			if(el.is('video') || el.is('audio')){
 				if(el.closest('.cb-player').data('initialized')){
@@ -1083,25 +1107,6 @@
 			//duation from data
 			if(el.data('duration')){
 				wrap.find('.cb-player-time-duration').text(formatTime(el.data('duration'), el));
-			}
-
-			function getbacktrackingPosition(container){
-				var media = container.find('video, audio'),
-					durationTime = Math.round((media[0].duration) - container.data('duration')),
-					playTime = Math.round(media[0].currentTime - container.data('duration'));
-
-				return durationTime - playTime;
-			}
-
-			function startWatchControlHide(container){
-				if(container.hasClass("cb-player-is-playing") && settings.controlHide){
-					clearTimeout(watchControlHide);
-					container.removeClass('cb-player-control-hide');
-
-					watchControlHide = setTimeout(function(){
-						container.addClass('cb-player-control-hide');
-					}, settings.controlHideTimeout);
-				}
 			}
 
 			el.on("timeupdate", function(){
