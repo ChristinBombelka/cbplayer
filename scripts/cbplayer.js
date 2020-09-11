@@ -1034,8 +1034,8 @@
 				return item;
 			}
 
-			 if(tracks.length){
-
+            var tracks = el.find('track');
+			if(tracks.length){
                 var subtitlesContainer = $('.cb-player-subtitle'),
                     subtitleList = $('.cb-player-subtitle-items');
 
