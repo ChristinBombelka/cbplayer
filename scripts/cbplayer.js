@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.4.3
- * 2020-08-10
+ * jQuery CBplayer 1.4.4
+ * 2020-09-11
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.4.3',
+	 	playerVersion = '1.4.4',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1034,35 +1034,32 @@
 				return item;
 			}
 
-			var tracks = el.find('track');
-			if(tracks.length){
+			 if(tracks.length){
 
-				var subtitlesContainer = $('.cb-player-subtitle'),
-					subtitleList = $('.cb-player-subtitle-items');
+                var subtitlesContainer = $('.cb-player-subtitle'),
+                    subtitleList = $('.cb-player-subtitle-items');
 
-				if(!subtitlesContainer.length){
+                if(!subtitlesContainer.length){
+                    subtitlesContainer = $('<div class="cb-player-subtitle"></div>');
+                    subtitlesContainer.append($('<div class="cb-player-subtitle-button"></div>'));
+                    subtitlesContainer.appendTo(wrap.find('.cb-player-controls'));
+                }
 
-					subtitlesContainer = $('<div class="cb-player-subtitle"></div>');
-					subtitlesContainer.append($('<div class="cb-player-subtitle-button"></div>'));
+                if(!subtitleList.length){
+                    subtitleList = $('<ul class="cb-player-subtitle-items"></ul>');
+                    subtitlesContainer.append(subtitleList);
+                }
 
-					subtitleList = $('<ul class="cb-player-subtitle-items"></ul>');
-				}
+                var trackSelected;
+                tracks.each(function(i, s){
+                    var track = $(s);
+                    var item = subtitleList.append(createTrackItem('subtitles-' + track.attr('srclang'), track.attr('srclang'), track.attr('label')));
 
-				var trackSelected;
-				tracks.each(function(i, s){
-					var track = $(s);
+                });
 
-					var item = subtitleList.append(createTrackItem('subtitles-' + track.attr('srclang'), track.attr('srclang'), track.attr('label')));
-
-				});
-
-				subtitleList.prepend(createTrackItem('subtitles-off', '', 'OFF'));
-
-				subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
-
-				subtitlesContainer.append(subtitleList);
-				subtitlesContainer.appendTo(wrap.find('.cb-player-controls'));
-			}
+                subtitleList.prepend(createTrackItem('subtitles-off', '', 'OFF'));
+                subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
+            }
 
 			if(!wrap.find('.cb-player-error').length){
 				$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(wrap);
