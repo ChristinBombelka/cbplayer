@@ -16,6 +16,8 @@ This player supportet m3u8 live streaming, include [hls.js](https://github.com/v
 
 <video class="js-cbplayer" poster="image.jpg" data-duration="250">
     <source data-src="my/video.mp4" type="video/mp4">
+    <track kind="subtitles" label="German" srclang="de" src="german.vtt">
+    <track kind="subtitles" label="English" srclang="en" src="english.vtt">
 </video>
 
 <script type="text/javascript" src="scripts/jquery-1.11.0.min.js"></script>
@@ -60,6 +62,10 @@ $(".js-cbplayer").cbplayer();
     /*  Values: true, false
      *   Show overlayer play button on video player
      */
+    overlaySpinner: true,
+     /*  Values: true, false
+     *   Show overlayer loading animation
+     */
     controlHide: true,
     /*  Values: true, false
      *   Hide controls on leave player, or mouse stop moving longer as 3 seconds (controlHideTimeout)
@@ -68,7 +74,7 @@ $(".js-cbplayer").cbplayer();
     /*  Values: Number
      *   Duration for hide controls on stop mouse moving
      */
-    controlHideTimeout: true,
+    backtracking: true,
     /*  Values: true, false
      *  Disable backtracking in progressbar
      */
@@ -158,6 +164,12 @@ Return volume ist change
 
 `mediaChangeVolume: function(container, volume){}`
 
+### mediaTimeupdate
+
+Return current time
+
+`mediaTimeupdate: function(container, time)`
+
 ## Methods
 
 ### mediaStopAll
@@ -204,6 +216,8 @@ Set new time in hh:mm:ss or ss
  <div class="cb-player">
     <video playsinline class="js-player cb-player-media" poster="image.jpg">
  		<source data-src="video_source.m3u8" type="application/x-mpegURL">
+        <track kind="subtitles" label="German" srclang="de" src="german.vtt">
+        <track kind="subtitles" label="English" srclang="en" src="english.vtt">
  	</video>
 
     <div class="cb-player-spinner-wrap">
@@ -274,6 +288,15 @@ Set new time in hh:mm:ss or ss
                     <div class="cb-player-volume-bar"></div>
                 </span>
             </div>
+        </div>
+
+        <div class="cb-player-subtitle">
+            <div class="cb-player-subtitle-button"></div>
+            <ul class="cb-player-subtitle-items">
+                <li class="cb-player-subtitle-item cb-player-subtitle--selected" data-lang="">OFF</li>
+                <li class="cb-player-subtitle-item" data-lang="de">German</li>
+                <li class="cb-player-subtitle-item" data-lang="en">English</li>
+            </ul>
         </div>
 
         <div class="cb-player-fullscreen cb-player-toggle-fullscreen">
