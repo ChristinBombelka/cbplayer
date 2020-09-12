@@ -1122,6 +1122,31 @@
 				}
 			});
 
+            $(tracks).on('cuechange', function(e){
+                if(!wrap.data('cuesinitzilized')){
+                    var tracks = el[0].textTracks;
+                    if(tracks){
+                        for (var i = 0; i < tracks.length; i++){
+                            var textTrack = el[0].textTracks[i];
+
+                            var cues = textTrack.cues;
+
+                            $(textTrack.cues).on('enter', function(e){   
+                                if(e.originalEvent.srcElement.track.mode == 'showing'){
+                                    $('<div class="cb-player-subtitle-text"></div>').append(e.originalEvent.srcElement.text).appendTo(wrap);
+                                }
+                            });
+
+                            $(textTrack.cues).on('exit', function(e){ 
+                                wrap.find('.cb-player-subtitle-text').remove();
+                            });
+                        }
+                    }
+
+                    wrap.data('cuesinitzilized', true);
+                }
+            });
+
 			el.on('durationchange', function(e){
 				var container = $(this).closest(".cb-player"),
 					progress = container.find(".cb-player-progress"),
@@ -1147,10 +1172,8 @@
 				var container = $(this).closest(".cb-player"),
 					progress = container.find(".cb-player-progress");
 
-				//container.find('.cb-player-poster').remove();
-
-				//is current position behind media duration, set new position
-				if(getbacktrackingPosition(container) >= container.data('duration') && container.data('backtracking') && container.data('is-livestream')){
+                //is current position behind media duration, set new position
+			    if(getbacktrackingPosition(container) >= container.data('duration') && container.data('backtracking') && container.data('is-livestream')){
 					position = 0.01;
 
 					progress.attr('aria-valuenow', position);
@@ -1218,6 +1241,7 @@
 				var container = $(this).closest(".cb-player");
 
 				container.removeClass("cb-player-is-playing cb-player-control-hide").addClass("cb-payer-is-replay");
+                container.find('.cb-player-subtitle-text').remove();
 
 				if ($.isFunction(settings.mediaIsEnd)) {
 				    settings.mediaIsEnd.call(this, wrap);
