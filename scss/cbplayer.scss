@@ -759,15 +759,20 @@ audio{
 }
 
 //style sublines
-.cb-player-subtitle-text{
+.cb-player-subtitle-layer{
 	font: normal 18px/22px Arial;
-	transform: translateX(-50%);
-	background-color: rgba(#000, 0.5);
-	padding: 10px;
+	text-align: center;
 	color: #fff;
 	position: absolute;
 	bottom: 36px;
-	left: 50%;
+	width: 100%;
+	left:0;
+}
+
+.cb-player-subtitle-text{
+	display: inline-block;
+	background-color: rgba(#000, 0.5);
+	padding: 10px;
 }
 
 ::cue {

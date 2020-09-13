@@ -185,6 +185,8 @@ audio { display: block !important; }
 
 .cb-player-subtitle-item:hover:before, .cb-player-subtitle--selected:before { content: ""; display: block; background-color: #fff; width: 5px; height: 5px; border-radius: 50%; position: absolute; left: 8px; top: 9px; }
 
-.cb-player-subtitle-text { font: normal 18px/22px Arial; -webkit-transform: translateX(-50%); transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.5); padding: 10px; color: #fff; position: absolute; bottom: 36px; left: 50%; }
+.cb-player-subtitle-layer { font: normal 18px/22px Arial; text-align: center; color: #fff; position: absolute; bottom: 36px; width: 100%; left: 0; }
+
+.cb-player-subtitle-text { display: inline-block; background-color: rgba(0, 0, 0, 0.5); padding: 10px; }
 
 ::cue { visibility: hidden; opacity: 0; }

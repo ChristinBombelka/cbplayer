@@ -1133,12 +1133,12 @@
                         var cue = cues[i];
                         cue.onenter = function(text){
                             if(track.mode == 'showing'){
-                                $('<div class="cb-player-subtitle-text"></div>').append(text.srcElement.text).appendTo(wrap);
+                                $('<div class="cb-player-subtitle-layer"><span class="cb-player-subtitle-text">'+text.srcElement.text+'</span></div>').appendTo(wrap);
                             }
                         }
 
                         cue.onexit = function(){
-                            wrap.find('.cb-player-subtitle-text').remove();
+                            wrap.find('.cb-player-subtitle-layer').remove();
                         }
                     }   
                 }
@@ -1238,7 +1238,7 @@
 				var container = $(this).closest(".cb-player");
 
 				container.removeClass("cb-player-is-playing cb-player-control-hide").addClass("cb-payer-is-replay");
-                container.find('.cb-player-subtitle-text').remove();
+                container.find('.cb-player-subtitle-layer').remove();
 
 				if ($.isFunction(settings.mediaIsEnd)) {
 				    settings.mediaIsEnd.call(this, wrap);
