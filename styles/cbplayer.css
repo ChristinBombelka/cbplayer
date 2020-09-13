@@ -155,13 +155,13 @@ audio { display: block !important; }
 
 .cb-player-progressbar-off .cb-player-progress-hide { cursor: auto; }
 
-.cb-player-context { font: 12px/1.2 normal; display: none; position: absolute; color: #fff; background-color: rgba(0, 0, 0, 0.8); padding-top: 5px; padding-bottom: 5px; }
+.cb-player-context { font: normal 12px/1.2; display: none; position: absolute; color: #fff; background-color: rgba(0, 0, 0, 0.8); padding-top: 5px; padding-bottom: 5px; }
 .cb-player-context.cb-player-context-active { display: block; }
 
 .cb-player-context-item { padding: 5px 15px; }
 .cb-player-context-item.link:hover { cursor: pointer; background-color: #fff; color: #000; }
 
-.cb-player-debug { display: none; font: 12px/1.2 normal; position: absolute; top: 5px; left: 5px; color: #fff; background-color: rgba(0, 0, 0, 0.8); padding-top: 5px; padding-bottom: 5px; z-index: 10; }
+.cb-player-debug { display: none; font: normal 12px/1.2; position: absolute; top: 5px; left: 5px; color: #fff; background-color: rgba(0, 0, 0, 0.8); padding-top: 5px; padding-bottom: 5px; z-index: 10; }
 
 .cb-player-debug-item { display: -webkit-box; display: -ms-flexbox; display: flex; padding: 5px 25px 5px 15px; width: 200px; }
 
@@ -185,7 +185,6 @@ audio { display: block !important; }
 
 .cb-player-subtitle-item:hover:before, .cb-player-subtitle--selected:before { content: ""; display: block; background-color: #fff; width: 5px; height: 5px; border-radius: 50%; position: absolute; left: 8px; top: 9px; }
 
-.cb-player-subtitle-text { -webkit-transform: translateX(-50%); transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.5); padding: 10px; color: #fff; position: absolute; bottom: 36px; left: 50%; }
-.cb-player-is-playing.cb-player-control-hide .cb-player-subtitle-text { bottom: 0; }
+.cb-player-subtitle-text { font: normal 18px/22px Arial; -webkit-transform: translateX(-50%); transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.5); padding: 10px; color: #fff; position: absolute; bottom: 36px; left: 50%; }
 
-::cue { visibility: hidden; color: #fff; font: 20px/22px normal Arial; background: rgba(0, 0, 0, 0); }
+::cue { visibility: hidden; opacity: 0; }

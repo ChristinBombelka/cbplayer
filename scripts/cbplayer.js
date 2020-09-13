@@ -1123,27 +1123,24 @@
 			});
 
             $(tracks).on('cuechange', function(e){
-                if(!wrap.data('cuesinitzilized')){
-                    var tracks = el[0].textTracks;
-                    if(tracks){
-                        for (var i = 0; i < tracks.length; i++){
-                            var textTrack = el[0].textTracks[i];
+                var track = e.originalEvent.srcElement.track;
 
-                            var cues = textTrack.cues;
+                if(track){
+                    var cues = track.cues;
 
-                            $(textTrack.cues).on('enter', function(e){   
-                                if(e.originalEvent.srcElement.track.mode == 'showing'){
-                                    $('<div class="cb-player-subtitle-text"></div>').append(e.originalEvent.srcElement.text).appendTo(wrap);
-                                }
-                            });
+                    for (var i = 0; i < cues.length; i++){
 
-                            $(textTrack.cues).on('exit', function(e){ 
-                                wrap.find('.cb-player-subtitle-text').remove();
-                            });
+                        var cue = cues[i];
+                        cue.onenter = function(text){
+                            if(track.mode == 'showing'){
+                                $('<div class="cb-player-subtitle-text"></div>').append(text.srcElement.text).appendTo(wrap);
+                            }
                         }
-                    }
 
-                    wrap.data('cuesinitzilized', true);
+                        cue.onexit = function(){
+                            wrap.find('.cb-player-subtitle-text').remove();
+                        }
+                    }   
                 }
             });
 
