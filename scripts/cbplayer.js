@@ -1500,6 +1500,10 @@
 				item.closest('.cb-player-subtitle-items').find('.cb-player-subtitle-item').removeClass('cb-player-subtitle--selected');
 				item.addClass('cb-player-subtitle--selected');
 
+                if(!item.data('lang')){
+                    container.find('.cb-player-subtitle-layer').remove();
+                }
+
 				var tracks = container.find('track');
 
 				for (var i = 0; i < video.textTracks.length; i++) {
