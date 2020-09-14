@@ -704,12 +704,12 @@ audio{
 	position: relative;
 	width: 36px;
     height: 36px;
+}
 
-    &:hover{
-		.cb-player-subtitle-items{
-			opacity: 1;
-			visibility: visible;
-		}
+.cb-player-subtitle-active{
+	.cb-player-subtitle-items{
+		opacity: 1;
+		visibility: visible;
 	}
 }
 

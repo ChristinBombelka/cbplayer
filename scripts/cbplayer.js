@@ -1518,6 +1518,20 @@
 				}
 			});
 
+			container.on('click', '.cb-player-subtitle', function(e){
+				var item = $(this);
+
+				if($(e.target).hasClass('cb-player-subtitle-button')){
+					item.toggleClass('cb-player-subtitle-active');
+				}else{
+					item.addClass('cb-player-subtitle-active');
+				}
+			});
+
+			container.on('mouseleave', '.cb-player-subtitle', function(){
+				$(this).removeClass('cb-player-subtitle-active');
+			});
+
 			if (!$(document).data('cbplayer-initialized')) {
 
 				$(document).on('mouseup', function(e){
