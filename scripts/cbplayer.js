@@ -1238,7 +1238,11 @@
 
 			el.on('waiting', function(){
 				var container = $(this).closest(".cb-player");
-				container.addClass("cb-player-is-loaded");
+				
+                //check current time with duration - fix for firefox
+                if($(this)[0].currentTime < container.data('duration')){
+                    container.addClass("cb-player-is-loaded");
+                }
 			});
 
 			el.on('canplay', function(){
