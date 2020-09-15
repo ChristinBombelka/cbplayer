@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.4.5
- * 2020-09-12
+ * jQuery CBplayer 1.4.6
+ * 2020-09-13
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.4.5',
+	 	playerVersion = '1.4.6',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -892,6 +892,47 @@
 		}
 	}
 
+    function watchSubtitles(container){
+        var el = container.find('video'),
+            tracks = el[0].textTracks,
+            lastCueId = container.data('lastCueId');
+
+        if(tracks && container.hasClass('cb-player--with-subtitles')){
+            for (var i = 0; i < tracks.length; i++){
+                var textTrack = el[0].textTracks[i],
+                    currentCue = false;
+
+                if(textTrack.mode == 'showing'){
+
+                    for (var i = 0; i < textTrack.cues.length; i++){
+                        var cue = textTrack.cues[i];
+
+                        if(cue.startTime < el[0].currentTime && cue.endTime > el[0].currentTime){
+                            currentCue = cue;
+                        }
+                    }
+
+                    var currentSubtitle = container.find('.cb-player-subtitle-layer');
+
+                    if(currentCue){
+                        if(lastCueId != currentCue.id){
+                            currentSubtitle.remove();
+
+                            $('<div class="cb-player-subtitle-layer"><span class="cb-player-subtitle-text">'+currentCue.text+'</span></div>').appendTo(container);
+
+                           container.data('lastCueId', currentCue.id);
+                        }
+                    }else{
+                        if(currentSubtitle.length){
+                            lastCueId = false;
+                            currentSubtitle.remove();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 	function Plugin( element, options ) {
         this.options = $.extend( {}, defaults, options );
         this._defaults = defaults;
@@ -1056,6 +1097,13 @@
 
                 subtitleList.prepend(createTrackItem('subtitles-off', '', 'OFF'));
                 subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
+
+                if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+                    wrap.addClass('cb-player--with-native-subtitles');
+                }else{
+                    wrap.addClass('cb-player--with-subtitles');
+                }   
+
             }
 
 			if(!wrap.find('.cb-player-error').length){
@@ -1105,7 +1153,6 @@
 				wrap.find('.cb-player-time-duration').text(formatTime(el.data('duration'), el));
 			}
 
-			var lastCueId = false;
 			el.on("timeupdate", function(){
 				var container = $(this).closest(".cb-player"),
 					progress = container.find(".cb-player-progress-play"),
@@ -1119,41 +1166,7 @@
 					watchTimer(container);
 				}
 
-                /*var tracks = el[0].textTracks;
-                if(tracks){
-                    for (var i = 0; i < tracks.length; i++){
-                        var textTrack = el[0].textTracks[i],
-                        	currentCue = false;
-
-                        if(textTrack.mode == 'showing'){
-
-                        	for (var i = 0; i < textTrack.cues.length; i++){
-								var cue = textTrack.cues[i];
-
-								if(cue.startTime < el[0].currentTime && cue.endTime > el[0].currentTime){
-									currentCue = cue;
-								}
-                        	}
-
-                        	var currentSubtitle = wrap.find('.cb-player-subtitle-layer');
-
-                        	if(currentCue){
-                        		if(lastCueId != currentCue.id){
-                        			currentSubtitle.remove();
-
-									$('<div class="cb-player-subtitle-layer"><span class="cb-player-subtitle-text">'+currentCue.text+'</span></div>').appendTo(wrap);
-
-                        			lastCueId = currentCue.id;
-                        		}
-                        	}else{
-                        		if(currentSubtitle.length){
-                        			lastCueId = false;
-                        			currentSubtitle.remove();
-                        		}
-                        	}
-                        }
-                    }
-                }*/
+                watchSubtitles(container);
 			});
 
 			el.on('durationchange', function(e){

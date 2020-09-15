@@ -186,48 +186,10 @@ audio { display: block !important; }
 
 .cb-player-subtitle-item:hover:before, .cb-player-subtitle--selected:before { content: ""; display: block; background-color: #fff; width: 5px; height: 5px; border-radius: 50%; position: absolute; left: 8px; top: 9px; }
 
-::cue { color: #fff; background-color: rgba(0, 0, 0, 0.5); }
+.cb-player--with-subtitles .cb-player-subtitle-layer { font: normal 16px/18px Arial; text-align: center; color: #fff; position: absolute; bottom: 36px; width: 100%; left: 0; }
+.cb-player--with-subtitles .cb-player-subtitle-text { display: inline-block; background-color: rgba(0, 0, 0, 0.5); padding: 5px; }
+.cb-player--with-subtitles ::cue { visibility: hidden; opacity: 0; }
+.cb-player--with-subtitles ::-webkit-media-text-track-container { display: none; opacity: 0; visibility: hidden; }
 
-::-webkit-media-text-track-container { bottom: 36px; }
-
-/* .cb-player-subtitle-layer{
-	font: normal 18px/22px Arial;
-	text-align: center;
-	color: #fff;
-	position: absolute;
-	bottom: 36px;
-	width: 100%;
-	left:0;
-}
-
-.cb-player-subtitle-text{
-	display: inline-block;
-	background-color: rgba(#000, 0.5);
-	padding: 10px;
-} */
-/* ::cue {
-	visibility: hidden;
-	opacity: 0;
-}
-
-::-webkit-media-text-track-container{
-	display: none;
-	opacity: 0;
-	visibility: hidden;
-} */
-/* @media only screen and (max-device-width : 640px) {
-	.cb-player-subtitle-layer{
-		display: none;
-	}
-
-	::cue{
-		visibility: visible;
-		opacity: 1;
-	}
-
-	::-webkit-media-text-track-container{
-		display: block;
-		opacity: 1;
-		visibility: visible;
-	}
-} */
+.cb-player--with-native-subtitles ::cue { color: #fff; background-color: rgba(0, 0, 0, 0.5); }
+.cb-player--with-native-subtitles ::-webkit-media-text-track-container { bottom: 38px; }
