@@ -1108,6 +1108,7 @@
 				wrap.find('.cb-player-time-duration').text(formatTime(el.data('duration'), el));
 			}
 
+			var lastCueId = false;
 			el.on("timeupdate", function(){
 				var container = $(this).closest(".cb-player"),
 					progress = container.find(".cb-player-progress-play"),
@@ -1120,29 +1121,43 @@
 				if(container.hasClass("cb-media-is-ready") && progress.length){
 					watchTimer(container);
 				}
+
+                /*var tracks = el[0].textTracks;
+                if(tracks){
+                    for (var i = 0; i < tracks.length; i++){
+                        var textTrack = el[0].textTracks[i],
+                        	currentCue = false;
+
+                        if(textTrack.mode == 'showing'){
+
+                        	for (var i = 0; i < textTrack.cues.length; i++){
+								var cue = textTrack.cues[i];
+
+								if(cue.startTime < el[0].currentTime && cue.endTime > el[0].currentTime){
+									currentCue = cue;
+								}
+                        	}
+
+                        	var currentSubtitle = wrap.find('.cb-player-subtitle-layer');
+
+                        	if(currentCue){
+                        		if(lastCueId != currentCue.id){
+                        			currentSubtitle.remove();
+
+									$('<div class="cb-player-subtitle-layer"><span class="cb-player-subtitle-text">'+currentCue.text+'</span></div>').appendTo(wrap);
+
+                        			lastCueId = currentCue.id;
+                        		}
+                        	}else{
+                        		if(currentSubtitle.length){
+                        			lastCueId = false;
+                        			currentSubtitle.remove();
+                        		}
+                        	}
+                        }
+                    }
+                }*/
 			});
-
-            $(tracks).on('cuechange', function(e){
-                var track = e.originalEvent.srcElement.track;
-
-                if(track){
-                    var cues = track.cues;
-
-                    for (var i = 0; i < cues.length; i++){
-
-                        var cue = cues[i];
-                        cue.onenter = function(text){
-                            if(track.mode == 'showing'){
-                                $('<div class="cb-player-subtitle-layer"><span class="cb-player-subtitle-text">'+text.srcElement.text+'</span></div>').appendTo(wrap);
-                            }
-                        }
-
-                        cue.onexit = function(){
-                            wrap.find('.cb-player-subtitle-layer').remove();
-                        }
-                    }   
-                }
-            });
 
 			el.on('durationchange', function(e){
 				var container = $(this).closest(".cb-player"),
