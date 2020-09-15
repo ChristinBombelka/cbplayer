@@ -771,15 +771,12 @@
 				player.requestFullScreen();
 			} else if (player.mozRequestFullScreen) {
 				container[0].mozRequestFullScreen();
-			} else if (player.webkitRequestFullscreen) {
-				if(isTouchDevice()){
-					player.webkitEnterFullScreen();
-				}else{
-					// container[0].webkitEnterFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-					container[0].webkitRequestFullscreen();
-				}
+			}else if (player.webkitRequestFullscreen) {
+                //fullscreen support android
+				container[0].webkitRequestFullscreen();
 			} else if (player.msRequestFullscreen) {
-				player.msRequestFullscreen();
+                //fullscreen IE 11
+				container[0].msRequestFullscreen();
 			}else if(player.webkitSupportsFullscreen){
 				//fullscreen support for ios
 				player.webkitEnterFullScreen();
