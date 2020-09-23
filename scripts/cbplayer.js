@@ -915,12 +915,13 @@
                     var currentSubtitle = container.find('.cb-player-subtitle-layer');
 
                     if(currentCue){
-                        if(lastCueId != currentCue.id){
+
+                        if(lastCueId != currentCue.startTime){
                             currentSubtitle.remove();
 
                             $('<div class="cb-player-subtitle-layer"><span class="cb-player-subtitle-text">'+currentCue.text+'</span></div>').appendTo(container);
 
-                           container.data('lastCueId', currentCue.id);
+                           container.data('lastCueId', currentCue.startTime);
                         }
                     }else{
                         if(currentSubtitle.length){
@@ -1102,7 +1103,7 @@
                     wrap.addClass('cb-player--with-native-subtitles');
                 }else{
                     wrap.addClass('cb-player--with-subtitles');
-                }   
+                }
 
             }
 
