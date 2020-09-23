@@ -1194,7 +1194,7 @@
 			var setLevel;
 
 			el.on('play', function(e){
-				var container = $(this).closest(".cb-player"),
+				var container = $(this).closest('.cb-player'),
 					progress = container.find(".cb-player-progress");
 
                 //is current position behind media duration, set new position
@@ -1211,7 +1211,7 @@
 			});
 
 			el.on('playing', function(e){
-				var container = $(this).closest(".cb-player");
+				var container = $(this).closest('.cb-player');
 
 				container
 					.addClass('cb-player-is-playing')
@@ -1220,7 +1220,7 @@
 
 			el.on('pause', function(e){
 
-				var container = $(this).closest(".cb-player");
+				var container = $(this).closest('.cb-player');
 
 				clearTimeout(watchControlHide);
 
@@ -1256,7 +1256,7 @@
 
 			el.on('waiting', function(){
 				var container = $(this).closest(".cb-player");
-				
+
                 //check current time with duration - fix for firefox
                 if($(this)[0].currentTime < container.data('duration')){
                     container.addClass("cb-player-is-loaded");
