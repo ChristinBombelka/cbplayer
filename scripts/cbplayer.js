@@ -882,6 +882,8 @@
 	}
 
 	function startWatchControlHide(container){
+		var settings = container.data('settings');
+
 		if(container.hasClass("cb-player-is-playing") && settings.controlHide){
 			clearTimeout(watchControlHide);
 			container.removeClass('cb-player-control-hide');
