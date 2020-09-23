@@ -893,8 +893,8 @@
 	}
 
     function watchSubtitles(container){
-        var el = container.find('video'),
-            tracks = el[0].textTracks,
+        var el = container.find('.cb-player-media'),
+        	tracks = el[0].textTracks,
             lastCueId = container.data('lastCueId');
 
         if(tracks && container.hasClass('cb-player--with-subtitles')){
