@@ -1213,7 +1213,9 @@
 			el.on('playing', function(e){
 				var container = $(this).closest(".cb-player");
 
-				container.addClass("cb-player-is-playing");
+				container
+					.addClass('cb-player-is-playing')
+					.removeClass('cb-payer-is-replay');
 			});
 
 			el.on('pause', function(e){
