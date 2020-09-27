@@ -21,9 +21,9 @@
 		    },
 		    youtube: {
 		        sdk: 'https://www.youtube.com/iframe_api',
-		        api: 'https://noembed.com/embed?url=https://www.youtube.com/watch?v={0}'
 		    },
 		},
+		youtubeInit = false,
 		defaults = {
 		tpl : 'default',
 		/*
@@ -68,6 +68,12 @@
 		/* video muted*/
 		loop: false,
 		/* video loop*/
+		youtube: {
+			noCookie: true,
+			showinfo: 0,
+			modestbranding: 1 //Hide brand Logo
+		},
+		/* config youtube */
 		disableClick: false,
 		/* disable click events on media */
 		mediaIsInit: false,
@@ -1053,6 +1059,18 @@
 		}
 	}
 
+	function getYoutubeHost(config){
+		if(config.youtube.noCookie){
+			return 'https://www.youtube-nocookie.com';
+		}
+
+		if (window.location.protocol === 'http:') {
+	      	return 'http://www.youtube.com';
+	    }
+
+	    return undefined;
+	}
+
 	function uniqid(a = "", b = false) {
 	    const c = Date.now()/1000;
 	    let d = c.toString(16).split(".").join("");
@@ -1077,6 +1095,7 @@
 	CBplayer.prototype = {
 		init: function(options) {
 			var el = $(this.element),
+				_this = this,
 				wrap;
 
 			if(el.is('video') || el.is('audio')){
@@ -1289,96 +1308,116 @@
 			let source = getSource(el),
             	provider = getProvider(source.mediaSrc);
 
-            //check source for youtube
+            var youtube = {
+            	setup: function(){
+
+
+
+            		if(window.YT && window.YT.Player){
+            			youtube.ready.call(_this);
+            		}else{
+            			var callback = window.onYouTubeIframeAPIReady;
+
+				        window.onYouTubeIframeAPIReady = function () {
+				         	youtube.ready.call(_this);
+				        }; 
+
+				        $.getScript(urls.youtube.sdk, function(jd) {});
+
+				        youtubeInit = true;
+            		}
+            	},
+            	ready: function ready() {
+
+            		videoId = getYoutubeId(source.mediaSrc);
+
+	        		wrap.addClass('cb-media-is-ready');
+
+	        		var id = uniqid(),
+	        			media = wrap.find('.cb-player-media'),
+	        			ytTimer;
+
+	        		el = $('<div>')
+	        			.attr('id', id)
+	        			.appendTo(media);
+
+	        		el.addClass('cb-player-media-iframe');
+
+	        		el.embed = new window.YT.Player(id, {
+				        videoId: videoId,
+				        host: getYoutubeHost(settings),
+				        playerVars: {
+				        	autoplay: 0,
+				        	controls: 0,
+				        	disablekb: 1,
+				        	rel: 0
+				        },
+				        events: {
+				        	'onStateChange': function(e){
+				        		var instance = e.target;
+
+				        		if(e.data == YT.PlayerState.PLAYING){
+				        			wrap.addClass('cb-player-is-playing').removeClass('cb-payer-is-replay cb-player-is-loaded');
+
+				        			ytTimer = setInterval(function(){
+				        				watchTimer(wrap);
+				        			}, 250);
+
+				        		}else if(e.data == YT.PlayerState.BUFFERING){
+
+				        			wrap.addClass('cb-player-is-loaded');
+
+				        		}else{
+				        			wrap.removeClass('cb-player-is-playing cb-player-is-loaded');
+
+				        			watchTimer(wrap);
+
+				        			clearTimeout(watchControlHide);
+									wrap.removeClass('cb-player-control-hide');
+
+				        			clearInterval(ytTimer);
+
+				        		}
+				        	},
+				        	'onReady': function(e){
+				        		var instance = e.target;
+
+				        		//set functions
+				        		wrap.data('instance', instance);
+
+				        		//set duration
+				        		wrap.data('duration', instance.getDuration());
+
+				        		setTimeout(function(){
+				        			setDuration(wrap);
+				        		});
+				        		
+				        	}
+				        }
+				    });
+	        	}
+            }
 
             if(provider == 'youtube' || provider == 'vimeo'){
             	wrap.addClass('cb-player--' + provider);
             	wrap.data('iframe', provider);
 
             	if(provider == 'youtube'){
-            		videoId = getYoutubeId(source.mediaSrc);
 
-			        var callback = window.onYouTubeIframeAPIReady;
+            		var checkYoutubeApiReady = function(){
+            			
+            			if(youtubeInit && typeof window.YT === 'undefined'){
+            				setTimeout(checkYoutubeApiReady, 250);
+	            		}else{
+	            			youtube.setup(_this);
+	            		}
 
-			        window.onYouTubeIframeAPIReady = function () {
-			         	youtube.ready.call($(this));
-			        }; // Load the SDK
-
-
-			        $.getScript(urls.youtube.sdk, function(jd) {});
-
-			        var youtube = {
-
-			        	ready: function ready() {
-
-			        		wrap.addClass('cb-media-is-ready');
-
-			        		var id = uniqid(),
-			        			media = wrap.find('.cb-player-media'),
-			        			ytTimer;
-
-			        		el = $('<div>')
-			        			.attr('id', id)
-			        			.appendTo(media);
-
-			        		el.addClass('cb-player-media-iframe');
-
-			        		el.embed = new window.YT.Player(id, {
-						        videoId: videoId,
-						        height: '360',
-          						width: '640',
-						        host: 'https://www.youtube-nocookie.com',
-						        playerVars: {
-						        	autoplay: 0,
-						        	controls: 0,
-						        	disablekb: 1,
-						        	rel: 0
-						        },
-						        events: {
-						        	'onStateChange': function(e){
-						        		var instance = e.target;
-
-						        		if(e.data == YT.PlayerState.PLAYING){
-						        			wrap.addClass('cb-player-is-playing').removeClass('cb-payer-is-replay');
-
-						        			ytTimer = setInterval(function(){
-						        				watchTimer(wrap);
-						        			}, 250);
-
-						        		}else{
-						        			wrap.removeClass('cb-player-is-playing');
-
-						        			watchTimer(wrap);
-
-						        			clearTimeout(watchControlHide);
-											wrap.removeClass('cb-player-control-hide');
-
-						        			clearInterval(ytTimer);
-
-						        		}
-						        	},
-						        	'onReady': function(e){
-						        		var instance = e.target;
-
-						        		//set functions
-						        		wrap.data('instance', instance);
-
-						        		//set duration
-						        		wrap.data('duration', instance.getDuration());
-
-						        		setTimeout(function(){
-						        			setDuration(wrap);
-						        		});
-						        		
-						        	}
-						        }
-						    });
-			        	}
-			        }
+            		}
+            		checkYoutubeApiReady();
+            		
             	}
             }
 			
-
 			el.on("timeupdate", function(){
 				var container = $(this).closest(".cb-player"),
 					progress = container.find(".cb-player-progress-play"),
@@ -1652,7 +1691,12 @@
 
 					}else{
 
-						if(container.hasClass('cb-player-is-playing') && !player[0].paused && !container.hasClass('cb-player-is-loaded')){
+						if(container.data('iframe')){
+							if(container.hasClass('cb-player-is-playing')){
+								//container.data('instance').pauseVideo();
+							}
+
+						}else if(container.hasClass('cb-player-is-playing') && !player[0].paused && !container.hasClass('cb-player-is-loaded')){
 							container.data('stopTemporary', true);
 							player[0].pause();
 						}
