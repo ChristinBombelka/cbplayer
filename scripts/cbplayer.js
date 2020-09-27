@@ -1065,7 +1065,7 @@
 	    return a + d + e;
 	}
 
-	function Plugin( element, options ) {
+	function CBplayer( element, options ) {
         this.options = $.extend( {}, defaults, options );
         this._defaults = defaults;
         this._name = pluginName;
@@ -1074,7 +1074,7 @@
         this.attachEvents(this.element, this.options);
     }
 
-	Plugin.prototype = {
+	CBplayer.prototype = {
 		init: function(options) {
 			var el = $(this.element),
 				wrap;
@@ -1939,7 +1939,7 @@
 			}
 
             if (!$.data(this, 'plugin_' + pluginName)) {
-                $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
+                $.data(this, 'plugin_' + pluginName, new CBplayer(this, options));
             }
             else if ($.isFunction(Plugin.prototype[options])) {
                 $.data(this, 'plugin_' + pluginName)[options]();
