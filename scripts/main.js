@@ -29,4 +29,9 @@ $(function() {
 		backgroundMode: false,
 		loop: false,
 	});
+    $(".js-player-5").cbplayer({
+        volume: 100,
+        backgroundMode: false,
+        loop: false,
+    });
 });

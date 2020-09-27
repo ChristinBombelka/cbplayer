@@ -193,3 +193,7 @@ audio { display: block !important; }
 
 .cb-player--with-native-subtitles ::cue { color: #fff; background-color: rgba(0, 0, 0, 0.5); }
 .cb-player--with-native-subtitles ::-webkit-media-text-track-container { bottom: 38px; }
+
+.cb-player--youtube .cb-player-media { position: relative; }
+.cb-player--youtube .cb-player-media:after { content: ""; padding-bottom: 56.26%; display: block; }
+.cb-player--youtube .cb-player-media-iframe { position: absolute; top: 0; left: 0; pointer-events: none; width: 100%; height: 100%; }
