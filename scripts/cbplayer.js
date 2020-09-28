@@ -1310,9 +1310,6 @@
 
             var youtube = {
             	setup: function(){
-
-
-
             		if(window.YT && window.YT.Player){
             			youtube.ready.call(_this);
             		}else{
@@ -1387,6 +1384,22 @@
 
 				        		//set duration
 				        		wrap.data('duration', instance.getDuration());
+
+				        		if(settings.backgroundMode){
+				        			instance.mute();	
+				        		}
+
+				        		if(settings.autoplay){
+				        			instance.playVideo();
+				        		}
+
+				        		if(volume){
+				        			instance.setVolume(volume);
+				        		}
+
+				        		if(loop){
+				        			instance.setLoop(true);
+				        		}
 
 				        		setTimeout(function(){
 				        			setDuration(wrap);
