@@ -1585,7 +1585,7 @@
 			}
 
 			setTimeout(function(){
-				if((wrap.data('autoplay') && $('.cb-player-is-playing').length == 0) || (wrap.data('autoplay') && wrap.data('backgroundMode'))){
+				if((!wrap.data('iframe') && wrap.data('autoplay') && $('.cb-player-is-playing').length == 0) || (wrap.data('autoplay') && wrap.data('backgroundMode'))){
 					initPlayer(wrap);
 				}
 			});
