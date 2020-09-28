@@ -1416,18 +1416,14 @@
             	wrap.data('iframe', provider);
 
             	if(provider == 'youtube'){
-
             		var checkYoutubeApiReady = function(){
-            			
-            			if(youtubeInit && typeof window.YT === 'undefined'){
-            				setTimeout(checkYoutubeApiReady, 250);
-	            		}else{
-	            			youtube.setup(_this);
-	            		}
-
+            			if(youtubeInit == false || (typeof window.YT !== 'undefined' && window.YT.Player)){
+            				youtube.setup(_this);
+            			}else{
+	           				setTimeout(checkYoutubeApiReady, 100);
+	           			}
             		}
             		checkYoutubeApiReady();
-            		
             	}
             }
 			
