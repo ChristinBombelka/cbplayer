@@ -1347,9 +1347,9 @@
 				        videoId: videoId,
 				        host: getYoutubeHost(settings),
 				        playerVars: {
-				        	autoplay: 0,
 				        	controls: 0,
 				        	disablekb: 1,
+				        	playsinline: 1,
 				        	rel: 0
 				        },
 				        events: {
