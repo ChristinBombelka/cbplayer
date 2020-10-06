@@ -34,6 +34,8 @@
 		/* enable/disable complete controls */
 		controlTime: true,
 		/* enable/disable  current/duration time */
+		controlTimeBackwards: false,
+		/* show remaining time */
 		controlProgress: true,
 		/* enable/disable progress bar */
 		controlFullscreen: true,
@@ -843,6 +845,20 @@
 		}
 
 		player.closest(".cb-player").find(".cb-player-time-current").text(playtime);
+
+		if(container.data('settings')['controlTimeBackwards']){
+			var remainingPlayTime;
+
+			if(container.data('iframe')){
+				remainingPlayTime = container.data('duration') - container.data('instance').getCurrentTime();
+			}else{
+				remainingPlayTime = player[0].duration - player[0].currentTime;
+			}
+
+			remainingPlayTime = formatTime(remainingPlayTime, player.closest(".cb-player"));
+			
+			player.closest('.cb-player').find('.cb-player-time-duration').text(remainingPlayTime);
+		}
 	}
 
 	function watchFullscreenStart(){
