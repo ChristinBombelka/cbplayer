@@ -814,7 +814,23 @@
 		}
 	}
 
+	function updatePlaytime(player, playtime){
+		if($.isNumeric(playtime)){
+			playtime = formatTime(playtime, player.closest('.cb-player'));
+		}
 
+		player.closest('.cb-player').find('.cb-player-time-current').text(playtime);
+	}
+
+	function updateProgress(container, progresstime){
+		var progressVisibile = container.find('.cb-player-progress-play');
+
+		if(container.length){
+			progressVisibile.css('width', progresstime + '%');
+		}
+
+		container.find('.cb-player-progress').attr('aria-valuenow', progresstime);
+	}	
 
 	function watchTimer(container) {
 		var player = container.find('.cb-player-media'),
@@ -823,7 +839,7 @@
 			progresstime,
 			playtime;
 
-		if(!player[0].duration && !container.data('iframe')){
+		if(!player[0].duration && !container.data('iframe') && !container.hasClass('cb-media-is-ready')){
 			return;
 		}
 
@@ -847,14 +863,12 @@
 				var embedPlayer = container.data('embed');
 
 				embedPlayer.getCurrentTime().then(function(seconds){
-					container.data('currentTime', seconds);
+					updatePlaytime(player, seconds);
+
+					progresstime = seconds * (100 / container.data('duration'));
+					updateProgress(container, progresstime)
 				});
-
-				playtime = container.data('currentTime');
-				progresstime = playtime * (100 / container.data('duration'));
 			}
-			
-
 		}else{
 			playtime = player[0].currentTime;
 			progresstime = player[0].currentTime * (100 / player[0].duration);
@@ -878,7 +892,9 @@
 
 			if(container.data('backtracking')){
 				//check livestream position
-				progressVisibile.css('width', progressPercentage + '%');
+				if(container.length){
+					progressVisibile.css('width', progressPercentage + '%');
+				}
 
 				if(Math.round(ariaValue) >= 99){
 
@@ -889,16 +905,13 @@
 				playtime = 'Live';
 			}
 
-		}else{
-			progressVisibile.css('width', progresstime + '%');
-			container.find('.cb-player-progress').attr('aria-valuenow', progresstime);
-		}
+		}else if(container.data('iframe') != 'vimeo'){
+			updateProgress(container, progresstime);
+		}	
 
-		if($.isNumeric(playtime)){
-			var playtime = formatTime(playtime, player.closest(".cb-player"));
+		if(container.data('iframe') != 'vimeo'){
+			updatePlaytime(player, playtime);
 		}
-
-		player.closest(".cb-player").find(".cb-player-time-current").text(playtime);
 
 		if(container.data('settings')['controlTimeBackwards']){
 			var remainingPlayTime;
@@ -1626,17 +1639,13 @@
 
             		el.on("timeupdate", function(){
 						var container = $(this).closest(".cb-player"),
-							progress = container.find(".cb-player-progress-play"),
 							media = container.find('video, audio');
 
 						if ($.isFunction(settings.mediaTimeupdate)) {
 						 	settings.mediaTimeupdate.call(this, wrap, media[0].currentTime);
 						}
 
-						if(container.hasClass("cb-media-is-ready") && progress.length){
-							watchTimer(container);
-						}
-
+						watchTimer(container);
 		                watchSubtitles(container);
 					});
 
