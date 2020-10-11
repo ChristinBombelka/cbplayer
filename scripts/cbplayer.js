@@ -1577,7 +1577,7 @@
 
 	        		iframe.setAttribute('src', src);
 	        		iframe.setAttribute('allowfullscreen', '');
-	        		iframe.setAttribute('allow', 'autoplay,fullscreen,picture-in-picture');
+	        		iframe.setAttribute('allow', 'autoplay,picture-in-picture');
 	        		iframe.setAttribute('referrerpolicy', 'no-referrer');
 	        		
 	        		$(iframe).appendTo(wrapper);
