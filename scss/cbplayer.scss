@@ -608,7 +608,7 @@ audio{
 	width: 100%;
 	padding: 0 10px;
 	font-size: 14px;
-	line-height: 1;
+	z-index: 1;
 }
 
 .cb-player-progressbar-off{
@@ -839,4 +839,13 @@ audio{
 		left: 0;
 		width: 100%;
 	}
+}
+
+.cb-player--audio{
+    .cb-player-controls{
+        opacity: 1;
+        visibility: visible;
+        position: relative;
+    }
+
 }

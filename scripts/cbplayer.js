@@ -1306,6 +1306,11 @@
 				wrap.append(context);
 			}
 
+            if(el.is("audio")){
+                wrap.addClass('cb-player--audio');
+                options.controlHide = false;
+            }
+
 			if(settings.tpl == 'default' && !settings.backgroundMode && !wrap.find('.cb-player-controls').length){
 
 				control.append(play);
