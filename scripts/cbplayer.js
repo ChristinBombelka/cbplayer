@@ -1,6 +1,6 @@
 /*!
- * jQuery CBplayer 1.5.0
- * 2020-09-27
+ * jQuery CBplayer 1.5.1
+ * 2020-12-17
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
@@ -421,6 +421,12 @@
 					//displayError(container, 'Timeout - File cannot loaded');
 				}, 3000);
 			});
+
+			 //fix firefox content by ajax 
+            //trigger load on abort event is fired
+            media.on('abort', function(){
+                media[0].load();
+            });
 
 			media.on('loadedmetadata', function(){
 
