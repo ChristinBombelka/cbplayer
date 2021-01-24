@@ -1,6 +1,6 @@
 /*!
- * jQuery CBplayer 1.5.1
- * 2020-12-17
+ * jQuery CBplayer 1.5.2
+ * 2021-01-24
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
@@ -229,12 +229,12 @@
             return;
         }
 
-		if(source.mediaSrc.match(/(.m3u8)/) && typeof Hls === 'undefined'){
+		if(source.mediaSrc.toLowerCase().match(/(.m3u8)/) && typeof Hls === 'undefined'){
 			displayError(container, 'hls.js ist not found');
 			return;
 		}
 
-		if(source.mediaSrc.match(/(.m3u8)/) && Hls.isSupported()){
+		if(source.mediaSrc.toLowerCase().match(/(.m3u8)/) && Hls.isSupported()){
 			var config = {
 				startPosition : -1,
 				capLevelToPlayerSize: false,
@@ -403,7 +403,7 @@
 				container.removeClass("cb-player-is-loaded");
 			});
 
-		}else if(source.mediaSrc.match(/(.mp4)/) || (source.mediaSrc.match(/(.m3u8)/) && Hls) ){
+		}else if(source.mediaSrc.toLowerCase().match(/(.mp4)/) || (source.mediaSrc.toLowerCase().match(/(.m3u8)/) && Hls) ){
 			// (Hls && (!isSupported() && mediaSrc.match(/(.m3u8)/)) || mediaSrc.match(/(.mp4)/)
 
 			if(fileExist(source.mediaSrc) === false){
@@ -451,7 +451,7 @@
 				}
 			});
 
-		}else if (source.mediaSrc.match(/(.mp3)/)){
+		}else if (source.mediaSrc.toLowerCase().match(/(.mp3)/)){
 
 			if(fileExist(source.mediaSrc) === false){
 				displayError(container, 'File not exist');
