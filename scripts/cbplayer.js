@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.2
- * 2021-01-24
+ * jQuery CBplayer 1.5.3
+ * 2021-03-17
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.5.0',
+	 	playerVersion = '1.5.3',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -412,22 +412,13 @@
 			}
 
 			source.mediaSrcEl.attr("src", source.mediaSrc);
-			media[0].load();
 
-			container.addClass("cb-player-is-loaded");
-
-			media.on('loadstart', function(){
-				timeoutMeta = setTimeout(function(){
-					//displayError(container, 'Timeout - File cannot loaded');
-				}, 3000);
+			//fix firefox content by ajax 
+			setTimeout(function(){
+				media[0].load();
+				container.addClass("cb-player-is-loaded");
 			});
-
-			 //fix firefox content by ajax 
-            //trigger load on abort event is fired
-            media.on('abort', function(){
-                media[0].load();
-            });
-
+			
 			media.on('loadedmetadata', function(){
 
 				clearTimeout(timeoutMeta);
@@ -458,14 +449,10 @@
 				return;
 			}
 			source.mediaSrcEl.attr("src", source.mediaSrc);
-			media[0].load();
 
-			container.addClass("cb-player-is-loaded");
-
-			media.on('loadstart', function(){
-				timeoutMeta = setTimeout(function(){
-					//displayError(container, 'Timeout - File cant loaded');
-				}, 3000);
+			setTimeout(function(){
+				media[0].load();
+				container.addClass("cb-player-is-loaded");
 			});
 
 			media.on('loadedmetadata', function(){
