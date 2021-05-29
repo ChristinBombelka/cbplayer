@@ -173,7 +173,7 @@
 	function fileExist(src){
 		var http = new XMLHttpRequest();
 
-	    http.open('HEAD', src, false);
+	    http.open('HEAD', src, true);
 	    http.send();
 
 	    return http.status != 404;
