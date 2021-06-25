@@ -93,8 +93,8 @@
 		mediaTimeupdate: false,
 		/* callback time update */
 		initSource: $,
-		mediaStopAll: $,
-		mediaStop: $,
+		mediaPauseAll: $,
+		mediaPause: $,
 		mediaPlay: $,
 		mediaRestart: $,
 		mediaSetVolume : $,
@@ -345,7 +345,7 @@
 				setVolume(container, container.data('volume'));
 
 				if(autostart){
-					toggleMediaStartSTopp(container);
+					toggleMediaPlayPause(container);
 				}
 
 				container.data({
@@ -438,7 +438,7 @@
 				setVolume(container, container.data('volume'));
 
 				if(autostart){
-					toggleMediaStartSTopp(container);
+					toggleMediaPlayPause(container);
 				}
 			});
 
@@ -470,7 +470,7 @@
 				});
 
 				if(autostart){
-					toggleMediaStartSTopp(container);
+					toggleMediaPlayPause(container);
 				}
 			});
 
@@ -542,7 +542,7 @@
 		clearInterval(watchProgress);
 	}
 
-	function toggleMediaStartSTopp (container){
+	function toggleMediaPlayPause (container){
 		var player = container.find('.cb-player-media')[0];
 
 		if(!container.data('backgroundMode')){
@@ -599,7 +599,7 @@
 		container.addClass('cb-player-initialized');
 
 		if(container.hasClass("cb-media-is-ready")){
-			toggleMediaStartSTopp(container);
+			toggleMediaPlayPause(container);
 		}else{
 			getPlayerSrc(container);
 		}
@@ -1752,7 +1752,7 @@
 						}
 
 						if(wrap.data('loop')){
-							toggleMediaStartSTopp(wrap);
+							toggleMediaPlayPause(wrap);
 						}
 					});
             	}
@@ -2231,7 +2231,7 @@
 			return;
 		}
 
-		if (options == "mediaStopAll") {
+		if (options == "mediaPauseAll") {
 			stopPlayingAll();
 			return;
 		}
@@ -2259,7 +2259,7 @@
 				return;
 			}
 
-			if(options == 'mediaStop'){
+			if(options == 'mediaPause'){
 				if(container.data('loop')){
 					container.data({
 						'loop' : false,

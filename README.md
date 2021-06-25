@@ -172,17 +172,17 @@ Return current time
 
 ## Methods
 
-### mediaStopAll
+### mediaPauseAll
 
-Call to stop all played videos, with the exception of videos in backgroundmode
+Call to pause all played videos, with the exception of videos in backgroundmode
 
-`$('classname').cbplayer('mediaStopAll')`
+`$('classname').cbplayer('mediaPauseAll')`
 
-### mediaStop
+### mediaPause
 
-Call to stop a selected media item
+Call to pause a selected media item
 
-`$('classname').cbplayer('mediaStop')`
+`$('classname').cbplayer('mediaPause')`
 
 ### mediaPlay
 
