@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.5
- * 2021-06-125
+ * jQuery CBplayer 1.5.6
+ * 2021-07-07
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.5.5',
+	 	playerVersion = '1.5.6',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -74,6 +74,9 @@
 			noCookie: true,
 			showinfo: 0,
 			modestbranding: 1 //Hide brand Logo
+		},
+		vimeo: {
+			referrerPolicy: null, // https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/referrerPolicy
 		},
 		/* config youtube */
 		disableClick: false,
@@ -1584,7 +1587,10 @@
 	        		iframe.setAttribute('src', src);
 	        		iframe.setAttribute('allowfullscreen', '');
 	        		iframe.setAttribute('allow', 'fullscreen; autoplay; picture-in-picture; encrypted-media; accelerometer; gyroscope');
-	        		iframe.setAttribute('referrerpolicy', 'no-referrer');
+
+	        		if(settings.vimeo.referrerPolicy != null){
+	        			iframe.setAttribute('referrerpolicy', settings.vimeo.referrerPolicy);
+	        		}
 
 	        		$(iframe).appendTo(wrapper);
 	        		$(iframe).addClass('cb-player-media-iframe');
