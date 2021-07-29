@@ -1844,8 +1844,13 @@
 			var touchtimer = false,
 				container = $(el).closest('.cb-player');
 
-			container.on('touchstart', '.cb-player-toggle-play, .cb-player-media', function(e){
-				if(container.data('backgroundMode') || options.disableClick){
+            var targetsTouch = ['.cb-player-toggle-play'];
+            if(options.disableClick == false){
+                targetsTouch.push('.cb-player-media');
+            }
+
+			container.on('touchstart', targetsTouch.join(','), function(e){
+				if(container.data('backgroundMode')){
 					return;
 				}
 
@@ -1862,8 +1867,13 @@
 				}
 			});
 
-			container.on(isTouchDevice() ? 'touchend' : 'click', '.cb-player-toggle-play, .cb-player-media, .cb-player-overlayer-button', function(e){
-				if(container.hasClass('cb-player-is-loaded') || container.data('backgroundMode') || options.disableClick){
+            var targetsClick = ['.cb-player-toggle-play', '.cb-player-overlayer-button'];
+            if(options.disableClick == false){
+                targetsClick.push('.cb-player-media');
+            }
+
+			container.on(isTouchDevice() ? 'touchend' : 'click', targetsClick.join(',') , function(e){
+                if(container.hasClass('cb-player-is-loaded') || container.data('backgroundMode')){
 					return;
 				}
 
