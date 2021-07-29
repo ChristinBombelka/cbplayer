@@ -826,16 +826,17 @@ audio{
 }
 
 .cb-player--vimeo{
-
 	.cb-player-media{
 		overflow: hidden;
+        margin-left: auto;
+        margin-right: auto;
 	}
 
 	.cb-player-media-embed{
-		transform: translateY(-38.28125%);
-		padding-bottom: 240%;
+		transform: translateY(-50%);
+		padding-bottom: 240vh;
 		position: absolute;
-		top: 0;
+		top: 50%;
 		left: 0;
 		width: 100%;
 	}

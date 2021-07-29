@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.6
- * 2021-07-07
+ * jQuery CBplayer 1.5.7
+ * 2021-07-29
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.5.6',
+	 	playerVersion = '1.5.7',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -100,8 +100,8 @@
 		mediaPause: $,
 		mediaPlay: $,
 		mediaRestart: $,
-		mediaSetVolume : $,
-		mediaSetTime : $
+		mediaSetVolume: $,
+		mediaSetTime: $
 	}
 
 	function isTouchDevice(){
@@ -1204,6 +1204,23 @@
 	    return a + d + e;
 	}
 
+    function fitIframe(container){
+        if(container.data('ratio') && container.data('iframe')){
+            const containerHeight = container.height()
+            const containerWidth = container.width()
+            const containerRatio = containerWidth / containerHeight
+            const media = container.find('.cb-player-media')
+
+            //fit video in height
+            if(containerRatio > container.data('ratio')){
+                let newWidth = containerHeight * container.data('ratio');
+                media.css('width', newWidth);
+            }else{
+                media.css('width', '');
+            }
+        }
+    }
+
 	function CBplayer( element, options ) {
         this.options = $.extend( {}, defaults, options );
         this._defaults = defaults;
@@ -1606,6 +1623,14 @@
 
 	        		wrap.data('embed', el.embed);
 
+                    //get video ratio
+                    Promise.all([el.embed.getVideoWidth(), el.embed.getVideoHeight()]).then((dimensions) => {
+                        const ratio = dimensions[0] / dimensions[1];
+                        wrap.data('ratio', ratio)
+
+                        fitIframe(wrap);
+                    });
+
 	        		el.embed.on('bufferstart', function(){
 	        			wrap.addClass('cb-player-is-loaded');
 	        		});
@@ -1616,6 +1641,8 @@
 
 	        		el.embed.on('play', function(){
 	        			wrap.addClass('cb-player-is-playing').removeClass('cb-payer-is-replay cb-player-is-loaded');
+
+                        fitIframe(wrap);
 	        		});
 
 	        		el.embed.on('pause', function(){
@@ -2190,6 +2217,12 @@
 						$('.cb-player-context-active').removeClass('cb-player-context-active');
 					}
 				});
+
+                $(window).on('resize', function(){
+                    $('.cb-player.cb-media-is-ready').each(function(){
+                        fitIframe($(this));
+                    });
+                });
 
 				$(document).data('cbplayer-initialized', true);
 			}
