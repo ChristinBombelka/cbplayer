@@ -1164,8 +1164,8 @@
 	}
 
 	function getVimeoId(url){
-		var regex = /^.*(vimeo\.com\/)([0-9]+)/;
-	    return url.match(regex) ? RegExp.$2 : url;
+		var regex = /^.*(vimeo\.com\/(video\/|))([0-9]+)/;
+	    return url.match(regex) ? RegExp.$3 : url;
 	}
 
 	function format(input) {
