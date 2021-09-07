@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.7
- * 2021-07-29
+ * jQuery CBplayer 1.5.8
+ * 2021-09-07
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.5.7',
+	 	playerVersion = '1.5.8',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1135,6 +1135,18 @@
 	      	return "vimeo";
 	    }
 
+	    if (url.toLowerCase().match(/(.mp4)/)){
+	    	return "mp4";
+	    }
+
+		if (url.toLowerCase().match(/(.m3u8)/)){
+			return "stream";
+		}
+
+		if (url.toLowerCase().match(/(.mp3)/)){
+	    	return "mp3";
+	    }
+
 	    return null;
 	}
 
@@ -1323,6 +1335,33 @@
 				wrap.append(debug);
 			}
 
+			let source = getSource(el),
+            	provider = getProvider(source.mediaSrc);
+
+            //check video/audio element exist
+            if((provider == 'stream' || provider == 'mp4' || provider == 'mp3') && (!wrap.find('video').length || !wrap.find('audio').length)){
+
+            	el.remove();
+
+            	let sourceType,
+            		targetType;
+
+            	if(provider == 'stream' || provider == 'mp4'){
+	            	targetType = 'video';
+	            	sourceType = 'video/mp4'
+	            	if(provider == 'stream'){
+	            		sourceType = 'application/x-mpegURL';
+	            	}
+
+	            }else{
+	            	targetType = 'audio';
+	            	sourceType = 'audio/mp3';
+	            }
+
+	            el = $('<'+targetType+' playsinline class="cb-player-media"><source src="' + source.mediaSrc + '" type="' + sourceType + '"/></'+targetType+'>');
+	            el.prependTo(wrap);
+            }
+
 			if(el.is("video")){
 				wrap.append(context);
 			}
@@ -1447,9 +1486,6 @@
 				'hlsStopLoad': settings.hlsStopLoad,
 				'settings': settings
 			});
-
-			let source = getSource(el),
-            	provider = getProvider(source.mediaSrc);
 
             var youtube = {
             	setup: function(){
@@ -1612,9 +1648,9 @@
 	        		$(iframe).appendTo(wrapper);
 	        		$(iframe).addClass('cb-player-media-iframe');
 
-	        		var poster = $('<div>')
-	        			.addClass('cb-player-media-poster')
-	        			.appendTo(media);
+	        		// var poster = $('<div>')
+	        		// 	.addClass('cb-player-media-poster')
+	        		// 	.appendTo(media);
 
 	        		el.embed = new window.Vimeo.Player(iframe, {
 	        			autopause: 1,
