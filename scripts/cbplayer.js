@@ -1339,8 +1339,7 @@
             	provider = getProvider(source.mediaSrc);
 
             //check video/audio element exist
-            if((provider == 'stream' || provider == 'mp4' || provider == 'mp3') && (!wrap.find('video').length || !wrap.find('audio').length)){
-
+            if(( provider == 'stream' || provider == 'mp4' || provider == 'mp3' ) && ( !wrap.find('video').length && !wrap.find('audio').length )){
             	el.remove();
 
             	let sourceType,
