@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.9
- * 2021-09-13
+ * jQuery CBplayer 1.5.10
+ * 2021-09-17
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.5.9',
+	 	playerVersion = '1.5.10',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -938,7 +938,22 @@
 	}
 
 	function watchFullscreenStart(){
-		if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.webkitDisplayingFullscreen) {
+        let nativeFullscreen = $('.cb-player.cb-player-is-native-fullscreen')
+
+        if(nativeFullscreen.length){
+
+            if(nativeFullscreen.data('iframe') == 'vimeo'){
+                player = nativeFullscreen.data('embed');
+
+                player.getFullscreen().then(function(fullscreen){
+                    if(fullscreen === false){
+                        nativeFullscreen.removeClass("cb-player-is-native-fullscreen");
+                        clearInterval(watchFullscreen);
+                    }
+                });
+            }
+
+        } else if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.webkitDisplayingFullscreen) {
 			$(".cb-player-is-fullscreen").removeClass("cb-player-is-fullscreen cb-player-control-hide");
 
 			clearInterval(watchFullscreen);
@@ -948,6 +963,7 @@
 	function toggleFullscreen(container, player){
 		if(!$('.cb-player-is-fullscreen').length){
 
+            let fullscreenActive = true
 			if (player.requestFullScreen) {
 				player.requestFullScreen();
 			} else if (player.mozRequestFullScreen) {
@@ -961,10 +977,24 @@
 			}else if(player.webkitSupportsFullscreen){
 				//fullscreen support for ios
 				player.webkitEnterFullScreen();
-			}
+			}else{
+                fullscreenActive = false
 
-			watchFullscreen = setInterval(watchFullscreenStart, 250);
-			container.addClass("cb-player-is-fullscreen");
+                //show native fulscreen for vimeo
+                if(container.data('iframe') == 'vimeo'){
+                    player = container.data('embed');
+
+                    player.requestFullscreen().then(function() {
+                        watchFullscreen = setInterval(watchFullscreenStart, 250);
+                        container.addClass("cb-player-is-native-fullscreen");
+                    });
+                }
+            }
+
+            if(fullscreenActive){
+                watchFullscreen = setInterval(watchFullscreenStart, 250);
+                container.addClass("cb-player-is-fullscreen");
+            }
 
 		} else {
 			if (document.cancelFullScreen) {
