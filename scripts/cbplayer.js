@@ -881,12 +881,28 @@
 
 		}
 
-		if(container.data('contextInfo') && container.data('is_hls')){
-			container.find('.cb-debug-resolution').text(player[0].videoWidth + 'x' + player[0].videoHeight);
-			container.find('.cb-debug-levels').text(container.data('level') + ' of ' + container.data('levels').length);
-			container.find('.cb-debug-buffer').text(Math.round(container.data('buffer')) + 's');
+		if(container.data('contextInfo') && (container.data('is_hls') || container.data('iframe') == 'vimeo')){
+			let videoWidth, videoHeight;
+
+			if(container.data('iframe') == 'vimeo'){
+
+				var embedPlayer = container.data('embed');
+
+				Promise.all([embedPlayer.getVideoWidth(), embedPlayer.getVideoHeight()]).then((dimensions) => {
+					container.find('.cb-debug-resolution').text(dimensions[0] + 'x' + dimensions[1]);
+				});
+
+				embedPlayer.getCurrentTime().then((seconds) => {
+					container.find('.cb-debug-current').text(Math.round(seconds) + 's');
+				});
+			}else{
+				container.find('.cb-debug-resolution').text(player[0].videoWidth + 'x' + player[0].videoHeight);
+				container.find('.cb-debug-levels').text(container.data('level') + ' of ' + container.data('levels').length);
+				container.find('.cb-debug-buffer').text(Math.round(container.data('buffer')) + 's');
+				container.find('.cb-debug-current').text(Math.round(player[0].currentTime) + 's');
+			}
+	
 			container.find('.cb-debug-duration').text(container.data('duration') + 's');
-			container.find('.cb-debug-current').text(Math.round(player[0].currentTime) + 's');
 		}
 
 		if(container.data('is-livestream')){
@@ -1354,22 +1370,6 @@
 
 			var context = $('<ul class="cb-player-context"><li class="cb-player-context-item">CBplayer ' + playerVersion + '</li></ul>');
 
-			if(settings.contextInfo){
-
-				var debugLink = $('<li class="cb-player-context-item link" data-link="debug">Debug-info</li>');
-				context.append(debugLink);
-
-				var debug = $('<div class="cb-player-overlayer cb-player-debug"><div class="cb-player-overlayer-close"></div></div>');
-
-				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">Resolution:</div><div class="cb-player-debug-item-value cb-debug-resolution"></div></div>'));
-				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">QualityLevels:</div><div class="cb-player-debug-item-value cb-debug-levels"></div></div>'));
-				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">Buffer:</div><div class="cb-player-debug-item-value cb-debug-buffer"></div></div>'));
-				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">Duration:</div><div class="cb-player-debug-item-value cb-debug-duration"></div></div>'));
-				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">CurrentTime:</div><div class="cb-player-debug-item-value cb-debug-current"></div></div>'));
-
-				wrap.append(debug);
-			}
-
 			let source = getSource(el),
             	provider = getProvider(source.mediaSrc);
 
@@ -1405,9 +1405,26 @@
                 options.controlHide = false;
             }
 
+            if(settings.contextInfo){
+
+				var debugLink = $('<li class="cb-player-context-item link" data-link="debug">Debug-info</li>');
+				context.append(debugLink);
+
+				var debug = $('<div class="cb-player-overlayer cb-player-debug"><div class="cb-player-overlayer-close"></div></div>');
+
+				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">Resolution:</div><div class="cb-player-debug-item-value cb-debug-resolution"></div></div>'));
+				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">QualityLevels:</div><div class="cb-player-debug-item-value cb-debug-levels"></div></div>'));
+				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">Buffer:</div><div class="cb-player-debug-item-value cb-debug-buffer"></div></div>'));
+				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">Duration:</div><div class="cb-player-debug-item-value cb-debug-duration"></div></div>'));
+				debug.append($('<div class="cb-player-debug-item"><div class="cb-player-debug-item-type">CurrentTime:</div><div class="cb-player-debug-item-value cb-debug-current"></div></div>'));
+
+				wrap.append(debug);
+			}
+
 			if(settings.tpl == 'default' && !settings.backgroundMode && !wrap.find('.cb-player-controls').length){
 
 				control.append(play);
+				wrap.append(context);
 
 				if(settings.controlShowLoad){
 					control.find('.cb-player-play').append($('</span><span class="cb-player-button-load"></span>'));
@@ -1647,7 +1664,7 @@
             		videoId = getVimeoId(source.mediaSrc);
 
 	        		wrap.addClass('cb-media-is-ready');
-
+	
 	        		var media = wrap.find('.cb-player-media');
 
 	        		var wrapper = document.createElement('div');
