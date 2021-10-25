@@ -2240,9 +2240,11 @@
 						track.mode = 'hidden';
 					}
 				}
+
+				item.closest('.cb-player-subtitle').removeClass('cb-player-subtitle-active');
 			});
 
-			container.on('click', '.cb-player-subtitle', function(e){
+			container.on(isTouchDevice() ? 'touchend' : 'mouseover', '.cb-player-subtitle', function(e){
 				var item = $(this);
 
 				if($(e.target).hasClass('cb-player-subtitle-button')){
