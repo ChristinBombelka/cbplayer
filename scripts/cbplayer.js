@@ -437,7 +437,7 @@
 				container.data({
 					'videowidth': media[0].videoWidth,
 					'videoheight': media[0].videoHeight,
-					'duration': media[0].duration
+					'duration': Math.floor(media[0].duration)
 				});
 
 				setVolume(container, container.data('volume'));
