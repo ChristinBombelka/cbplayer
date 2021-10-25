@@ -881,11 +881,10 @@
 
 		}
 
-		if(container.data('contextInfo') && (container.data('is_hls') || container.data('iframe') == 'vimeo')){
+		if(container.data('contextInfo')){
 			let videoWidth, videoHeight;
 
 			if(container.data('iframe') == 'vimeo'){
-
 				var embedPlayer = container.data('embed');
 
 				Promise.all([embedPlayer.getVideoWidth(), embedPlayer.getVideoHeight()]).then((dimensions) => {
@@ -893,13 +892,19 @@
 				});
 
 				embedPlayer.getCurrentTime().then((seconds) => {
-					container.find('.cb-debug-current').text(Math.round(seconds) + 's');
+					container.find('.cb-debug-current').text(Math.floor(seconds) + 's');
 				});
 			}else{
 				container.find('.cb-debug-resolution').text(player[0].videoWidth + 'x' + player[0].videoHeight);
-				container.find('.cb-debug-levels').text(container.data('level') + ' of ' + container.data('levels').length);
-				container.find('.cb-debug-buffer').text(Math.round(container.data('buffer')) + 's');
-				container.find('.cb-debug-current').text(Math.round(player[0].currentTime) + 's');
+				container.find('.cb-debug-current').text(Math.floor(player[0].currentTime) + 's');
+
+				if(container.data('level')){
+					container.find('.cb-debug-levels').text(container.data('level') + ' of ' + container.data('levels').length);
+				}
+				
+				if(container.data('buffer')){
+					container.find('.cb-debug-buffer').text(Math.round(container.data('buffer')) + 's');
+				}
 			}
 	
 			container.find('.cb-debug-duration').text(container.data('duration') + 's');
