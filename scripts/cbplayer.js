@@ -55,7 +55,7 @@
 		backtracking: true,
 		/* disable duratuon/progressbar */
 		controlShowLoad: true,
-		/* show loading animation on play/pause/replay button*/
+		/* controll show loading animation button*/
 		hlsStopLoad: false,
 		/* stop buffering hls stream on video stop*/
 		volume: 100,
@@ -223,7 +223,7 @@
 			container.addClass("cb-player-progressbar-off");
 		}
 
-		container.removeClass("cb-payer-is-replay");
+		//container.removeClass("cb-payer-is-replay");
 
 		var settings = container.data('settings'),
 			media = container.find(".cb-player-media"),
@@ -1356,7 +1356,7 @@
 			// }
 
 			var control = $('<div class="cb-player-controls"></div>');
-			var play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span><span class="cb-player-button-replay"></div>');
+			var play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span></div>');
 			var time = $('<div class="cb-player-time"><span class="cb-player-time-current">00:00</span><span class="cb-player-time-seperator">/</span><span class="cb-player-time-duration">00:00</span></div>');
 			var progress = $('<span class="cb-player-progress" role="slider" aria-valuenow="0"><div class="cb-player-progress-hide"></div><div class="cb-player-progress-play"></div><div class="cb-player-progress-load"></div></span>');
 			var tooltip = $('<span class="cb-player-progress-tooltip"></span>');
@@ -1427,7 +1427,7 @@
 				wrap.append(context);
 
 				if(settings.controlShowLoad){
-					control.find('.cb-player-play').append($('</span><span class="cb-player-button-load"></span>'));
+					control.find('.cb-player-play').append($('<span class="cb-player-button-load"></span>'));
 				}
 
 				if(settings.controlTime){
@@ -1493,7 +1493,6 @@
                 }else{
                     wrap.addClass('cb-player--with-subtitles');
                 }
-
             }
 
 			if(!wrap.find('.cb-player-error').length){
@@ -1584,7 +1583,7 @@
 				        		var instance = e.target;
 
 				        		if(e.data == YT.PlayerState.PLAYING){
-				        			wrap.addClass('cb-player-is-playing').removeClass('cb-payer-is-replay cb-player-is-loaded');
+				        			wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-loaded');
 
 				        			ytTimer = setInterval(function(){
 				        				watchTimer(wrap);
@@ -1727,7 +1726,7 @@
 	        		});
 
 	        		el.embed.on('play', function(){
-	        			wrap.addClass('cb-player-is-playing').removeClass('cb-payer-is-replay cb-player-is-loaded');
+	        			wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-loaded');
 
                         fitIframe(wrap);
 	        		});
@@ -1822,7 +1821,7 @@
 
 						container
 							.addClass('cb-player-is-playing')
-							.removeClass('cb-payer-is-replay');
+							.removeClass('cb-payer-is-ended');
 					});
 
 					el.on('pause', function(e){
@@ -1878,7 +1877,7 @@
 					el.on('ended', function(){
 						var container = $(this).closest(".cb-player");
 
-						container.removeClass("cb-player-is-playing cb-player-control-hide").addClass("cb-payer-is-replay");
+						container.removeClass("cb-player-is-playing cb-player-control-hide").addClass("cb-payer-is-ended");
 		                container.find('.cb-player-subtitle-layer').remove();
 
 						if ($.isFunction(settings.mediaIsEnd)) {

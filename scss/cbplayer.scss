@@ -156,7 +156,6 @@ audio{
 }
 
 .cb-player-button-pause,
-.cb-player-button-replay,
 .cb-player-button-mute,
 .cb-player-button-fullscreen-off{
 	display: none;
@@ -267,8 +266,7 @@ audio{
 
 
 .cb-player-button-play,
-.cb-player-button-pause,
-.cb-player-button-replay{
+.cb-player-button-pause{
 	transform: translate(-50%, -50%);
 	position: absolute;
 	left: 50%;
@@ -289,26 +287,6 @@ audio{
     border-right: 4px solid #fff;
     width: 4px;
     height: 12px;
-}
-
-
-.cb-player-button-replay{
-	width: 20px;
-	height: 20px;
-	background-image: url("../elements/icon_replay.svg");
-	background-repeat: no-repeat;
-	background-size: contain;
-}
-
-.cb-payer-replay{
-	.cb-player-button-play{
-		display: none;
-	}
-
-	.cb-player-button-replay{
-		display: block;
-	}
-
 }
 
 .cb-player-time{
@@ -496,8 +474,7 @@ audio{
 
     .cb-player-with-load{
         .cb-player-button-play,
-        .cb-player-button-pause,
-        .cb-player-button-replay{
+        .cb-player-button-pause{
             display: none;
         }
 
