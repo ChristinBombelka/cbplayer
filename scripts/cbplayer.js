@@ -1726,7 +1726,7 @@
 	        		});
 
 	        		el.embed.on('play', function(){
-	        			wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-loaded');
+	        			wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-ended cb-player-is-loaded');
 
                         fitIframe(wrap);
 	        		});
@@ -1745,6 +1745,10 @@
 	        		el.embed.on('seeked', function(){
 	        			clearTimeout(watchControlHide);
 						wrap.removeClass('cb-player-control-hide');
+	        		});
+
+	        		el.embed.on('ended', function(data) {
+	        			wrap.addClass('cb-player-is-ended');
 	        		});
 
 	        		//set duration
