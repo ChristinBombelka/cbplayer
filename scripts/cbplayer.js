@@ -38,6 +38,8 @@
 		/* show remaining time */
 		controlProgress: true,
 		/* enable/disable progress bar */
+		controllTooltip: true,
+		/* enable/disable tooltip on progress bar */
 		controlFullscreen: true,
 		/* enable/disable fullscreen button */
 		controlAudio: true,
@@ -1341,11 +1343,14 @@
 			var play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span><span class="cb-player-button-replay"></div>');
 			var time = $('<div class="cb-player-time"><span class="cb-player-time-current">00:00</span><span class="cb-player-time-seperator">/</span><span class="cb-player-time-duration">00:00</span></div>');
 			var progress = $('<span class="cb-player-progress" role="slider" aria-valuenow="0"><div class="cb-player-progress-hide"></div><div class="cb-player-progress-play"></div><div class="cb-player-progress-load"></div></span>');
+			var tooltip = $('<span class="cb-player-progress-tooltip"></span>');
 			var mute = $('<div class="cb-player-volume-wrap"><div class="cb-player-toggle-mute"><span class="cb-player-button-sound"></span><span class="cb-player-button-mute"></span></div></div>');
 			var volume = $('<div class="cb-player-volume-' + settings.volumeOrientation + '"><span class="cb-player-volume"><div class="cb-player-volume-hide" role="slider" aria-valuenow=""></div><div class="cb-player-volume-bar"></div></span></div>');
 			var fullscreen = $('<div class="cb-player-fullscreen cb-player-toggle-fullscreen"><span class="cb-player-button-fullscreen-on"></span><span class="cb-player-button-fullscreen-off"></span></div>');
-
-			var tooltip = $('<span class="cb-player-progress-tooltip"></span>').prependTo(progress);
+			
+			if(settings.controllTooltip){
+				tooltip.prependTo(progress);
+			}
 
 			var context = $('<ul class="cb-player-context"><li class="cb-player-context-item">CBplayer ' + playerVersion + '</li></ul>');
 
