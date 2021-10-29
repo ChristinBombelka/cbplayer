@@ -32,17 +32,19 @@
 		*/
 		controlBar: true,
 		/* enable/disable complete controls */
+		controlLoadButton: true,
+		/* controll show loading animation button*/
 		controlTime: true,
 		/* enable/disable  current/duration time */
 		controlTimeBackwards: false,
 		/* show remaining time */
 		controlProgress: true,
 		/* enable/disable progress bar */
-		controllTooltip: true,
+		controlTooltip: true,
 		/* enable/disable tooltip on progress bar */
 		controlFullscreen: true,
 		/* enable/disable fullscreen button */
-		controlAudio: true,
+		controlVolume: true,
 		/* enable/disable mute/volume */
 		overlayButton: true,
 		/* enable/disable overlay play button*/
@@ -54,8 +56,6 @@
 		/* timeout to hide control on mousemove */
 		backtracking: true,
 		/* disable duratuon/progressbar */
-		controlShowLoad: true,
-		/* controll show loading animation button*/
 		hlsStopLoad: false,
 		/* stop buffering hls stream on video stop*/
 		volume: 100,
@@ -1369,7 +1369,7 @@
 			var volume = $('<div class="cb-player-volume-' + settings.volumeOrientation + '"><span class="cb-player-volume"><div class="cb-player-volume-hide" role="slider" aria-valuenow=""></div><div class="cb-player-volume-bar"></div></span></div>');
 			var fullscreen = $('<div class="cb-player-fullscreen cb-player-toggle-fullscreen"><span class="cb-player-button-fullscreen-on"></span><span class="cb-player-button-fullscreen-off"></span></div>');
 			
-			if(settings.controllTooltip){
+			if(settings.controlTooltip){
 				tooltip.prependTo(progress);
 			}
 
@@ -1431,7 +1431,7 @@
 				control.append(play);
 				wrap.append(context);
 
-				if(settings.controlShowLoad){
+				if(settings.controlLoadButton){
 					control.find('.cb-player-play').append($('<span class="cb-player-button-load"></span>'));
 				}
 
@@ -1443,7 +1443,7 @@
 					control.append(progress);
 				}
 
-				if(settings.controlAudio){
+				if(settings.controlVolume){
 					volume.appendTo(mute);
 					control.append(mute);
 				}
