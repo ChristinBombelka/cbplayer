@@ -132,6 +132,10 @@ audio{
 	}
 }
 
+.cb-player-play{
+	cursor: pointer;
+}
+
 .cb-player-play,
 .cb-player-volume-wrap{
 	background-color: transparent;
@@ -139,7 +143,6 @@ audio{
 	height: 36px;
 	padding: 0;
 	margin: 0;
-	cursor: pointer;
 	border: 0;
 	float: left;
 	position: relative;
@@ -220,7 +223,8 @@ audio{
 	z-index: 10;
 }
 
-.cb-player-progress-hide{
+.cb-player-progress-hide,
+.cb-player-volume-hide{
 	top: -4px;
 	height: calc(100% + 8px);
 }
@@ -346,8 +350,14 @@ audio{
 	top: 50%;
 }
 
-.cb-player-button-sound,
-.cb-player-button-mute{
+.cb-player-sound{
+	cursor: pointer;
+	width: 100%;
+	height: 100%;
+}
+
+.cb-player-sound-on,
+.cb-player-sound-off{
 	width: 100%;
 	height: 100%;
 	background-position: center;
@@ -355,25 +365,21 @@ audio{
 	background-size: 20px;
 }
 
-.cb-player-toggle-mute{
-	width: 100%;
-	height: 100%;
-}
-
-.cb-player-button-sound{
+.cb-player-sound-on{
 	background-image: url("../elements/icon_sound_on.svg");
+	display: block;
 }
 
-.cb-player-button-mute{
+.cb-player-sound-off{
 	background-image: url("../elements/icon_sound_off.svg");
 }
 
 .cb-player-is-muted{
-	.cb-player-button-sound{
+	.cb-player-sound-on{
 		display: none;
 	}
 
-	.cb-player-button-mute{
+	.cb-player-sound-off{
 		display: block;
 	}
 }
@@ -602,6 +608,7 @@ audio{
 	background-color: $colorBackground;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	z-index: 2;
 
 	&.cb-player-context-active{
 		display: block;
