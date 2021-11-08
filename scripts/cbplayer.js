@@ -1486,12 +1486,19 @@
                 var trackSelected;
                 tracks.each(function(i, s){
                     var track = $(s);
-                    var item = subtitleList.append(createTrackItem('subtitles-' + track.attr('srclang'), track.attr('srclang'), track.attr('label')));
+                   	var item = createTrackItem('subtitles-' + track.attr('srclang'), track.attr('srclang'), track.attr('label'))
 
+                    subtitleList.append(item);
+
+                   	if(track[0].default){
+                    	item.addClass('cb-player-subtitle--selected')
+                    }
                 });
 
                 subtitleList.prepend(createTrackItem('subtitles-off', '', 'OFF'));
-                subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
+                if(!subtitleList.find('.cb-player-subtitle--selected').length){
+                	subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
+                }
 
                 if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
                     wrap.addClass('cb-player--with-native-subtitles');
