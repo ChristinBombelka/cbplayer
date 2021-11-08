@@ -627,7 +627,7 @@
 					time = player.currentTime;
 
 				if(buffer.start(i) <= time && time <= buffer.end(i)){
-					var loadPercentage = buffer.end(i) / player.duration * 100;
+					var loadPercentage = Math.floor(buffer.end(i)) / Math.floor(player.duration) * 100;
 				}
 			}
 
