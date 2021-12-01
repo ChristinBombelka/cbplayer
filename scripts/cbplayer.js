@@ -88,6 +88,8 @@
 		/* callback media container create */
 		mediaIsReady: false,
 		/* ballback media is ready to play*/
+        mediaMetaIsLoaded: false,
+        /* wait for media meta data */
 		mediaIsPlay: false,
 		/* callback media start play */
 		mediaIsPause: false,
@@ -361,6 +363,10 @@
 					'videowidth': data.levels[0].width,
 					'videoheight': data.levels[0].height
 				});
+
+                if ($.isFunction(settings.mediaMetaIsLoaded)) {
+                    settings.mediaMetaIsLoaded.call(this, container);
+                }
 			});
 
 			var firstLoad = true,
@@ -446,6 +452,10 @@
 				if(autostart){
 					toggleMediaPlayPause(container);
 				}
+
+                if ($.isFunction(settings.mediaMetaIsLoaded)) {
+                    settings.mediaMetaIsLoaded.call(this, container);
+                }
 			});
 
 		}else if (source.mediaSrc.toLowerCase().match(/(.mp3)/)){
@@ -478,6 +488,10 @@
 				if(autostart){
 					toggleMediaPlayPause(container);
 				}
+
+                if ($.isFunction(settings.mediaMetaIsLoaded)) {
+                    settings.mediaMetaIsLoaded.call(this, container);
+                }
 			});
 
 		}else{
