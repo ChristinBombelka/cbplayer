@@ -79,6 +79,7 @@
 		},
 		vimeo: {
 			referrerPolicy: null, // https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/referrerPolicy
+            fitIframe: true,
 		},
 		/* config youtube */
 		disableClick: false,
@@ -1275,13 +1276,16 @@
             const containerWidth = container.width()
             const containerRatio = containerWidth / containerHeight
             const media = container.find('.cb-player-media')
+            const settings = container.data('settings');
 
-            //fit video in height
-            if(containerRatio > container.data('ratio')){
-                let newWidth = containerHeight * container.data('ratio');
-                media.css('width', newWidth);
-            }else{
-                media.css('width', '');
+            if(settings.vimeo.fitIframe){
+                //fit video in height
+                if(containerRatio > container.data('ratio')){
+                    let newWidth = containerHeight * container.data('ratio');
+                    media.css('width', newWidth);
+                }else{
+                    media.css('width', '');
+                }
             }
         }
     }
