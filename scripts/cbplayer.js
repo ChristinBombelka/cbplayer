@@ -1354,11 +1354,12 @@
 
 				el = wrap.find("video, audio");
 
-                if(!el.length){
+                if(wrap.find('.cb-player-media').length){
+                    el = wrap.find('.cb-player-media')
+                }else if(!el.length){
                     el = $('<div>').appendTo(wrap);
+                    el.addClass('cb-player-media');
                 }
-
-				el.addClass('cb-player-media');
 			}
 
 			if(settings.overlaySpinner && !wrap.find('.cb-player-spinner-wrap').length){
