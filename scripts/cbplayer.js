@@ -7,7 +7,7 @@
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-	 	playerVersion = '1.5.12',
+		playerVersion = '1.5.12',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -16,11 +16,11 @@
 		urls = {
 			vimeo: {
 				iframe: 'https://player.vimeo.com/video/{0}?{1}',
-	        	sdk: 'https://player.vimeo.com/api/player.js',
-		    },
-		    youtube: {
-		        sdk: 'https://www.youtube.com/iframe_api',
-		    },
+				sdk: 'https://player.vimeo.com/api/player.js',
+			},
+			youtube: {
+				sdk: 'https://www.youtube.com/iframe_api',
+			},
 		},
 		youtubeInit = false,
 		vimeoInit = false,
@@ -48,8 +48,8 @@
 		/* enable/disable mute/volume */
 		overlayButton: true,
 		/* enable/disable overlay play button*/
-        overlaySpinner: true,
-        /* enable/disable overlay spinner*/
+		overlaySpinner: true,
+		/* enable/disable overlay spinner*/
 		controlHide: true,
 		/* hide controls on leave container or mousemove stop longer as 'controlHideTimeout' */
 		controlHideTimeout: 3000,
@@ -79,7 +79,7 @@
 		},
 		vimeo: {
 			referrerPolicy: null, // https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/referrerPolicy
-            fitIframe: true,
+			fitIframe: true,
 		},
 		/* config youtube */
 		disableClick: false,
@@ -88,8 +88,8 @@
 		/* callback media container create */
 		mediaIsReady: false,
 		/* ballback media is ready to play*/
-        mediaMetaIsLoaded: false,
-        /* wait for media meta data */
+		mediaMetaIsLoaded: false,
+		/* wait for media meta data */
 		mediaIsPlay: false,
 		/* callback media start play */
 		mediaIsPause: false,
@@ -181,37 +181,37 @@
 	function fileExist(src){
 		var http = new XMLHttpRequest();
 
-	    http.open('HEAD', src, true);
-	    http.send();
+		http.open('HEAD', src, true);
+		http.send();
 
-	    return http.status != 404;
+		return http.status != 404;
 	}
 
-    function getSource(media){
-        if(media.attr('src')){
-            mediaSrcEl = media;
-            mediaSrc = mediaSrcEl.attr('src');
-        }else if(media.data('src')){
-            mediaSrcEl = media;
-            mediaSrc = mediaSrcEl.data('src');
-        }else if(media.find("source").attr('src')){
-            mediaSrcEl = media.find("source");
-            mediaSrc = mediaSrcEl.attr('src');
-        }else if(media.find("source").data('src')){
-            mediaSrcEl = media.find("source");
-            mediaSrc = media.find("source").data('src');
-        }else if(media.parent().data('src')){
-            mediaSrcEl = media.parent();
-            mediaSrc = media.parent().data('src');
-        }else{
-            return false;
-        }
+	function getSource(media){
+		if(media.attr('src')){
+			mediaSrcEl = media;
+			mediaSrc = mediaSrcEl.attr('src');
+		}else if(media.data('src')){
+			mediaSrcEl = media;
+			mediaSrc = mediaSrcEl.data('src');
+		}else if(media.find("source").attr('src')){
+			mediaSrcEl = media.find("source");
+			mediaSrc = mediaSrcEl.attr('src');
+		}else if(media.find("source").data('src')){
+			mediaSrcEl = media.find("source");
+			mediaSrc = media.find("source").data('src');
+		}else if(media.parent().data('src')){
+			mediaSrcEl = media.parent();
+			mediaSrc = media.parent().data('src');
+		}else{
+			return false;
+		}
 
-        return {
-            mediaSrcEl,
-            mediaSrc
-        }
-    }
+		return {
+			mediaSrcEl,
+			mediaSrc
+		}
+	}
 
 	function getPlayerSrc(container, autostart){
 		if(container.hasClass('cb-player-is-loaded') || container.hasClass('cb-media-is-ready')){
@@ -232,10 +232,10 @@
 			media = container.find(".cb-player-media"),
 			timeoutMeta;
 
-        let source = getSource(media);
-        if(!source){
-            return;
-        }
+		let source = getSource(media);
+		if(!source){
+			return;
+		}
 
 		if(source.mediaSrc.toLowerCase().match(/(.m3u8)/) && typeof Hls === 'undefined'){
 			displayError(container, 'hls.js ist not found');
@@ -364,9 +364,9 @@
 					'videoheight': data.levels[0].height
 				});
 
-                if ($.isFunction(settings.mediaMetaIsLoaded)) {
-                    settings.mediaMetaIsLoaded.call(this, container);
-                }
+				if ($.isFunction(settings.mediaMetaIsLoaded)) {
+					settings.mediaMetaIsLoaded.call(this, container);
+				}
 			});
 
 			var firstLoad = true,
@@ -453,9 +453,9 @@
 					toggleMediaPlayPause(container);
 				}
 
-                if ($.isFunction(settings.mediaMetaIsLoaded)) {
-                    settings.mediaMetaIsLoaded.call(this, container);
-                }
+				if ($.isFunction(settings.mediaMetaIsLoaded)) {
+					settings.mediaMetaIsLoaded.call(this, container);
+				}
 			});
 
 		}else if (source.mediaSrc.toLowerCase().match(/(.mp3)/)){
@@ -489,9 +489,9 @@
 					toggleMediaPlayPause(container);
 				}
 
-                if ($.isFunction(settings.mediaMetaIsLoaded)) {
-                    settings.mediaMetaIsLoaded.call(this, container);
-                }
+				if ($.isFunction(settings.mediaMetaIsLoaded)) {
+					settings.mediaMetaIsLoaded.call(this, container);
+				}
 			});
 
 		}else{
@@ -727,7 +727,7 @@
 
 		settings = container.data('settings');
 		if ($.isFunction(settings.mediaChangeVolume)) {
-		    settings.mediaChangeVolume.call(this, container, volume);
+			settings.mediaChangeVolume.call(this, container, volume);
 		}
 	}
 
@@ -976,22 +976,22 @@
 	}
 
 	function watchFullscreenStart(){
-        let nativeFullscreen = $('.cb-player.cb-player-is-native-fullscreen')
+		let nativeFullscreen = $('.cb-player.cb-player-is-native-fullscreen')
 
-        if(nativeFullscreen.length){
+		if(nativeFullscreen.length){
 
-            if(nativeFullscreen.data('iframe') == 'vimeo'){
-                player = nativeFullscreen.data('embed');
+			if(nativeFullscreen.data('iframe') == 'vimeo'){
+				player = nativeFullscreen.data('embed');
 
-                player.getFullscreen().then(function(fullscreen){
-                    if(fullscreen === false){
-                        nativeFullscreen.removeClass("cb-player-is-native-fullscreen");
-                        clearInterval(watchFullscreen);
-                    }
-                });
-            }
+				player.getFullscreen().then(function(fullscreen){
+					if(fullscreen === false){
+						nativeFullscreen.removeClass("cb-player-is-native-fullscreen");
+						clearInterval(watchFullscreen);
+					}
+				});
+			}
 
-        } else if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.webkitDisplayingFullscreen) {
+		} else if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.webkitDisplayingFullscreen) {
 			$(".cb-player-is-fullscreen").removeClass("cb-player-is-fullscreen cb-player-control-hide");
 
 			clearInterval(watchFullscreen);
@@ -1001,38 +1001,38 @@
 	function toggleFullscreen(container, player){
 		if(!$('.cb-player-is-fullscreen').length){
 
-            let fullscreenActive = true
+			let fullscreenActive = true
 			if (player.requestFullScreen) {
 				player.requestFullScreen();
 			} else if (player.mozRequestFullScreen) {
 				container[0].mozRequestFullScreen();
 			}else if (player.webkitRequestFullscreen) {
-                //fullscreen support android
+				//fullscreen support android
 				container[0].webkitRequestFullscreen();
 			} else if (player.msRequestFullscreen) {
-                //fullscreen IE 11
+				//fullscreen IE 11
 				container[0].msRequestFullscreen();
 			}else if(player.webkitSupportsFullscreen){
 				//fullscreen support for ios
 				player.webkitEnterFullScreen();
 			}else{
-                fullscreenActive = false
+				fullscreenActive = false
 
-                //show native fulscreen for vimeo
-                if(container.data('iframe') == 'vimeo'){
-                    player = container.data('embed');
+				//show native fulscreen for vimeo
+				if(container.data('iframe') == 'vimeo'){
+					player = container.data('embed');
 
-                    player.requestFullscreen().then(function() {
-                        watchFullscreen = setInterval(watchFullscreenStart, 250);
-                        container.addClass("cb-player-is-native-fullscreen");
-                    });
-                }
-            }
+					player.requestFullscreen().then(function() {
+						watchFullscreen = setInterval(watchFullscreenStart, 250);
+						container.addClass("cb-player-is-native-fullscreen");
+					});
+				}
+			}
 
-            if(fullscreenActive){
-                watchFullscreen = setInterval(watchFullscreenStart, 250);
-                container.addClass("cb-player-is-fullscreen");
-            }
+			if(fullscreenActive){
+				watchFullscreen = setInterval(watchFullscreenStart, 250);
+				container.addClass("cb-player-is-fullscreen");
+			}
 
 		} else {
 			if (document.cancelFullScreen) {
@@ -1150,77 +1150,77 @@
 		}
 	}
 
-    function watchSubtitles(container){
-        var el = container.find('.cb-player-media'),
-        	tracks = el[0].textTracks,
-            lastCueId = container.data('lastCueId');
+	function watchSubtitles(container){
+		var el = container.find('.cb-player-media'),
+			tracks = el[0].textTracks,
+			lastCueId = container.data('lastCueId');
 
-        if(tracks && container.hasClass('cb-player--with-subtitles')){
-            for (var i = 0; i < tracks.length; i++){
-                var textTrack = el[0].textTracks[i],
-                    currentCue = false;
+		if(tracks && container.hasClass('cb-player--with-subtitles')){
+			for (var i = 0; i < tracks.length; i++){
+				var textTrack = el[0].textTracks[i],
+					currentCue = false;
 
-                if(textTrack.mode == 'showing'){
+				if(textTrack.mode == 'showing'){
 
-                    for (var i = 0; i < textTrack.cues.length; i++){
-                        var cue = textTrack.cues[i];
+					for (var i = 0; i < textTrack.cues.length; i++){
+						var cue = textTrack.cues[i];
 
-                        if(cue.startTime < el[0].currentTime && cue.endTime > el[0].currentTime){
-                            currentCue = cue;
-                        }
-                    }
+						if(cue.startTime < el[0].currentTime && cue.endTime > el[0].currentTime){
+							currentCue = cue;
+						}
+					}
 
-                    var currentSubtitle = container.find('.cb-player-subtitle-layer');
+					var currentSubtitle = container.find('.cb-player-subtitle-layer');
 
-                    if(currentCue){
+					if(currentCue){
 
-                        if(lastCueId != currentCue.startTime){
-                            currentSubtitle.remove();
+						if(lastCueId != currentCue.startTime){
+							currentSubtitle.remove();
 
-                            $('<div class="cb-player-subtitle-layer"><span class="cb-player-subtitle-text">'+currentCue.text+'</span></div>').appendTo(container);
+							$('<div class="cb-player-subtitle-layer"><span class="cb-player-subtitle-text">'+currentCue.text+'</span></div>').appendTo(container);
 
-                           container.data('lastCueId', currentCue.startTime);
-                        }
-                    }else{
-                        if(currentSubtitle.length){
-                            lastCueId = false;
-                            currentSubtitle.remove();
-                        }
-                    }
-                }
-            }
-        }
-    }
+						   container.data('lastCueId', currentCue.startTime);
+						}
+					}else{
+						if(currentSubtitle.length){
+							lastCueId = false;
+							currentSubtitle.remove();
+						}
+					}
+				}
+			}
+		}
+	}
 
-    function getProvider(url){
-	    // YouTube
-	    if (/^(https?:\/\/)?(www\.)?(youtube\.com|youtube-nocookie\.com|youtu\.?be)\/.+$/.test(url)) {
-	      	return "youtube";
-	    }
+	function getProvider(url){
+		// YouTube
+		if (/^(https?:\/\/)?(www\.)?(youtube\.com|youtube-nocookie\.com|youtu\.?be)\/.+$/.test(url)) {
+			return "youtube";
+		}
 
-	    // Vimeo
-	    if (/^https?:\/\/(player.vimeo.com\/video\/|vimeo.com)\d{0,9}(?=\b|\/)/.test(url)) {
-	      	return "vimeo";
-	    }
+		// Vimeo
+		if (/^https?:\/\/(player.vimeo.com\/video\/|vimeo.com)\d{0,9}(?=\b|\/)/.test(url)) {
+			return "vimeo";
+		}
 
-	    if (url.toLowerCase().match(/(.mp4)/)){
-	    	return "mp4";
-	    }
+		if (url.toLowerCase().match(/(.mp4)/)){
+			return "mp4";
+		}
 
 		if (url.toLowerCase().match(/(.m3u8)/)){
 			return "stream";
 		}
 
 		if (url.toLowerCase().match(/(.mp3)/)){
-	    	return "mp3";
-	    }
+			return "mp3";
+		}
 
-	    return null;
+		return null;
 	}
 
 	function getYoutubeId(url) {
-	    var regex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-	    return url.match(regex) ? RegExp.$2 : url;
+		var regex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+		return url.match(regex) ? RegExp.$2 : url;
 	}
 
 	function setDuration(container){
@@ -1237,29 +1237,29 @@
 		}
 
 		if (window.location.protocol === 'http:') {
-	      	return 'http://www.youtube.com';
-	    }
+			return 'http://www.youtube.com';
+		}
 
-	    return undefined;
+		return undefined;
 	}
 
 	function getVimeoId(url){
 		var regex = /^.*(vimeo\.com\/(video\/|))([0-9]+)/;
-	    return url.match(regex) ? RegExp.$3 : url;
+		return url.match(regex) ? RegExp.$3 : url;
 	}
 
 	function format(input) {
-	    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	      	args[_key - 1] = arguments[_key];
-	    }
+		for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+			args[_key - 1] = arguments[_key];
+		}
 
-	    if (!input) {
-	      return input;
-	    }
+		if (!input) {
+		  return input;
+		}
 
-	    return input.toString().replace(/{(\d+)}/g, function (match, i) {
-	     	return args[i].toString();
-	    });
+		return input.toString().replace(/{(\d+)}/g, function (match, i) {
+			return args[i].toString();
+		});
 	}
 
 	function buildUrlParams(input){
@@ -1273,45 +1273,45 @@
 	}
 
 	function uniqid(a = "", b = false) {
-	    const c = Date.now()/1000;
-	    let d = c.toString(16).split(".").join("");
-	    while(d.length < 14) d += "0";
-	    let e = "";
-	    if(b){
-	        e = ".";
-	        e += Math.round(Math.random() * 10000);
-	    }
-	    return a + d + e;
+		const c = Date.now()/1000;
+		let d = c.toString(16).split(".").join("");
+		while(d.length < 14) d += "0";
+		let e = "";
+		if(b){
+			e = ".";
+			e += Math.round(Math.random() * 10000);
+		}
+		return a + d + e;
 	}
 
-    function fitIframe(container){
-        if(container.data('ratio') && container.data('iframe')){
-            const containerHeight = container.height()
-            const containerWidth = container.width()
-            const containerRatio = containerWidth / containerHeight
-            const media = container.find('.cb-player-media')
-            const settings = container.data('settings');
+	function fitIframe(container){
+		if(container.data('ratio') && container.data('iframe')){
+			const containerHeight = container.height()
+			const containerWidth = container.width()
+			const containerRatio = containerWidth / containerHeight
+			const media = container.find('.cb-player-media')
+			const settings = container.data('settings');
 
-            if(settings.vimeo.fitIframe){
-                //fit video in height
-                if(containerRatio > container.data('ratio')){
-                    let newWidth = containerHeight * container.data('ratio');
-                    media.css('width', newWidth);
-                }else{
-                    media.css('width', '');
-                }
-            }
-        }
-    }
+			if(settings.vimeo.fitIframe){
+				//fit video in height
+				if(containerRatio > container.data('ratio')){
+					let newWidth = containerHeight * container.data('ratio');
+					media.css('width', newWidth);
+				}else{
+					media.css('width', '');
+				}
+			}
+		}
+	}
 
 	function CBplayer( element, options ) {
-        this.options = $.extend( {}, defaults, options );
-        this._defaults = defaults;
-        this._name = pluginName;
-        this.element = element;
-        this.init(this.options);
-        this.attachEvents(this.element, this.options);
-    }
+		this.options = $.extend( {}, defaults, options );
+		this._defaults = defaults;
+		this._name = pluginName;
+		this.element = element;
+		this.init(this.options);
+		this.attachEvents(this.element, this.options);
+	}
 
 	CBplayer.prototype = {
 		init: function(options) {
@@ -1354,12 +1354,12 @@
 
 				el = wrap.find("video, audio");
 
-                if(wrap.find('.cb-player-media').length){
-                    el = wrap.find('.cb-player-media')
-                }else if(!el.length){
-                    el = $('<div>').appendTo(wrap);
-                    el.addClass('cb-player-media');
-                }
+				if(wrap.find('.cb-player-media').length){
+					el = wrap.find('.cb-player-media')
+				}else if(!el.length){
+					el = $('<div>').appendTo(wrap);
+					el.addClass('cb-player-media');
+				}
 			}
 
 			if(settings.overlaySpinner && !wrap.find('.cb-player-spinner-wrap').length){
@@ -1395,41 +1395,41 @@
 			var context = $('<ul class="cb-player-context"><li class="cb-player-context-item">CBplayer ' + playerVersion + '</li></ul>');
 
 			let source = getSource(el),
-            	provider = getProvider(source.mediaSrc);
+				provider = getProvider(source.mediaSrc);
 
-            //check video/audio element exist
-            if(( provider == 'stream' || provider == 'mp4' || provider == 'mp3' ) && ( !wrap.find('video').length && !wrap.find('audio').length )){
-            	el.remove();
+			//check video/audio element exist
+			if(( provider == 'stream' || provider == 'mp4' || provider == 'mp3' ) && ( !wrap.find('video').length && !wrap.find('audio').length )){
+				el.remove();
 
-            	let sourceType,
-            		targetType;
+				let sourceType,
+					targetType;
 
-            	if(provider == 'stream' || provider == 'mp4'){
-	            	targetType = 'video';
-	            	sourceType = 'video/mp4'
-	            	if(provider == 'stream'){
-	            		sourceType = 'application/x-mpegURL';
-	            	}
+				if(provider == 'stream' || provider == 'mp4'){
+					targetType = 'video';
+					sourceType = 'video/mp4'
+					if(provider == 'stream'){
+						sourceType = 'application/x-mpegURL';
+					}
 
-	            }else{
-	            	targetType = 'audio';
-	            	sourceType = 'audio/mp3';
-	            }
+				}else{
+					targetType = 'audio';
+					sourceType = 'audio/mp3';
+				}
 
-	            el = $('<'+targetType+' playsinline class="cb-player-media"><source src="' + source.mediaSrc + '" type="' + sourceType + '"/></'+targetType+'>');
-	            el.prependTo(wrap);
-            }
+				el = $('<'+targetType+' playsinline class="cb-player-media"><source src="' + source.mediaSrc + '" type="' + sourceType + '"/></'+targetType+'>');
+				el.prependTo(wrap);
+			}
 
 			if(el.is("video")){
 				wrap.append(context);
 			}
 
-            if(el.is("audio")){
-                wrap.addClass('cb-player--audio');
-                options.controlHide = false;
-            }
+			if(el.is("audio")){
+				wrap.addClass('cb-player--audio');
+				options.controlHide = false;
+			}
 
-            if(settings.contextInfo){
+			if(settings.contextInfo){
 
 				var debugLink = $('<li class="cb-player-context-item link" data-link="debug">Debug-info</li>');
 				context.append(debugLink);
@@ -1486,58 +1486,58 @@
 				return item;
 			}
 
-            var tracks = el.find('track');
+			var tracks = el.find('track');
 			if(tracks.length){
-                var subtitlesContainer = wrap.find('.cb-player-subtitle'),
-                    subtitleList = wrap.find('.cb-player-subtitle-items');
+				var subtitlesContainer = wrap.find('.cb-player-subtitle'),
+					subtitleList = wrap.find('.cb-player-subtitle-items');
 
-                if(!subtitlesContainer.length){
-                    subtitlesContainer = $('<div class="cb-player-subtitle"></div>');
-                    subtitlesContainer.append($('<div class="cb-player-subtitle-button"></div>'));
-                    subtitlesContainer.appendTo(wrap.find('.cb-player-controls'));
-                }
+				if(!subtitlesContainer.length){
+					subtitlesContainer = $('<div class="cb-player-subtitle"></div>');
+					subtitlesContainer.append($('<div class="cb-player-subtitle-button"></div>'));
+					subtitlesContainer.appendTo(wrap.find('.cb-player-controls'));
+				}
 
-                if(!subtitleList.length){
-                    subtitleList = $('<ul class="cb-player-subtitle-items"></ul>');
-                    subtitlesContainer.append(subtitleList);
-                }
+				if(!subtitleList.length){
+					subtitleList = $('<ul class="cb-player-subtitle-items"></ul>');
+					subtitlesContainer.append(subtitleList);
+				}
 
-                var trackSelected;
-                let tracksLoaded = new Promise(resolve => {
-                    tracks.each(function(i, s){
-                        var track = $(s);
-                       	var item = createTrackItem('subtitles-' + track.attr('srclang'), track.attr('srclang'), track.attr('label'))
+				var trackSelected;
+				let tracksLoaded = new Promise(resolve => {
+					tracks.each(function(i, s){
+						var track = $(s);
+						var item = createTrackItem('subtitles-' + track.attr('srclang'), track.attr('srclang'), track.attr('label'))
 
-                        subtitleList.append(item);
+						subtitleList.append(item);
 
-                       	fetch($(track[0]).attr('src'))
-                        .then( resp => resp.text() )
-                        .then( data => {
-                            // console.log(data)
-                            if(track[0].default){
-                               item.addClass('cb-player-subtitle--selected')
-                            }
+						fetch($(track[0]).attr('src'))
+						.then( resp => resp.text() )
+						.then( data => {
+							// console.log(data)
+							if(track[0].default){
+							   item.addClass('cb-player-subtitle--selected')
+							}
 
-                            if(tracks.length == i + 1){
-                                resolve()
-                            }
-                        });
-                    });
-                });
+							if(tracks.length == i + 1){
+								resolve()
+							}
+						});
+					});
+				});
 
-                tracksLoaded.then(() => {
-                    subtitleList.prepend(createTrackItem('subtitles-off', '', 'OFF'));
-                    if(!subtitleList.find('.cb-player-subtitle--selected').length){
-                    	subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
-                    }
+				tracksLoaded.then(() => {
+					subtitleList.prepend(createTrackItem('subtitles-off', '', 'OFF'));
+					if(!subtitleList.find('.cb-player-subtitle--selected').length){
+						subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
+					}
 
-                    if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-                        wrap.addClass('cb-player--with-native-subtitles');
-                    }else{
-                        wrap.addClass('cb-player--with-subtitles');
-                    }
-                });
-            }
+					if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+						wrap.addClass('cb-player--with-native-subtitles');
+					}else{
+						wrap.addClass('cb-player--with-subtitles');
+					}
+				});
+			}
 
 			if(!wrap.find('.cb-player-error').length){
 				$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(wrap);
@@ -1565,9 +1565,9 @@
 				wrap.find('.cb-player-time-duration').text(formatTime(wrap.data('duration'), wrap));
 			}
 
-            if(wrap.find('.cb-player-button-load').length){
-                wrap.find('.cb-player-play').addClass('cb-player-with-load');
-            }
+			if(wrap.find('.cb-player-button-load').length){
+				wrap.find('.cb-player-play').addClass('cb-player-with-load');
+			}
 
 			wrap.data({
 				'initialized': true,
@@ -1581,227 +1581,227 @@
 				'settings': settings
 			});
 
-            var youtube = {
-            	setup: function(){
-            		if(window.YT && window.YT.Player){
-            			youtube.ready.call(_this);
-            		}else{
-            			var callback = window.onYouTubeIframeAPIReady;
+			var youtube = {
+				setup: function(){
+					if(window.YT && window.YT.Player){
+						youtube.ready.call(_this);
+					}else{
+						var callback = window.onYouTubeIframeAPIReady;
 
-				        window.onYouTubeIframeAPIReady = function () {
-				         	youtube.ready.call(_this);
-				        };
+						window.onYouTubeIframeAPIReady = function () {
+							youtube.ready.call(_this);
+						};
 
-				        $.getScript(urls.youtube.sdk, function(jd) {});
+						$.getScript(urls.youtube.sdk, function(jd) {});
 
-				        youtubeInit = true;
-            		}
-            	},
-            	ready: function ready() {
+						youtubeInit = true;
+					}
+				},
+				ready: function ready() {
 
-            		videoId = getYoutubeId(source.mediaSrc);
+					videoId = getYoutubeId(source.mediaSrc);
 
-	        		wrap.addClass('cb-media-is-ready');
+					wrap.addClass('cb-media-is-ready');
 
-	        		var id = uniqid(),
-	        			media = wrap.find('.cb-player-media'),
-	        			ytTimer;
+					var id = uniqid(),
+						media = wrap.find('.cb-player-media'),
+						ytTimer;
 
-	        		el = $('<div>')
-	        			.attr('id', id)
-	        			.appendTo(media);
+					el = $('<div>')
+						.attr('id', id)
+						.appendTo(media);
 
-	        		el.addClass('cb-player-media-iframe');
+					el.addClass('cb-player-media-iframe');
 
-	        		el.embed = new window.YT.Player(id, {
-				        videoId: videoId,
-				        host: getYoutubeHost(settings),
-				        playerVars: {
-				        	controls: 0,
-				        	disablekb: 1,
-				        	playsinline: 1,
-				        	rel: 0
-				        },
-				        events: {
-				        	'onStateChange': function(e){
-				        		var instance = e.target;
+					el.embed = new window.YT.Player(id, {
+						videoId: videoId,
+						host: getYoutubeHost(settings),
+						playerVars: {
+							controls: 0,
+							disablekb: 1,
+							playsinline: 1,
+							rel: 0
+						},
+						events: {
+							'onStateChange': function(e){
+								var instance = e.target;
 
-				        		if(e.data == YT.PlayerState.PLAYING){
-				        			wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-loaded');
+								if(e.data == YT.PlayerState.PLAYING){
+									wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-loaded');
 
-				        			ytTimer = setInterval(function(){
-				        				watchTimer(wrap);
-				        			}, 250);
+									ytTimer = setInterval(function(){
+										watchTimer(wrap);
+									}, 250);
 
-				        		}else if(e.data == YT.PlayerState.BUFFERING){
+								}else if(e.data == YT.PlayerState.BUFFERING){
 
-				        			wrap.addClass('cb-player-is-loaded');
+									wrap.addClass('cb-player-is-loaded');
 
-				        		}else{
-				        			wrap.removeClass('cb-player-is-playing cb-player-is-loaded');
+								}else{
+									wrap.removeClass('cb-player-is-playing cb-player-is-loaded');
 
-				        			watchTimer(wrap);
+									watchTimer(wrap);
 
-				        			clearTimeout(watchControlHide);
+									clearTimeout(watchControlHide);
 									wrap.removeClass('cb-player-control-hide');
 
-				        			clearInterval(ytTimer);
+									clearInterval(ytTimer);
 
-				        		}
-				        	},
-				        	'onReady': function(e){
-				        		var instance = e.target;
+								}
+							},
+							'onReady': function(e){
+								var instance = e.target;
 
-				        		//set functions
-				        		wrap.data('instance', instance);
+								//set functions
+								wrap.data('instance', instance);
 
-				        		//set duration
-				        		wrap.data('duration', instance.getDuration());
+								//set duration
+								wrap.data('duration', instance.getDuration());
 
-				        		if(settings.backgroundMode){
-				        			instance.mute();
-				        		}
+								if(settings.backgroundMode){
+									instance.mute();
+								}
 
-				        		if(settings.autoplay){
-				        			instance.playVideo();
-				        		}
+								if(settings.autoplay){
+									instance.playVideo();
+								}
 
-				        		if(volume){
-				        			instance.setVolume(volume);
-				        		}
+								if(volume){
+									instance.setVolume(volume);
+								}
 
-				        		if(loop){
-				        			instance.setLoop(true);
-				        		}
+								if(loop){
+									instance.setLoop(true);
+								}
 
-				        		setTimeout(function(){
-				        			setDuration(wrap);
-				        		});
+								setTimeout(function(){
+									setDuration(wrap);
+								});
 
-				        	}
-				        }
-				    });
-	        	}
-            }
+							}
+						}
+					});
+				}
+			}
 
-            var vimeo = {
-            	setup: function(){
-            		if(window.Vimeo && window.Vimeo.Player){
-            			vimeo.ready.call(_this);
-            		}else{
-            			$.getScript(urls.vimeo.sdk)
-				        	.done(function(script, status){
+			var vimeo = {
+				setup: function(){
+					if(window.Vimeo && window.Vimeo.Player){
+						vimeo.ready.call(_this);
+					}else{
+						$.getScript(urls.vimeo.sdk)
+							.done(function(script, status){
 
 								vimeo.ready.call(_this);
 
-				        		vimeoInit = true;
+								vimeoInit = true;
 
-				        	}).fail(function(jqxhr, settings, exception){
-				        		console.warn('Vimeo SDK failed to load', jqxhr);
-				        	});
+							}).fail(function(jqxhr, settings, exception){
+								console.warn('Vimeo SDK failed to load', jqxhr);
+							});
 
-            		}
-            	},
-            	ready: function(){
+					}
+				},
+				ready: function(){
 
-            		videoId = getVimeoId(source.mediaSrc);
+					videoId = getVimeoId(source.mediaSrc);
 
-	        		wrap.addClass('cb-media-is-ready');
+					wrap.addClass('cb-media-is-ready');
 	
-	        		var media = wrap.find('.cb-player-media');
+					var media = wrap.find('.cb-player-media');
 
-	        		var wrapper = document.createElement('div');
-	        		wrapper.setAttribute('class', 'cb-player-media-embed');
-	        		$(wrapper).appendTo(media);
+					var wrapper = document.createElement('div');
+					wrapper.setAttribute('class', 'cb-player-media-embed');
+					$(wrapper).appendTo(media);
 
-	        		var params = buildUrlParams({
-	        			loop: settings.loop,
-	        			autoplay: settings.autoplay,
-	        			muted: settings.muted,
-	        			gesture: 'media',
-	        			playsinline: true,
-	        			byline: false,
+					var params = buildUrlParams({
+						loop: settings.loop,
+						autoplay: settings.autoplay,
+						muted: settings.muted,
+						gesture: 'media',
+						playsinline: true,
+						byline: false,
 						portrait: false,
-	        			title: false,
-	        			transparent: false
-	        		});
+						title: false,
+						transparent: false
+					});
 
-	        		//Create a new DOM element
-	        		//Use this to prevent play() failed error
-	        		var iframe = document.createElement('iframe'),
-	        			src = format(urls.vimeo.iframe, videoId, params);
+					//Create a new DOM element
+					//Use this to prevent play() failed error
+					var iframe = document.createElement('iframe'),
+						src = format(urls.vimeo.iframe, videoId, params);
 
-	        		iframe.setAttribute('src', src);
-	        		iframe.setAttribute('allowfullscreen', '');
-	        		iframe.setAttribute('allow', 'fullscreen; autoplay; picture-in-picture; encrypted-media; accelerometer; gyroscope');
+					iframe.setAttribute('src', src);
+					iframe.setAttribute('allowfullscreen', '');
+					iframe.setAttribute('allow', 'fullscreen; autoplay; picture-in-picture; encrypted-media; accelerometer; gyroscope');
 
-	        		if(settings.vimeo.referrerPolicy != null){
-	        			iframe.setAttribute('referrerpolicy', settings.vimeo.referrerPolicy);
-	        		}
+					if(settings.vimeo.referrerPolicy != null){
+						iframe.setAttribute('referrerpolicy', settings.vimeo.referrerPolicy);
+					}
 
-	        		$(iframe).appendTo(wrapper);
-	        		$(iframe).addClass('cb-player-media-iframe');
+					$(iframe).appendTo(wrapper);
+					$(iframe).addClass('cb-player-media-iframe');
 
-	        		// var poster = $('<div>')
-	        		// 	.addClass('cb-player-media-poster')
-	        		// 	.appendTo(media);
+					// var poster = $('<div>')
+					// 	.addClass('cb-player-media-poster')
+					// 	.appendTo(media);
 
-	        		el.embed = new window.Vimeo.Player(iframe, {
-	        			autopause: 1,
-	        			muted: settings.muted
-	        		});
+					el.embed = new window.Vimeo.Player(iframe, {
+						autopause: 1,
+						muted: settings.muted
+					});
 
-	        		wrap.data('embed', el.embed);
+					wrap.data('embed', el.embed);
 
-                    //get video ratio
-                    Promise.all([el.embed.getVideoWidth(), el.embed.getVideoHeight()]).then((dimensions) => {
-                        const ratio = dimensions[0] / dimensions[1];
-                        wrap.data('ratio', ratio)
+					//get video ratio
+					Promise.all([el.embed.getVideoWidth(), el.embed.getVideoHeight()]).then((dimensions) => {
+						const ratio = dimensions[0] / dimensions[1];
+						wrap.data('ratio', ratio)
 
-                        fitIframe(wrap);
-                    });
+						fitIframe(wrap);
+					});
 
-	        		el.embed.on('bufferstart', function(){
-	        			wrap.addClass('cb-player-is-loaded');
-	        		});
+					el.embed.on('bufferstart', function(){
+						wrap.addClass('cb-player-is-loaded');
+					});
 
-	        		el.embed.on('bufferend', function(){
-	        			wrap.removeClass('cb-player-is-loaded');
-	        		});
+					el.embed.on('bufferend', function(){
+						wrap.removeClass('cb-player-is-loaded');
+					});
 
-	        		el.embed.on('play', function(){
-	        			wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-ended cb-player-is-loaded');
+					el.embed.on('play', function(){
+						wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-ended cb-player-is-loaded');
 
-                        fitIframe(wrap);
-	        		});
+						fitIframe(wrap);
+					});
 
-	        		el.embed.on('pause', function(){
-	        			wrap.removeClass('cb-player-is-playing cb-player-is-loaded');
+					el.embed.on('pause', function(){
+						wrap.removeClass('cb-player-is-playing cb-player-is-loaded');
 
-	        			clearTimeout(watchControlHide);
+						clearTimeout(watchControlHide);
 						wrap.removeClass('cb-player-control-hide');
-	        		});
+					});
 
-	        		el.embed.on('timeupdate', function(){
-	        			watchTimer(wrap);
-	        		});
+					el.embed.on('timeupdate', function(){
+						watchTimer(wrap);
+					});
 
-	        		el.embed.on('seeked', function(){
-	        			clearTimeout(watchControlHide);
+					el.embed.on('seeked', function(){
+						clearTimeout(watchControlHide);
 						wrap.removeClass('cb-player-control-hide');
-	        		});
+					});
 
-	        		el.embed.on('ended', function(data) {
-	        			wrap.addClass('cb-player-is-ended');
-	        		});
+					el.embed.on('ended', function(data) {
+						wrap.addClass('cb-player-is-ended');
+					});
 
-	        		//set duration
-	        		el.embed.getDuration().then(function(duration) {
+					//set duration
+					el.embed.getDuration().then(function(duration) {
 						wrap.data('duration', duration);
 
 						setTimeout(function(){
-		        			setDuration(wrap);
-		        		});
+							setDuration(wrap);
+						});
 					}).catch(function(e){
 						displayError(el.closest(".cb-player"), e);
 					});
@@ -1809,22 +1809,22 @@
 					if(settings.muted){
 						setVolume(el.closest(".cb-player"), 0);
 					}
-            	}
-            }
+				}
+			}
 
-            var media = {
-            	ready: function(el){
+			var media = {
+				ready: function(el){
 
-            		el.on("timeupdate", function(){
+					el.on("timeupdate", function(){
 						var container = $(this).closest(".cb-player"),
 							media = container.find('video, audio');
 
 						if ($.isFunction(settings.mediaTimeupdate)) {
-						 	settings.mediaTimeupdate.call(this, wrap, media[0].currentTime);
+							settings.mediaTimeupdate.call(this, wrap, media[0].currentTime);
 						}
 
 						watchTimer(container);
-		                watchSubtitles(container);
+						watchSubtitles(container);
 					});
 
 					el.on('durationchange', function(e){
@@ -1851,8 +1851,8 @@
 						var container = $(this).closest('.cb-player'),
 							progress = container.find(".cb-player-progress");
 
-		                //is current position behind media duration, set new position
-					    if(getbacktrackingPosition(container) >= container.data('duration') && container.data('backtracking') && container.data('is-livestream')){
+						//is current position behind media duration, set new position
+						if(getbacktrackingPosition(container) >= container.data('duration') && container.data('backtracking') && container.data('is-livestream')){
 							position = 0.01;
 
 							progress.attr('aria-valuenow', position);
@@ -1860,7 +1860,7 @@
 						}
 
 						if ($.isFunction(settings.mediaIsPlay)) {
-						    settings.mediaIsPlay.call(this, wrap);
+							settings.mediaIsPlay.call(this, wrap);
 						}
 					});
 
@@ -1882,7 +1882,7 @@
 						container.data('pause', true);
 
 						if ($.isFunction(settings.mediaIsPause)) {
-						    settings.mediaIsPause.call(this, wrap);
+							settings.mediaIsPause.call(this, wrap);
 						}
 
 						if(container.hasClass('cb-player-is-seeking')){
@@ -1911,10 +1911,10 @@
 					el.on('waiting', function(){
 						var container = $(this).closest(".cb-player");
 
-		                //check current time with duration - fix for firefox
-		                if($(this)[0].currentTime < container.data('duration')){
-		                    container.addClass("cb-player-is-loaded");
-		                }
+						//check current time with duration - fix for firefox
+						if($(this)[0].currentTime < container.data('duration')){
+							container.addClass("cb-player-is-loaded");
+						}
 					});
 
 					el.on('canplay', function(){
@@ -1926,47 +1926,47 @@
 						var container = $(this).closest(".cb-player");
 
 						container.removeClass("cb-player-is-playing cb-player-control-hide").addClass("cb-payer-is-ended");
-		                container.find('.cb-player-subtitle-layer').remove();
+						container.find('.cb-player-subtitle-layer').remove();
 
 						if ($.isFunction(settings.mediaIsEnd)) {
-						    settings.mediaIsEnd.call(this, wrap);
+							settings.mediaIsEnd.call(this, wrap);
 						}
 
 						if(wrap.data('loop')){
 							toggleMediaPlayPause(wrap);
 						}
 					});
-            	}
-            }
+				}
+			}
 
 
-            if(provider == 'youtube' || provider == 'vimeo'){
-            	wrap.addClass('cb-player--' + provider);
-            	wrap.data('iframe', provider);
+			if(provider == 'youtube' || provider == 'vimeo'){
+				wrap.addClass('cb-player--' + provider);
+				wrap.data('iframe', provider);
 
-            	if(provider == 'youtube'){
-            		var checkYoutubeApiReady = function(){
-            			if(youtubeInit == false || (typeof window.YT !== 'undefined' && window.YT.Player)){
-            				youtube.setup(_this);
-            			}else{
-	           				setTimeout(checkYoutubeApiReady, 100);
-	           			}
-            		}
-            		checkYoutubeApiReady();
-            	}else if(provider == 'vimeo'){
+				if(provider == 'youtube'){
+					var checkYoutubeApiReady = function(){
+						if(youtubeInit == false || (typeof window.YT !== 'undefined' && window.YT.Player)){
+							youtube.setup(_this);
+						}else{
+							setTimeout(checkYoutubeApiReady, 100);
+						}
+					}
+					checkYoutubeApiReady();
+				}else if(provider == 'vimeo'){
 
-            		var checkViemoApiReady = function(){
-            			if(vimeoInit == false || (typeof window.Vimeo !== 'undefined' && window.Vimeo.Player)){
-            				vimeo.setup(_this);
-            			}else{
-	           				setTimeout(checkViemoApiReady, 100);
-	           			}
-	           		}
-	           		checkViemoApiReady();
-            	}
-            }else{
-        		media.ready(el)
-        	}
+					var checkViemoApiReady = function(){
+						if(vimeoInit == false || (typeof window.Vimeo !== 'undefined' && window.Vimeo.Player)){
+							vimeo.setup(_this);
+						}else{
+							setTimeout(checkViemoApiReady, 100);
+						}
+					}
+					checkViemoApiReady();
+				}
+			}else{
+				media.ready(el)
+			}
 
 
 			wrap.mouseenter(function(){
@@ -1992,7 +1992,7 @@
 			});
 
 			if ($.isFunction(settings.mediaIsInit)) {
-			    settings.mediaIsInit.call(this, wrap);
+				settings.mediaIsInit.call(this, wrap);
 			}
 
 			setTimeout(function(){
@@ -2005,10 +2005,10 @@
 			var touchtimer = false,
 				container = $(el).closest('.cb-player');
 
-            var targetsTouch = ['.cb-player-toggle-play'];
-            if(options.disableClick == false){
-                targetsTouch.push('.cb-player-media');
-            }
+			var targetsTouch = ['.cb-player-toggle-play'];
+			if(options.disableClick == false){
+				targetsTouch.push('.cb-player-media');
+			}
 
 			container.on('touchstart', targetsTouch.join(','), function(e){
 				if(container.data('backgroundMode')){
@@ -2028,21 +2028,21 @@
 				}
 			});
 
-            var targetsClick = ['.cb-player-toggle-play', '.cb-player-overlayer-button'];
-            if(options.disableClick == false){
-                targetsClick.push('.cb-player-media');
-            }
+			var targetsClick = ['.cb-player-toggle-play', '.cb-player-overlayer-button'];
+			if(options.disableClick == false){
+				targetsClick.push('.cb-player-media');
+			}
 
 			container.on(isTouchDevice() ? 'touchend' : 'click', targetsClick.join(',') , function(e){
-                if(container.hasClass('cb-player-is-loaded') || container.data('backgroundMode')){
+				if(container.hasClass('cb-player-is-loaded') || container.data('backgroundMode')){
 					return;
 				}
 
 				if(e.type == 'touchend'){
 					if(touchtimer){
-				        initPlayer(container);
+						initPlayer(container);
 
-				        touchtimer = false;
+						touchtimer = false;
 					}
 				}else{
 					initPlayer(container);
@@ -2263,9 +2263,9 @@
 				item.closest('.cb-player-subtitle-items').find('.cb-player-subtitle-item').removeClass('cb-player-subtitle--selected');
 				item.addClass('cb-player-subtitle--selected');
 
-                if(!item.data('lang')){
-                    container.find('.cb-player-subtitle-layer').remove();
-                }
+				if(!item.data('lang')){
+					container.find('.cb-player-subtitle-layer').remove();
+				}
 
 				var tracks = container.find('track');
 
@@ -2354,16 +2354,16 @@
 					}
 				});
 
-                $(window).on('resize', function(){
-                    $('.cb-player.cb-media-is-ready').each(function(){
-                    	let player = $(this)
+				$(window).on('resize', function(){
+					$('.cb-player.cb-media-is-ready').each(function(){
+						let player = $(this)
 
-                    	setTimeout(function(){
-                    		fitIframe(player);
-                    	})
-                        
-                    });
-                });
+						setTimeout(function(){
+							fitIframe(player);
+						})
+						
+					});
+				});
 
 				$(document).data('cbplayer-initialized', true);
 			}
@@ -2440,19 +2440,19 @@
 			return;
 		}
 
-        return this.each(function() {
+		return this.each(function() {
 			var container = $(this);
 
 			if(($(this).is("video") || $(this).is("audio")) &&  $(this).closest('.cb-player').length){
 				container = container.closest('.cb-player');
 			}
 
-            if (!$.data(this, 'plugin_' + pluginName)) {
-                $.data(this, 'plugin_' + pluginName, new CBplayer(this, options));
-            }
-            else if ($.isFunction(Plugin.prototype[options])) {
-                $.data(this, 'plugin_' + pluginName)[options]();
-            }
+			if (!$.data(this, 'plugin_' + pluginName)) {
+				$.data(this, 'plugin_' + pluginName, new CBplayer(this, options));
+			}
+			else if ($.isFunction(Plugin.prototype[options])) {
+				$.data(this, 'plugin_' + pluginName)[options]();
+			}
 
 			if(options == 'initSource'){
 				if(container.data('is-livestream')){
@@ -2501,6 +2501,6 @@
 					videoStart(container, media);
 				}
 			}
-        });
-    }
+		});
+	}
 })( jQuery, window, document );
