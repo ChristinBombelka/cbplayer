@@ -1503,27 +1503,40 @@
                 }
 
                 var trackSelected;
-                tracks.each(function(i, s){
-                    var track = $(s);
-                   	var item = createTrackItem('subtitles-' + track.attr('srclang'), track.attr('srclang'), track.attr('label'))
+                let tracksLoaded = new Promise(resolve => {
+                    tracks.each(function(i, s){
+                        var track = $(s);
+                       	var item = createTrackItem('subtitles-' + track.attr('srclang'), track.attr('srclang'), track.attr('label'))
 
-                    subtitleList.append(item);
+                        subtitleList.append(item);
 
-                   	if(track[0].default){
-                    	item.addClass('cb-player-subtitle--selected')
-                    }
+                       	fetch($(track[0]).attr('src'))
+                        .then( resp => resp.text() )
+                        .then( data => {
+                            // console.log(data)
+                            if(track[0].default){
+                               item.addClass('cb-player-subtitle--selected')
+                            }
+
+                            if(tracks.length == i + 1){
+                                resolve()
+                            }
+                        });
+                    });
                 });
 
-                subtitleList.prepend(createTrackItem('subtitles-off', '', 'OFF'));
-                if(!subtitleList.find('.cb-player-subtitle--selected').length){
-                	subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
-                }
+                tracksLoaded.then(() => {
+                    subtitleList.prepend(createTrackItem('subtitles-off', '', 'OFF'));
+                    if(!subtitleList.find('.cb-player-subtitle--selected').length){
+                    	subtitleList.find('.cb-player-subtitle-item').eq(0).addClass('cb-player-subtitle--selected');
+                    }
 
-                if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-                    wrap.addClass('cb-player--with-native-subtitles');
-                }else{
-                    wrap.addClass('cb-player--with-subtitles');
-                }
+                    if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+                        wrap.addClass('cb-player--with-native-subtitles');
+                    }else{
+                        wrap.addClass('cb-player--with-subtitles');
+                    }
+                });
             }
 
 			if(!wrap.find('.cb-player-error').length){
