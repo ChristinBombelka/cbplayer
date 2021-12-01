@@ -361,7 +361,8 @@
 					'level': hls.currentLevel + 1,
 					'is_hls': true,
 					'videowidth': data.levels[0].width,
-					'videoheight': data.levels[0].height
+					'videoheight': data.levels[0].height,
+					'ratio': data.levels[0].width / data.levels[0].height
 				});
 
 				if ($.isFunction(settings.mediaMetaIsLoaded)) {
@@ -444,6 +445,7 @@
 				container.data({
 					'videowidth': media[0].videoWidth,
 					'videoheight': media[0].videoHeight,
+					'ratio': media[0].videoWidth / media[0].videoHeight,
 					'duration': Math.floor(media[0].duration)
 				});
 
