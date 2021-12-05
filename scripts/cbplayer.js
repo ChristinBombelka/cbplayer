@@ -1513,17 +1513,18 @@
 						subtitleList.append(item);
 
 						fetch($(track[0]).attr('src'))
-						.then( resp => resp.text() )
-						.then( data => {
-							// console.log(data)
-							if(track[0].default){
-							   item.addClass('cb-player-subtitle--selected')
-							}
+							.then( resp => resp.text() )
+							.then( data => {
+								// console.log(data)
+								if(track[0].default){
+								   item.addClass('cb-player-subtitle--selected')
+								}
 
-							if(tracks.length == i + 1){
-								resolve()
-							}
-						});
+								if(tracks.length == i + 1){
+									resolve()
+								}
+							});
+
 					});
 				});
 
@@ -1922,6 +1923,11 @@
 					el.on('canplay', function(){
 						var container = $(this).closest(".cb-player");
 						container.removeClass("cb-player-is-loaded");
+
+						if(typeof hls !== 'undefined' && container.data('hlsStopLoad') && container.data('initSource') == true){
+							hls.stopLoad();
+							container.data('initSource', false);
+						}
 					});
 
 					el.on('ended', function(){
@@ -2460,6 +2466,8 @@
 				if(container.data('is-livestream')){
 					return;
 				}
+
+				container.data('initSource', true);
 
 				getPlayerSrc(container, false);
 				return;
