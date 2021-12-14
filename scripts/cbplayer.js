@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.13
- * 2021-11-01
+ * jQuery CBplayer 1.5.14
+ * 2021-12-14
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.5.13',
+		playerVersion = '1.5.14',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -100,6 +100,8 @@
 		/* callback change volume */
 		mediaTimeupdate: false,
 		/* callback time update */
+		mediaTrackChange: false,
+		/* callback track changed */
 		initSource: $,
 		mediaPauseAll: $,
 		mediaPause: $,
@@ -1155,7 +1157,8 @@
 	function watchSubtitles(container){
 		var el = container.find('.cb-player-media'),
 			tracks = el[0].textTracks,
-			lastCueId = container.data('lastCueId');
+			lastCueId = container.data('lastCueId'),
+			settings = container.data('settings');
 
 		if(tracks && container.hasClass('cb-player--with-subtitles')){
 			for (var i = 0; i < tracks.length; i++){
@@ -1182,6 +1185,10 @@
 							$('<div class="cb-player-subtitle-layer"><span class="cb-player-subtitle-text">'+currentCue.text+'</span></div>').appendTo(container);
 
 						   container.data('lastCueId', currentCue.startTime);
+
+							if ($.isFunction(settings.mediaTrackChange)) {
+								settings.mediaTrackChange.call(this, container, currentCue.text);
+							}
 						}
 					}else{
 						if(currentSubtitle.length){
