@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.14
- * 2021-12-14
+ * jQuery CBplayer 1.5.15
+ * 2021-12-21
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.5.14',
+		playerVersion = '1.5.15',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -100,8 +100,8 @@
 		/* callback change volume */
 		mediaTimeupdate: false,
 		/* callback time update */
-		mediaTrackChange: false,
-		/* callback track changed */
+		mediaControlsChange: false,
+		/* callback controls hide/show */
 		initSource: $,
 		mediaPauseAll: $,
 		mediaPause: $,
@@ -996,7 +996,8 @@
 			}
 
 		} else if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.webkitDisplayingFullscreen) {
-			$(".cb-player-is-fullscreen").removeClass("cb-player-is-fullscreen cb-player-control-hide");
+			$(".cb-player-is-fullscreen").removeClass("cb-player-is-fullscreen");
+			controlsToggle($(".cb-player-is-fullscreen"), false);
 
 			clearInterval(watchFullscreen);
 		}
@@ -1146,10 +1147,10 @@
 
 		if(container.hasClass("cb-player-is-playing") && settings.controlHide){
 			clearTimeout(watchControlHide);
-			container.removeClass('cb-player-control-hide');
+			controlsToggle(container, false)
 
 			watchControlHide = setTimeout(function(){
-				container.addClass('cb-player-control-hide');
+				controlsToggle(container, true)
 			}, settings.controlHideTimeout);
 		}
 	}
@@ -1309,8 +1310,27 @@
 				}else{
 					media.css('width', '');
 				}
+
+	function controlsToggle(container, conrolsHide){
+		let setting = container.data('settings');
+		let lastStatus = container.data('controlsHidden');
+		let controlsHidden;
+
+		if(conrolsHide){
+			container.addClass('cb-player-control-hide');
+			controlsHidden = true;
+		}else{
+			container.removeClass('cb-player-control-hide');
+			controlsHidden = false;
+		}
+
+		if(lastStatus != controlsHidden){
+			if ($.isFunction(settings.mediaControlsChange)) {
+				settings.mediaControlsChange.call(this, container, controlsHidden);
 			}
 		}
+
+		container.data('controlsHidden', controlsHidden);
 	}
 
 	function CBplayer( element, options ) {
@@ -1653,7 +1673,7 @@
 									watchTimer(wrap);
 
 									clearTimeout(watchControlHide);
-									wrap.removeClass('cb-player-control-hide');
+									controlsToggle(wrap, false);
 
 									clearInterval(ytTimer);
 
@@ -1789,7 +1809,7 @@
 						wrap.removeClass('cb-player-is-playing cb-player-is-loaded');
 
 						clearTimeout(watchControlHide);
-						wrap.removeClass('cb-player-control-hide');
+						controlsToggle(wrap, false);
 					});
 
 					el.embed.on('timeupdate', function(){
@@ -1798,7 +1818,7 @@
 
 					el.embed.on('seeked', function(){
 						clearTimeout(watchControlHide);
-						wrap.removeClass('cb-player-control-hide');
+						controlsToggle(wrap, false);
 					});
 
 					el.embed.on('ended', function(data) {
@@ -1899,7 +1919,9 @@
 							return;
 						}
 
-						container.removeClass("cb-player-is-playing cb-player-control-hide");
+						container.removeClass("cb-player-is-playing");
+
+						controlsToggle(container, false);
 
 						if(typeof hls !== 'undefined' && container.data('hlsStopLoad')){
 							hls.stopLoad();
@@ -1910,7 +1932,7 @@
 						var container = $(this).closest(".cb-player");
 
 						clearTimeout(watchControlHide);
-						container.removeClass('cb-player-control-hide');
+						controlsToggle(container, false);
 					});
 
 					el.on('seeked', function(e){
@@ -1940,7 +1962,8 @@
 					el.on('ended', function(){
 						var container = $(this).closest(".cb-player");
 
-						container.removeClass("cb-player-is-playing cb-player-control-hide").addClass("cb-payer-is-ended");
+						container.removeClass("cb-player-is-playing").addClass("cb-payer-is-ended");
+						controlsToggle(container, false);
 						container.find('.cb-player-subtitle-layer').remove();
 
 						if ($.isFunction(settings.mediaIsEnd)) {
@@ -1989,7 +2012,7 @@
 
 				if(container.hasClass("cb-player-is-playing") && settings.controlHide){
 					clearTimeout(watchControlHide);
-					container.removeClass('cb-player-control-hide');
+					controlsToggle(container, false);
 				}
 			});
 
@@ -1997,7 +2020,7 @@
 				var container = $(this);
 
 				if(container.hasClass("cb-player-is-playing") && settings.controlHide){
-					container.addClass('cb-player-control-hide');
+					controlsToggle(container, true);
 				}
 			});
 
@@ -2032,7 +2055,7 @@
 
 				if(container.hasClass('cb-player-control-hide')){
 					//show controls on tocuh start
-					container.removeClass('cb-player-control-hide');
+					controlsToggle(container, false);
 
 				}else{
 					touchtimer = true
