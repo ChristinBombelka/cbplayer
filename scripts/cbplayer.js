@@ -2043,7 +2043,7 @@
 			var touchtimer = false,
 				container = $(el).closest('.cb-player');
 
-			var targetsTouch = ['.cb-player-toggle-play'];
+			var targetsTouch = ['.cb-player-toggle-play', '.cb-player-overlayer-button'];
 			if(options.disableClick == false){
 				targetsTouch.push('.cb-player-media');
 			}
