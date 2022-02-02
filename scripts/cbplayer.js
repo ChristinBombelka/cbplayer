@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.15
- * 2021-12-21
+ * jQuery CBplayer 1.5.16
+ * 2022-02-02
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.5.15',
+		playerVersion = '1.5.16',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1900,6 +1900,8 @@
 						container
 							.addClass('cb-player-is-playing')
 							.removeClass('cb-payer-is-ended');
+
+						startWatchControlHide(container);
 					});
 
 					el.on('pause', function(e){
@@ -2024,8 +2026,14 @@
 				}
 			});
 
-			wrap.mousemove(function(){
+			wrap.mousemove(function(e){
 				var container = $(this);
+				let target = $(e.target);
+
+				if(target.closest('.cb-player-controls').length || target.hasClass('cb-player-controls')){
+					return;
+				}
+
 				startWatchControlHide(container);
 			});
 
@@ -2242,6 +2250,13 @@
 
 				if(container.data('iframe') != 'vimeo'){
 					setVolume(container, volumevalue);
+				}
+			});
+
+			container.on('mouseenter', '.cb-player-controls', function(){
+				if(container.hasClass('cb-player-is-playing')){
+					clearTimeout(watchControlHide);
+					controlsToggle(container, false);
 				}
 			});
 
