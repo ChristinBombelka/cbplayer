@@ -1315,7 +1315,7 @@
 	}
 
 	function controlsToggle(container, conrolsHide){
-		let setting = container.data('settings');
+		let settings = container.data('settings');
 		let lastStatus = container.data('controlsHidden');
 		let controlsHidden;
 
