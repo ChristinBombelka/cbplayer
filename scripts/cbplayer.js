@@ -1310,6 +1310,9 @@
 				}else{
 					media.css('width', '');
 				}
+			}
+		}
+	}
 
 	function controlsToggle(container, conrolsHide){
 		let setting = container.data('settings');
