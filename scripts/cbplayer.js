@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.16
- * 2022-02-02
+ * jQuery CBplayer 1.5.17
+ * 2022-02-09
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.5.16',
+		playerVersion = '1.5.17',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -847,6 +847,15 @@
 		player.closest('.cb-player').find('.cb-player-time-current').text(playtime);
 	}
 
+	function updateRemainingPlayTime(player, time){
+		if(!player.length && !time){
+			return;
+		}
+
+		time = formatTime(time, player.closest(".cb-player"));
+		player.closest('.cb-player').find('.cb-player-time-duration').text(time);
+	}
+
 	function updateProgress(container, progresstime){
 		var progressVisibile = container.find('.cb-player-progress-play');
 
@@ -960,22 +969,27 @@
 		}
 
 		if(container.data('settings')['controlTimeBackwards']){
-			var remainingPlayTime;
+			var remainingPlayTime = false;
 
 			if(container.data('iframe')){
 				if(container.data('iframe') == 'youtube'){
 					remainingPlayTime = container.data('duration') - container.data('instance').getCurrentTime();
 				}else if (container.data('iframe') == 'vimeo'){
-					//
+					let embedPlayer = container.data('embed');
+					embedPlayer.getCurrentTime().then(function(seconds){
+						let remainingPlayTime = container.data('duration') - seconds
+
+						updateRemainingPlayTime(player, remainingPlayTime)
+					});
 				}
 
 			}else{
 				remainingPlayTime = player[0].duration - player[0].currentTime;
 			}
 
-			remainingPlayTime = formatTime(remainingPlayTime, player.closest(".cb-player"));
-
-			player.closest('.cb-player').find('.cb-player-time-duration').text(remainingPlayTime);
+			if(remainingPlayTime){
+				updateRemainingPlayTime(player, remainingPlayTime)
+			}
 		}
 	}
 
