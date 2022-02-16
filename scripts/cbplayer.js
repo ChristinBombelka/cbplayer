@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.17
- * 2022-02-09
+ * jQuery CBplayer 1.5.18
+ * 2022-02-16
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.5.17',
+		playerVersion = '1.5.18',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -418,7 +418,7 @@
 				container.removeClass("cb-player-is-loaded");
 			});
 
-		}else if(source.mediaSrc.toLowerCase().match(/(.mp4)/) || (source.mediaSrc.toLowerCase().match(/(.m3u8)/) && Hls) ){
+		}else if(source.mediaSrc.toLowerCase().match(/(.mp4)/) || isVimeoVideoUrl(source.mediaSrc) || (source.mediaSrc.toLowerCase().match(/(.m3u8)/) && Hls) ){
 			// (Hls && (!isSupported() && mediaSrc.match(/(.m3u8)/)) || mediaSrc.match(/(.mp4)/)
 
 			if(fileExist(source.mediaSrc) === false){
@@ -1266,6 +1266,11 @@
 
 		return undefined;
 	}
+
+	function isVimeoVideoUrl(url){
+        var regex = /^.*(player.vimeo.com\/progressive_redirect\/playback\/(\d+)\/rendition\/(\d+[p])).*/;
+        return url.match(regex) ? RegExp.$2 : url;
+    }
 
 	function getVimeoId(url){
 		var regex = /^.*(vimeo\.com\/(video\/|))([0-9]+)/;
