@@ -1527,6 +1527,10 @@
 				}
 			}
 
+			if(wrap.find('.cb-player-progress').length){
+				wrap.find('.cb-player-progress').attr('role', 'slider');
+			}
+			
 			function createTrackItem(id, lang, label){
 				var item = $('<li>');
 
