@@ -80,7 +80,9 @@ audio { display: block !important; }
 
 .cb-player-button-pause { -webkit-box-sizing: content-box; box-sizing: content-box; border-left: 4px solid #fff; border-right: 4px solid #fff; width: 4px; height: 12px; }
 
-.cb-player-time { -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; margin-right: 10px; }
+.cb-player-time { -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; }
+.cb-player-time + .cb-player-progress { margin-left: 10px; }
+.cb-player-progress + .cb-player-time { margin-left: 10px; }
 
 .cb-player-volume-wrap { position: relative; }
 .cb-player-volume-wrap:hover .cb-player-volume-vertical, .cb-player-volume-wrap:hover .cb-player-volume-horizontal, .cb-player-is-setvolume .cb-player-volume-wrap .cb-player-volume-vertical, .cb-player-is-setvolume .cb-player-volume-wrap .cb-player-volume-horizontal { visibility: visible; opacity: 1; }

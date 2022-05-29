@@ -295,7 +295,14 @@ audio{
 
 .cb-player-time{
     font-feature-settings: 'tnum';
-	margin-right: 10px;
+	
+	& + .cb-player-progress{
+		margin-left: 10px; 
+	}
+
+	.cb-player-progress + &{
+		margin-left: 10px;
+	}
 }
 
 .cb-player-volume-wrap{
