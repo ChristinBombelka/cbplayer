@@ -37,26 +37,48 @@ $(".js-cbplayer").cbplayer();
     tpl: 'default',
     /*  Values: text,
      *  Add a other Value to use your coustom template, based of the basic template.
+        Template example: 
+        [
+            {name: 'play'},
+            {name: 'time', value: ['current']},
+            {name: 'progress'},
+            {name: 'time', value: ['duration']},
+            {name: 'mute'},
+            {name: 'subtitle'},
+            {name: 'fullscreen'}
+        ]
      */
     controlBar: true,
     /*  Values: true, false
      *  Show or hide controllbar
      */
+    controlLoadButton: true,
+    /*  Values: true, false
+     *  Show or hide load animation on play button 
+     */
     controlTime: true,
+    /*  Values: true, false
+     *  Show timer in controlls
+     */
+    controlTimeBackwards: false
     /*  Values: true, false
      *  Show timer in controlls
      */
     controlProgress: true,
     /*  Values: true, false
-     *   Show progressbar in controlls
+     *   show remaining time on duration
+     */
+    controlTooltip: true,
+    /*  Values: true, false
+     *   show tooltip on progress 
      */
     controlFullscreen: true,
     /*  Values: true, false
      *   Show fullscreen button in video controlls
      */
-    controlAudio: true,
+    controlVolume: true,
     /*  Values: true, false
-     *   Show Audio bar in controlls
+     *   Show volume bar
      */
     overlayButton: true,
     /*  Values: true, false
@@ -94,7 +116,7 @@ $(".js-cbplayer").cbplayer();
     /*  Values: 'vertical', 'horizontal'
     *   Set volume bar orientation
     */
-    contextInfo: true,
+    contextInfo: false,
     /*  Values: true, false
     *   Show Debug info in context menu
     */
@@ -109,10 +131,6 @@ $(".js-cbplayer").cbplayer();
     muted: false,
     /*  Values: true, false
     *   Simular with "muted" in HTML5 Video Tag
-    */
-    loop: false,
-    /*  Values: true, false
-    *   Simular with "loop" in HTML5 Video Tag
     */
     loop: false,
     /*  Values: true, false
@@ -139,6 +157,12 @@ Return the initialized media element.
 Media source is set and video can play
 
 `mediaIsReady: function(container){}`
+
+### mediaMetaIsLoaded
+
+Return media meta is loaded
+
+`mediaMetaIsLoaded: function(container){}`
 
 ### mediaIsPlay
 
@@ -170,7 +194,19 @@ Return current time
 
 `mediaTimeupdate: function(container, time)`
 
+### mediaControlsChange
+
+Return controls show/hide
+
+`mediaControlsChange: function(container, isHIdden)`
+
 ## Methods
+
+### initSource
+
+Call init source from data attribute 
+
+`$('classname').cbplayer('initSource')`
 
 ### mediaPauseAll
 
@@ -209,105 +245,65 @@ Set new time in hh:mm:ss or ss
 `$('.classname').cbplayer('mediaSetTime', '01:12');`
 
 
-
 ## Template
  ```html
-
- <div class="cb-player">
-    <video playsinline class="js-player cb-player-media" poster="image.jpg">
- 		<source data-src="video_source.m3u8" type="application/x-mpegURL">
-        <track kind="subtitles" label="German" srclang="de" src="german.vtt">
-        <track kind="subtitles" label="English" srclang="en" src="english.vtt">
- 	</video>
-
+<div class="cb-player cb-player--with-subtitles cb-media-is-ready">
+    <video playsinline="" class="player js-player-self cb-player-media" poster="image.jpg">
+        <source data-src="files/sample.mp4" type="video/mp4">
+        <track default="" kind="subtitles" label="German" srclang="de" src="files/german.vtt">
+        <track kind="subtitles" label="English" srclang="en" src="files/english.vtt">
+    </video>
     <div class="cb-player-spinner-wrap">
         <div class="cb-player-spinner"></div>
     </div>
-
     <div class="cb-player-overlayer-button"></div>
-
-    <div class="cb-player-overlayer cb-player-debug">
-        <div class="cb-player-overlayer-close"></div>
-        <div class="cb-player-debug-item">
-            <div class="cb-player-debug-item-type">Resolution:</div>
-            <div class="cb-player-debug-item-value cb-debug-resolution"></div>
-        </div>
-        <div class="cb-player-debug-item">
-            <div class="cb-player-debug-item-type">QualityLevels:</div>
-            <div class="cb-player-debug-item-value cb-debug-levels"></div>
-        </div>
-        <div class="cb-player-debug-item">
-            <div class="cb-player-debug-item-type">Buffer:</div>
-            <div class="cb-player-debug-item-value cb-debug-buffer"></div>
-        </div>
-        <div class="cb-player-debug-item">
-            <div class="cb-player-debug-item-type">Duration:</div>
-            <div class="cb-player-debug-item-value cb-debug-duration"></div>
-        </div>
-        <div class="cb-player-debug-item">
-            <div class="cb-player-debug-item-type">CurrentTime:</div>
-            <div class="cb-player-debug-item-value cb-debug-current"></div>
-        </div>
-    </div>
-
     <ul class="cb-player-context">
-        <li class="cb-player-context-item">CBplayer x.x.x</li>
-        <li class="cb-player-context-item link" data-link="debug">Debug-info</li>
+        <li class="cb-player-context-item">CBplayer 1.6.0</li>
     </ul>
-
     <div class="cb-player-controls">
-        <div class="cb-player-play cb-player-toggle-play">
+        <div class="cb-player-play cb-player-toggle-play cb-player-with-load">
             <span class="cb-player-button-play"></span>
             <span class="cb-player-button-pause"></span>
-            <span class="cb-player-button-replay"></span>
             <span class="cb-player-button-load"></span>
         </div>
-
         <div class="cb-player-time">
             <span class="cb-player-time-current">00:00</span>
             <span class="cb-player-time-seperator">/</span>
             <span class="cb-player-time-duration">00:00</span>
         </div>
-
-        <span class="cb-player-progress" role="slider" aria-valuenow="0">
-            <span class="cb-player-progress-tooltip"></span>
+        <div class="cb-player-progress" aria-valuenow="" role="slider">
+            <div class="cb-player-progress-tooltip"></div>
             <div class="cb-player-progress-hide"></div>
             <div class="cb-player-progress-play"></div>
             <div class="cb-player-progress-load"></div>
-        </span>
-
+        </div>
         <div class="cb-player-volume-wrap">
-            <div class="cb-player-toggle-mute">
-                <span class="cb-player-button-sound"></span>
-                <span class="cb-player-button-mute"></span>
+            <div class="cb-player-sound">
+                <span class="cb-player-sound-on"></span>
+                <span class="cb-player-sound-off"></span>
             </div>
-
             <div class="cb-player-volume-vertical">
                 <span class="cb-player-volume">
-                    <div class="cb-player-volume-hide" role="slider" aria-valuenow=""></div>
-                    <div class="cb-player-volume-bar"></div>
+                    <div class="cb-player-volume-hide" role="slider" aria-valuenow="50"></div>
+                    <div class="cb-player-volume-bar" style="width: 50%;"></div>
                 </span>
             </div>
         </div>
-
         <div class="cb-player-subtitle">
             <div class="cb-player-subtitle-button"></div>
             <ul class="cb-player-subtitle-items">
-                <li class="cb-player-subtitle-item cb-player-subtitle--selected" data-lang="">OFF</li>
-                <li class="cb-player-subtitle-item" data-lang="de">German</li>
+                <li class="cb-player-subtitle-item" data-lang="">OFF</li>
+                <li class="cb-player-subtitle-item cb-player-subtitle--selected" data-lang="de">German</li>
                 <li class="cb-player-subtitle-item" data-lang="en">English</li>
             </ul>
         </div>
-
         <div class="cb-player-fullscreen cb-player-toggle-fullscreen">
             <span class="cb-player-button-fullscreen-on"></span>
             <span class="cb-player-button-fullscreen-off"></span>
         </div>
     </div>
-
     <div class="cb-player-error">
         <div class="cb-player-error-message"></div>
     </div>
 </div>
-
 ```

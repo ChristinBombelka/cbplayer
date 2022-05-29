@@ -45,7 +45,7 @@
 		controlFullscreen: true,
 		/* enable/disable fullscreen button */
 		controlVolume: true,
-		/* enable/disable mute/volume */
+		/* enable/disable volume bar */
 		overlayButton: true,
 		/* enable/disable overlay play button*/
 		overlaySpinner: true,
