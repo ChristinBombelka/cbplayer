@@ -3,25 +3,37 @@
 //Ver. 1.0 - 28-8-2017
 
 $(function() {
-	$(".js-player").cbplayer({
-		volume: 50,
-		contextInfo: true,
+	$(".js-player-1").cbplayer({
+	 	backtracking: false,
+	 	contextInfo: true,
 	});
 
-	$(".js-player-2").cbplayer({
-		backtracking: false,
-		contextInfo: true,
-		autoplay: false,
+ //    $(".js-player-vimeo").cbplayer({
+ //      	contextInfo: true,
+ //      	controlTimeBackwards: true,
+ //    });
+
+	$(".js-player-self").cbplayer({
+		tpl: [
+			{name: 'play'},
+			{name: 'time', value: ['current']},
+			{name: 'progress'},
+			{name: 'time', value: ['duration']},
+			{name: 'mute'},
+			{name: 'subtitle'},
+			{name: 'fullscreen'}
+		],
+		controlVolume: true,
+		controlLoadButton: true,
+	 	volume: 50,
+	 	contextInfo: false,
 	});
 
-	$(".js-player-3").cbplayer({
+	$(".js-player-iframe").cbplayer({
 		volume: 50,
 		backgroundMode: false,
 		loop: false,
 		autoplay: false,
-		mediaTimeupdate: function(el, time){
-			console.log(el, time);
-		}
 	});
 
 	$(".js-player-4").cbplayer({
@@ -29,9 +41,6 @@ $(function() {
 		backgroundMode: false,
 		loop: false,
 	});
-    $(".js-player-5").cbplayer({
-        volume: 100,
-        backgroundMode: false,
-        loop: false,
-    });
+
+
 });

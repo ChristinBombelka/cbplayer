@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.5.19
- * 2022-05-10
+ * jQuery CBplayer 1.6.0
+ * 2022-05-29
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.5.19',
+		playerVersion = '1.6.0',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1438,17 +1438,29 @@
 			// 	$('<div class="cb-player-poster" style="background-image: url('" + el.attr('poster') + "')"></div>').appendTo(wrap);
 			// }
 
-			var control = $('<div class="cb-player-controls"></div>');
-			var play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span></div>');
-			var time = $('<div class="cb-player-time"><span class="cb-player-time-current">00:00</span><span class="cb-player-time-seperator">/</span><span class="cb-player-time-duration">00:00</span></div>');
-			var progress = $('<div class="cb-player-progress" aria-valuenow="0"><div class="cb-player-progress-hide"></div><div class="cb-player-progress-play"></div><div class="cb-player-progress-load"></div></div>');
-			var tooltip = $('<div class="cb-player-progress-tooltip"></div>');
-			var mute = $('<div class="cb-player-volume-wrap"><div class="cb-player-sound"><span class="cb-player-sound-on"></span><span class="cb-player-sound-off"></span></div></div>');
-			var volume = $('<div class="cb-player-volume-' + settings.volumeOrientation + '"><span class="cb-player-volume"><div class="cb-player-volume-hide" role="slider" aria-valuenow=""></div><div class="cb-player-volume-bar"></div></span></div>');
-			var fullscreen = $('<div class="cb-player-fullscreen cb-player-toggle-fullscreen"><span class="cb-player-button-fullscreen-on"></span><span class="cb-player-button-fullscreen-off"></span></div>');
-			
+			const control = $('<div class="cb-player-controls"></div>')
+			const tpl_play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span></div>')
+			const tpl_time = $('<div class="cb-player-time"></div>')
+			const tpl_time_current = $('<span class="cb-player-time-current">00:00</span>')
+			const tpl_time_seperator = $('<span class="cb-player-time-seperator">/</span>')
+			const tpl_time_duration = $('<span class="cb-player-time-duration">00:00</span>')
+			const tpl_progress = $('<div class="cb-player-progress" aria-valuenow="0"><div class="cb-player-progress-hide"></div><div class="cb-player-progress-play"></div><div class="cb-player-progress-load"></div></div>')
+			const tpl_tooltip = $('<div class="cb-player-progress-tooltip"></div>')
+			const tpl_mute = $('<div class="cb-player-volume-wrap"><div class="cb-player-sound"><span class="cb-player-sound-on"></span><span class="cb-player-sound-off"></span></div></div>')
+			const tpl_volume = $('<div class="cb-player-volume-' + settings.volumeOrientation + '"><span class="cb-player-volume"><div class="cb-player-volume-hide" role="slider" aria-valuenow=""></div><div class="cb-player-volume-bar"></div></span></div>')
+			const tpl_fullscreen = $('<div class="cb-player-fullscreen cb-player-toggle-fullscreen"><span class="cb-player-button-fullscreen-on"></span><span class="cb-player-button-fullscreen-off"></span></div>')
+			const tpl_subtitle = $('<div class="cb-player-subtitle"><div class="cb-player-subtitle-button"></div></div>')
+
 			if(settings.controlTooltip){
-				tooltip.prependTo(progress);
+				tpl_tooltip.prependTo(tpl_progress);
+			}
+
+			if(settings.controlVolume){
+				tpl_volume.appendTo(tpl_mute);
+			}
+
+			if(settings.controlLoadButton){
+				tpl_play.append($('<span class="cb-player-button-load"></span>'));
 			}
 
 			var context = $('<ul class="cb-player-context"><li class="cb-player-context-item">CBplayer ' + playerVersion + '</li></ul>');
@@ -1504,30 +1516,73 @@
 				wrap.append(debug);
 			}
 
-			if(settings.tpl == 'default' && !settings.backgroundMode && !wrap.find('.cb-player-controls').length){
+			if(settings.tpl && $.isArray(settings.tpl)){
 
-				control.append(play);
+				$.each(settings.tpl, function(i,e){
+					const element = e
+					const value = element.value
+
+					if(element.name == 'play'){
+						control.append(tpl_play);
+					}else if(element.name == 'time'){
+
+						if(value && value.length == 2){
+							tpl_time.append(tpl_time_current)
+							tpl_time.append(tpl_time_seperator)
+							tpl_time.append(tpl_time_duration)
+							control.append(tpl_time)
+						}else if(value){
+
+							if(value[0] == 'current'){
+								const tpl_time_clone = tpl_time.clone()
+
+								tpl_time_clone.append(tpl_time_current)
+								control.append(tpl_time_clone)
+
+							}else if(value[0] == 'duration'){
+								const tpl_time_clone = tpl_time.clone()
+
+								tpl_time_clone.append(tpl_time_duration)
+								control.append(tpl_time_clone)
+							}
+						}
+					}else if(element.name == 'progress'){
+						control.append(tpl_progress);
+					}else if(element.name == 'mute'){
+						control.append(tpl_mute);
+					}else if(element.name == 'subtitle'){
+						control.append(tpl_subtitle);
+					}else if(element.name == 'fullscreen'){
+						control.append(tpl_fullscreen);
+					}
+				})
+
 				wrap.append(context);
 
-				if(settings.controlLoadButton){
-					control.find('.cb-player-play').append($('<span class="cb-player-button-load"></span>'));
+				if(settings.controlBar){
+					wrap.append(control);
 				}
 
+			}else if(settings.tpl == 'default' && !settings.backgroundMode && !wrap.find('.cb-player-controls').length){
+
+				control.append(tpl_play);
+				wrap.append(context);
+
 				if(settings.controlTime){
-					control.append(time);
+					tpl_time.append(tpl_time_current)
+					tpl_time.append(tpl_time_seperator)
+					tpl_time.append(tpl_time_duration)
+					control.append(tpl_time);
 				}
 
 				if(settings.controlProgress){
-					control.append(progress);
+					control.append(tpl_progress);
 				}
 
-				if(settings.controlVolume){
-					volume.appendTo(mute);
-					control.append(mute);
-				}
+				control.append(tpl_mute);
 
 				if(!el.is("audio") && settings.controlFullscreen){
-					control.append(fullscreen);
+					control.append(tpl_fullscreen);
 				}
 
 				if(settings.controlBar){
@@ -1549,15 +1604,14 @@
 				return item;
 			}
 
-			var tracks = el.find('track');
+			let tracks = el.find('track');
 			if(tracks.length){
-				var subtitlesContainer = wrap.find('.cb-player-subtitle'),
-					subtitleList = wrap.find('.cb-player-subtitle-items');
+				let subtitlesContainer = wrap.find('.cb-player-subtitle')
+				let subtitleList = wrap.find('.cb-player-subtitle-items')
 
 				if(!subtitlesContainer.length){
-					subtitlesContainer = $('<div class="cb-player-subtitle"></div>');
-					subtitlesContainer.append($('<div class="cb-player-subtitle-button"></div>'));
-					subtitlesContainer.appendTo(wrap.find('.cb-player-controls'));
+					tpl_subtitle.appendTo(wrap.find('.cb-player-controls'))
+					subtitlesContainer = wrap.find('.cb-player-subtitle')
 				}
 
 				if(!subtitleList.length){
@@ -1607,19 +1661,19 @@
 				$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(wrap);
 			}
 
-			var volume = settings.volume;
+			let volume = settings.volume;
 			if(settings.muted || settings.backgroundMode || el.is('[muted]') ){
 				el.prop('muted', true);
 				volume = 0;
 			}
 
-			var autoplay = settings.autoplay;
+			let autoplay = settings.autoplay;
 			if(el.is('[autoplay]')){
 				el.removeAttr('autoplay');
 				autoplay = true;
 			}
 
-			var loop = settings.loop;
+			let loop = settings.loop;
 			if(settings.backgroundMode || el.is('[loop]')){
 				el.removeAttr('loop');
 				loop = true;

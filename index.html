@@ -35,28 +35,32 @@
 
 <div class="block-video">
 
-	<h1>Livestream N24</h1>
-	<video playsinline class="player js-player-2" poster="images/Foto_171.jpg">
+	<!-- <h1>Livestream N24</h1>
+	<video playsinline class="player js-player-1" poster="images/Foto_171.jpg">
 		<source data-src="https://live2weltcms-lh.akamaihd.net/i/Live2WeltCMS_1@444563/index_1_av-b.m3u8" type="application/x-mpegURL">
-	</video>
+	</video> -->
 
-	<h1>Livestream MTV</h1>
-	<video playsinline class="player js-player" poster="images/Foto_171.jpg">
-		<source data-src="https://unilivemtveu-lh.akamaihd.net/i/mtvde_1@134922/master.m3u8" type="application/x-mpegURL">
+	<!-- <h1>Livestream N24 Data Source</h1>
+	<div class="cb-player player js-player-1" data-src="https://live2weltcms-lh.akamaihd.net/i/Live2WeltCMS_1@444563/index_1_av-b.m3u8"></div> -->
+
+
+	<h1>Livestream ZDF</h1>
+	<video playsinline class="player js-player-1" poster="images/Foto_171.jpg">
+		<source data-src="http://zdf-hls-17.akamaized.net/hls/live/2016500/de/high/master.m3u8" type="application/x-mpegURL">
 	</video>
 
 	<h1>Selfhoste mp4</h1>
-	<video playsinline class="player js-player-3" poster="images/Foto_171.jpg">
+	<video playsinline class="player js-player-self" poster="images/Foto_171.jpg">
 		<source data-src="files/SampleVideo_1280x720_2mb.mp4" type="video/mp4">
-		<track kind="subtitles" label="German" srclang="de" src="files/german.vtt">
+		<track default kind="subtitles" label="German" srclang="de" src="files/german.vtt">
 		<track kind="subtitles" label="English" srclang="en" src="files/english.vtt">
 	</video>
 
     <h1>Youtube iFrame</h1>
-    <div class="cb-player player js-player-5" data-src="https://www.youtube.com/watch?v=E9oKEJ1pXPw"></div>
+    <div class="cb-player player js-player-iframe" data-src="https://www.youtube.com/watch?v=E9oKEJ1pXPw"></div>
 
     <h1>Vimeo iFrame</h1>
-	<div class="cb-player player js-player-5" data-src="https://vimeo.com/40648169"></div>
+	<div class="cb-player player js-player-iframe" data-src="https://vimeo.com/40648169"></div>
 
 
 	<!-- <h1>File not exist</h1>
