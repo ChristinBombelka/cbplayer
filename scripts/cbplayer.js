@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.6.0
- * 2022-05-29
+ * jQuery CBplayer 1.6.1
+ * 2022-05-31
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.6.0',
+		playerVersion = '1.6.1',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -574,6 +574,10 @@
 		}
 	}
 
+    function hidePoster(container){
+        container.find('.cb-player-poster').hide()
+    }
+
 	function toggleMediaPlayPause (container){
 		var player = container.find('.cb-player-media')[0];
 
@@ -620,6 +624,8 @@
 		}
 
 		container.removeClass('cb-player-initialized');
+
+        hidePoster(container)
 	}
 
 	function initPlayer(container) {
@@ -1434,9 +1440,11 @@
 				return;
 			}
 
-			// if(el.attr('poster')){
-			// 	$('<div class="cb-player-poster" style="background-image: url('" + el.attr('poster') + "')"></div>').appendTo(wrap);
-			// }
+			if(wrap.data('poster')){
+				let poster = $('<div class="cb-player-poster"></div>')
+                poster.css('background-image', 'url(' + wrap.data("poster") + ')')
+                poster.appendTo(wrap);
+			}
 
 			const control = $('<div class="cb-player-controls"></div>')
 			const tpl_play = $('<div class="cb-player-play cb-player-toggle-play"><span class="cb-player-button-play"></span><span class="cb-player-button-pause"></span></div>')
