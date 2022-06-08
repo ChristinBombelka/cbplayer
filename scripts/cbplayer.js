@@ -74,8 +74,11 @@
 		/* video loop*/
 		youtube: {
 			noCookie: true,
-			showinfo: 0,
-			modestbranding: 1 //Hide brand Logo
+            showinfo: 0, // Hide Video Info
+            controls: 0, // Disable YouTube controls
+            disablekb: 1, // Disable key navigation
+            playsinline: 1, // IOS play video inline
+            rel: 0, // Related videos
 		},
 		vimeo: {
 			referrerPolicy: null, // https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/referrerPolicy
@@ -1743,10 +1746,11 @@
 						videoId: videoId,
 						host: getYoutubeHost(settings),
 						playerVars: {
-							controls: 0,
-							disablekb: 1,
-							playsinline: 1,
-							rel: 0
+							showinfo: settings.youtube.showinfo,
+                            controls: settings.youtube.controls,
+                            disablekb: settings.youtube.disablekb,
+                            playsinline: settings.youtube.playsinline,
+                            rel: settings.youtube.rel
 						},
 						events: {
 							'onStateChange': function(e){
