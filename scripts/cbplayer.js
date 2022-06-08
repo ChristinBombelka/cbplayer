@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.6.1
- * 2022-05-31
+ * jQuery CBplayer 1.6.2
+ * 2022-06-08
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.6.1',
+		playerVersion = '1.6.2',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1364,6 +1364,15 @@
 		container.data('controlsHidden', controlsHidden);
 	}
 
+    function addPoster(container, image){
+        if(!container.find('.cb-player-poster').length){
+            let poster = $('<div class="cb-player-poster"></div>')
+
+            poster.css('background-image', 'url(' + image + ')')
+            poster.appendTo(container);
+        }
+    }
+
 	function CBplayer( element, options ) {
 		this.options = $.extend( {}, defaults, options );
 		this._defaults = defaults;
@@ -1444,9 +1453,7 @@
 			}
 
 			if(wrap.data('poster')){
-				let poster = $('<div class="cb-player-poster"></div>')
-                poster.css('background-image', 'url(' + wrap.data("poster") + ')')
-                poster.appendTo(wrap);
+                addPoster(wrap, wrap.data('poster'))
 			}
 
 			const control = $('<div class="cb-player-controls"></div>')
@@ -1739,6 +1746,9 @@
 					el = $('<div>')
 						.attr('id', id)
 						.appendTo(media);
+
+                    const thump = 'http://img.youtube.com/vi/'+videoId+'/maxresdefault.jpg'
+                    addPoster(wrap, thump)
 
 					el.addClass('cb-player-media-iframe');
 

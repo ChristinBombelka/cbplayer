@@ -110,7 +110,7 @@ audio{
 	opacity: 0;
 	visibility: hidden;
 	align-items: center;
-	z-index: 1;
+	z-index: 2;
 
 	.cb-media-is-ready &{
 		opacity: 1;
