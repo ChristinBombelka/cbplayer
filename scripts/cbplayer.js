@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.6.2
- * 2022-06-08
+ * jQuery CBplayer 1.6.3
+ * 2022-06-10
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.6.2',
+		playerVersion = '1.6.3',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -627,8 +627,6 @@
 		}
 
 		container.removeClass('cb-player-initialized');
-
-        hidePoster(container)
 	}
 
 	function initPlayer(container) {
@@ -1743,9 +1741,13 @@
 						media = wrap.find('.cb-player-media'),
 						ytTimer;
 
+                    var wrapper = document.createElement('div');
+                    wrapper.setAttribute('class', 'cb-player-media-embed');
+                    $(wrapper).appendTo(media);
+
 					el = $('<div>')
 						.attr('id', id)
-						.appendTo(media);
+						.appendTo(wrapper);
 
                     const thump = 'http://img.youtube.com/vi/'+videoId+'/maxresdefault.jpg'
                     addPoster(wrap, thump)
@@ -1768,6 +1770,8 @@
 
 								if(e.data == YT.PlayerState.PLAYING){
 									wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-loaded');
+
+                                    hidePoster(wrap)
 
 									ytTimer = setInterval(function(){
 										watchTimer(wrap);
@@ -1803,12 +1807,14 @@
 								}
 
 								if(settings.autoplay){
-									instance.playVideo();
+                                    videoStart(wrap, false)
 								}
 
-								if(volume){
-									instance.setVolume(volume);
-								}
+								if(volume && settings.muted === false){
+                                    setVolume(wrap, volume)
+								}else if(settings.muted){
+                                    setVolume(wrap, 0)
+                                }
 
 								if(loop){
 									instance.setLoop(true);
@@ -1817,7 +1823,6 @@
 								setTimeout(function(){
 									setDuration(wrap);
 								});
-
 							}
 						}
 					});
@@ -1912,7 +1917,8 @@
 					el.embed.on('play', function(){
 						wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-ended cb-player-is-loaded');
 
-						fitIframe(wrap);
+						fitIframe(wrap)
+                        hidePoster(wrap)
 					});
 
 					el.embed.on('pause', function(){
@@ -2012,6 +2018,7 @@
 							.removeClass('cb-payer-is-ended');
 
 						startWatchControlHide(container);
+                        hidePoster(container)
 					});
 
 					el.on('pause', function(e){

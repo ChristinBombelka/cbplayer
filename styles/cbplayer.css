@@ -202,4 +202,7 @@ audio { display: block !important; }
 .cb-player--vimeo .cb-player-media { overflow: hidden; margin-left: auto; margin-right: auto; }
 .cb-player--vimeo .cb-player-media-embed { -webkit-transform: translateY(-50%); transform: translateY(-50%); padding-bottom: 240vh; position: absolute; top: 50%; left: 0; width: 100%; }
 
+.cb-player--youtube .cb-player-media { overflow: hidden; }
+.cb-player--youtube .cb-player-media-embed { position: absolute; height: 200%; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); width: 100%; }
+
 .cb-player--audio .cb-player-controls { opacity: 1; visibility: visible; position: relative; }
