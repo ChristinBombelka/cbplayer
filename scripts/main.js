@@ -3,6 +3,11 @@
 //Ver. 1.0 - 28-8-2017
 
 $(function() {
+	$(".js-player-audio").cbplayer({
+	 	backtracking: false,
+	 	contextInfo: true,
+	});
+
 	$(".js-player-1").cbplayer({
 	 	backtracking: false,
 	 	contextInfo: true,
@@ -36,11 +41,9 @@ $(function() {
 		autoplay: false,
 	});
 
-	$(".js-player-4").cbplayer({
-		volume: 50,
-		backgroundMode: false,
-		loop: false,
-	});
-
-
+	// $(".js-player-4").cbplayer({
+	// 	volume: 50,
+	// 	backgroundMode: false,
+	// 	loop: false,
+	// });
 });
