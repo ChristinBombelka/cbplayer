@@ -1328,15 +1328,41 @@
 			const media = container.find('.cb-player-media')
 			const settings = container.data('settings');
 
-			if(settings.vimeo.fitIframe){
-				//fit video in height
-				if(containerRatio > container.data('ratio')){
-					let newWidth = containerHeight * container.data('ratio');
-					media.css('width', newWidth);
-				}else{
-					media.css('width', '');
-				}
-			}
+			// if(container.data('iframe') == 'vimeo' && settings.vimeo.fitIframe){
+			// 	//fit video in height
+			// 	if(containerRatio > container.data('ratio')){
+			// 		container.addClass('cb-player--iframe-fit')
+			// 		let newWidth = containerHeight * container.data('ratio');
+					
+			// 		media.css({
+			// 			'height': containerHeight,
+			// 			'width': newWidth
+			// 		});
+			// 	}else{
+			// 		container.removeClass('cb-player--iframe-fit')
+			// 		media.css({
+			// 			'height': '',
+			// 			'width': ''
+			// 		});
+			// 	}
+			// }else if(container.data('iframe') == 'youtube'){
+
+			// 	if(containerRatio > container.data('ratio')){
+			// 		container.addClass('cb-player--iframe-fit')
+			// 		let newWidth = containerHeight * container.data('ratio');
+					
+			// 		media.css({
+			// 			'height': containerHeight,
+			// 			'width': newWidth,
+			// 		});
+			// 	}else{
+			// 		container.removeClass('cb-player--iframe-fit')
+			// 		media.css({
+			// 			'height': '',
+			// 			'width': ''
+			// 		});
+			// 	}
+			// }
 		}
 	}
 
@@ -1735,8 +1761,6 @@
 
 					videoId = getYoutubeId(source.mediaSrc);
 
-					wrap.addClass('cb-media-is-ready');
-
 					var id = uniqid(),
 						media = wrap.find('.cb-player-media'),
 						ytTimer;
@@ -1753,6 +1777,16 @@
                     addPoster(wrap, thump)
 
 					el.addClass('cb-player-media-iframe');
+
+					fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v='+videoId+'&format=json')
+						.then( response => response.json() )
+						.then( (data) => {
+							if(jQuery.type(data) == 'object'){
+								wrap.data('ratio', data.width / data.height)
+							}					
+
+							fitIframe(wrap);			
+						})
 
 					el.embed = new window.YT.Player(id, {
 						videoId: videoId,
@@ -1795,6 +1829,8 @@
 							},
 							'onReady': function(e){
 								var instance = e.target;
+
+								wrap.addClass('cb-media-is-ready');
 
 								//set functions
 								wrap.data('instance', instance);

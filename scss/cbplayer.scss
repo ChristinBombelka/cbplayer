@@ -790,12 +790,7 @@ audio{
 .cb-player--vimeo{
 	.cb-player-media{
 		position: relative;
-
-		&:after{
-			content: "";
-			padding-bottom: 56.26%;
-			display: block;
-		}
+		padding-bottom: 56.26%;
 	}
 
 	.cb-player-media-iframe{
@@ -825,7 +820,7 @@ audio{
 
 	.cb-player-media-embed{
 		transform: translateY(-50%);
-		padding-bottom: 240vh;
+		padding-bottom: 200%;
 		position: absolute;
 		top: 50%;
 		left: 0;
@@ -836,6 +831,8 @@ audio{
 .cb-player--youtube{
     .cb-player-media{
         overflow: hidden;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .cb-player-media-embed{
@@ -845,6 +842,15 @@ audio{
         transform: translateY(-50%);
         width: 100%;
     }
+}
+
+.cb-player--iframe-fit{
+	&.cb-player--youtube,
+	&.cb-player--vimeo{
+		.cb-player-media{
+			padding-bottom: 0;
+		}
+	}
 }
 
 .cb-player--audio{
