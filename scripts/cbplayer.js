@@ -1325,44 +1325,43 @@
 			const containerHeight = container.height()
 			const containerWidth = container.width()
 			const containerRatio = containerWidth / containerHeight
-			const media = container.find('.cb-player-media')
+			const media = container.find('.cb-player-media-container')
 			const settings = container.data('settings');
 
-			// if(container.data('iframe') == 'vimeo' && settings.vimeo.fitIframe){
-			// 	//fit video in height
-			// 	if(containerRatio > container.data('ratio')){
-			// 		container.addClass('cb-player--iframe-fit')
-			// 		let newWidth = containerHeight * container.data('ratio');
+			if(container.data('iframe') == 'vimeo' && settings.vimeo.fitIframe){
+				//fit video in height
+				if(containerRatio > container.data('ratio')){
+					container.addClass('cb-player--iframe-fit')
+					let newWidth = containerHeight * container.data('ratio');
 					
-			// 		media.css({
-			// 			'height': containerHeight,
-			// 			'width': newWidth
-			// 		});
-			// 	}else{
-			// 		container.removeClass('cb-player--iframe-fit')
-			// 		media.css({
-			// 			'height': '',
-			// 			'width': ''
-			// 		});
-			// 	}
-			// }else if(container.data('iframe') == 'youtube'){
-
-			// 	if(containerRatio > container.data('ratio')){
-			// 		container.addClass('cb-player--iframe-fit')
-			// 		let newWidth = containerHeight * container.data('ratio');
+					media.css({
+						'height': containerHeight,
+						'width': newWidth
+					});
+				}else{
+					container.removeClass('cb-player--iframe-fit')
+					media.css({
+						'height': '',
+						'width': ''
+					});
+				}
+			}else if(container.data('iframe') == 'youtube'){
+				if(containerRatio > container.data('ratio')){
+					container.addClass('cb-player--iframe-fit')
+					let newWidth = containerHeight * container.data('ratio');
 					
-			// 		media.css({
-			// 			'height': containerHeight,
-			// 			'width': newWidth,
-			// 		});
-			// 	}else{
-			// 		container.removeClass('cb-player--iframe-fit')
-			// 		media.css({
-			// 			'height': '',
-			// 			'width': ''
-			// 		});
-			// 	}
-			// }
+					media.css({
+						'height': containerHeight,
+						'width': newWidth,
+					});
+				}else{
+					container.removeClass('cb-player--iframe-fit')
+					media.css({
+						'height': '',
+						'width': ''
+					});
+				}
+			}
 		}
 	}
 
@@ -1765,9 +1764,12 @@
 						media = wrap.find('.cb-player-media'),
 						ytTimer;
 
+					let mediaContainer = $('<div class="cb-player-media-container"></div>')
+					mediaContainer.appendTo(media)
+
                     var wrapper = document.createElement('div');
                     wrapper.setAttribute('class', 'cb-player-media-embed');
-                    $(wrapper).appendTo(media);
+                    $(wrapper).appendTo(mediaContainer);
 
 					el = $('<div>')
 						.attr('id', id)
@@ -1777,16 +1779,6 @@
                     addPoster(wrap, thump)
 
 					el.addClass('cb-player-media-iframe');
-
-					fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v='+videoId+'&format=json')
-						.then( response => response.json() )
-						.then( (data) => {
-							if(jQuery.type(data) == 'object'){
-								wrap.data('ratio', data.width / data.height)
-							}					
-
-							fitIframe(wrap);			
-						})
 
 					el.embed = new window.YT.Player(id, {
 						videoId: videoId,
@@ -1837,6 +1829,12 @@
 
 								//set duration
 								wrap.data('duration', instance.getDuration());
+
+								//set video ratio
+								let videoData = instance.j.i
+								if(jQuery.type(videoData) == 'object'){
+									wrap.data('ratio', videoData.width / videoData.height)
+								}	
 
 								if(settings.backgroundMode){
 									instance.mute();
@@ -1891,9 +1889,12 @@
 	
 					var media = wrap.find('.cb-player-media');
 
+					let mediaContainer = $('<div class="cb-player-media-container"></div>')
+					mediaContainer.appendTo(media)
+
 					var wrapper = document.createElement('div');
 					wrapper.setAttribute('class', 'cb-player-media-embed');
-					$(wrapper).appendTo(media);
+					$(wrapper).appendTo(mediaContainer);
 
 					var params = buildUrlParams({
 						loop: settings.loop,

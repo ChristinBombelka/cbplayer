@@ -204,6 +204,6 @@ audio { display: block !important; }
 .cb-player--youtube .cb-player-media { overflow: hidden; margin-left: auto; margin-right: auto; }
 .cb-player--youtube .cb-player-media-embed { position: absolute; height: 200%; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); width: 100%; }
 
-.cb-player--iframe-fit.cb-player--youtube .cb-player-media, .cb-player--iframe-fit.cb-player--vimeo .cb-player-media { padding-bottom: 0; }
+.cb-player--iframe-fit.cb-player--youtube .cb-player-media-container, .cb-player--iframe-fit.cb-player--vimeo .cb-player-media-container { position: absolute; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%); overflow: hidden; }
 
 .cb-player--audio .cb-player-controls { opacity: 1; visibility: visible; position: relative; }

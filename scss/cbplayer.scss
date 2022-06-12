@@ -847,8 +847,11 @@ audio{
 .cb-player--iframe-fit{
 	&.cb-player--youtube,
 	&.cb-player--vimeo{
-		.cb-player-media{
-			padding-bottom: 0;
+		.cb-player-media-container{
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+			overflow: hidden;
 		}
 	}
 }
@@ -859,5 +862,4 @@ audio{
         visibility: visible;
         position: relative;
     }
-
 }
