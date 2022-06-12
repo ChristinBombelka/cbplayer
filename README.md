@@ -30,6 +30,12 @@ $(".js-cbplayer").cbplayer();
 </html>
  ```
 
+## Minimal setup
+ 
+ ```html
+ <div class="cb-player js-player" data-src="VIDEO_SOURCE/URL"></div>
+ ```
+
 ## Options:
 
 ```js
