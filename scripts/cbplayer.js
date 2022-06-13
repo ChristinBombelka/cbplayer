@@ -1790,6 +1790,8 @@
 								var instance = e.target;
 
 								if(e.data == YT.PlayerState.PLAYING){
+									stopPlayingAll(wrap)
+
 									wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-loaded');
 
                                     hidePoster(wrap)
@@ -1948,6 +1950,7 @@
 					el.embed.on('play', function(){
 						wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-ended cb-player-is-loaded');
 
+						stopPlayingAll(wrap)
 						fitIframe(wrap)
                         hidePoster(wrap)
 					});
