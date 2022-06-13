@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.6.3
- * 2022-06-10
+ * jQuery CBplayer 1.6.4
+ * 2022-06-13
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.6.3',
+		playerVersion = '1.6.4',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -521,7 +521,7 @@
 					//Fix Clear DOM before call pause
 					$('body').height();
 
-					videoStop(player);
+					videoStop(container, player);
 				}
 			}
 		});
@@ -560,16 +560,15 @@
 		}
 	}
 
-	function videoStop(player){
-		var container = $(player).closest('.cb-player');
-
+	function videoStop(container, player){
 		if(container.data('iframe')){
 			if(container.data('iframe') == 'youtube'){
 				container.data('instance').pauseVideo();
 			}else if (container.data('iframe') == 'vimeo'){
 				player = container.data('embed');
 
-				videoStop(player);
+				player.pause();
+				clearInterval(watchProgress);
 			}
 		}else{
 			player.pause();
@@ -599,9 +598,9 @@
 				//5/-1 unstarted
 
 				if(container.data('instance').getPlayerState() != 1){
-					container.data('instance').playVideo();
+                    videoStart(container, false)
 				}else if(container.data('instance').getPlayerState() == 1){
-					container.data('instance').pauseVideo();
+                    videoStop(container, false)
 				}
 			}else if(container.data('iframe') == 'vimeo'){
 				var embedPlayer = container.data('embed');
@@ -610,19 +609,15 @@
 					if(paused){
 						videoStart(container, embedPlayer);
 					}else{
-						videoStop(embedPlayer);
+						videoStop(container, embedPlayer);
 					}
 				});
 			}
-
 		}else{
 			if (player.paused) {
-
 				videoStart(container, player);
-
 			} else {
-
-				videoStop(player);
+				videoStop(container, player);
 			}
 		}
 
@@ -1816,7 +1811,6 @@
 									controlsToggle(wrap, false);
 
 									clearInterval(ytTimer);
-
 								}
 							},
 							'onReady': function(e){
@@ -2682,7 +2676,7 @@
 
 				var media = container.find('.cb-player-media')[0];
 
-				videoStop(media);
+				videoStop(container, media);
 				return;
 			}
 
