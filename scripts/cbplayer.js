@@ -1271,7 +1271,7 @@
 
 	function isVimeoVideoUrl(url){
         var regex = /^.*(player.vimeo.com\/progressive_redirect\/playback\/(\d+)\/rendition\/(\d+[p])).*/;
-        return url.match(regex) ? RegExp.$2 : url;
+        return url.match(regex) ? RegExp.$2 : false;
     }
 
 	function getVimeoId(url){
