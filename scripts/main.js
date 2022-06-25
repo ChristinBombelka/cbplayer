@@ -4,8 +4,8 @@
 
 $(function() {
 	$(".js-player-audio").cbplayer({
-	 	backtracking: false,
 	 	contextInfo: true,
+	 	volumeOrientation: 'horizontal'
 	});
 
 	$(".js-player-1").cbplayer({
@@ -32,13 +32,15 @@ $(function() {
 		controlLoadButton: true,
 	 	volume: 50,
 	 	contextInfo: false,
+	 	volumeOrientation: 'horizontal'
 	});
 
 	$(".js-player-iframe").cbplayer({
-		volume: 50,
+		volume: 100,
 		backgroundMode: false,
 		loop: false,
 		autoplay: false,
+		volumeOrientation: 'horizontal'
 	});
 
 	// $(".js-player-4").cbplayer({

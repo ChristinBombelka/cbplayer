@@ -85,13 +85,16 @@ audio { display: block !important; }
 .cb-player-progress + .cb-player-time { margin-left: 10px; }
 
 .cb-player-volume-wrap { position: relative; }
-.cb-player-volume-wrap:hover .cb-player-volume-vertical, .cb-player-volume-wrap:hover .cb-player-volume-horizontal, .cb-player-is-setvolume .cb-player-volume-wrap .cb-player-volume-vertical, .cb-player-is-setvolume .cb-player-volume-wrap .cb-player-volume-horizontal { visibility: visible; opacity: 1; }
+.cb-player-volume-wrap:hover .cb-player-volume, .cb-player-is-setvolume .cb-player-volume-wrap .cb-player-volume { visibility: visible; opacity: 1; }
 
-.cb-player-volume-vertical { -webkit-transition: visibility 500ms ease, opacity 500ms ease; transition: visibility 500ms ease, opacity 500ms ease; background: rgba(0, 0, 0, 0.8); display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); -webkit-transform-origin: 0 0; transform-origin: 0 0; position: absolute; left: 50%; top: 0; width: 100px; height: 36px; margin-left: -18px; visibility: hidden; opacity: 0; }
+.cb-player-volume-wrap--vertical .cb-player-volume { -webkit-transition: visibility 500ms ease, opacity 500ms ease; transition: visibility 500ms ease, opacity 500ms ease; background: rgba(0, 0, 0, 0.8); display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); -webkit-transform-origin: 0 0; transform-origin: 0 0; position: absolute; left: 50%; top: 0; width: 100px; height: 36px; margin-left: -18px; visibility: hidden; opacity: 0; }
 
-.cb-player-volume-horizontal { -webkit-transition: visibility 500ms ease, opacity 500ms ease; transition: visibility 500ms ease, opacity 500ms ease; background: rgba(0, 0, 0, 0.8); display: -webkit-box; display: -ms-flexbox; display: flex; position: absolute; left: 50%; top: 0; width: 100px; height: 36px; margin-left: -18px; visibility: hidden; opacity: 0; }
+.cb-player-volume-wrap--horizontal { width: 136px; }
+.cb-player-volume-wrap--horizontal .cb-player-sound { width: 36px; }
+.cb-player-volume-wrap--horizontal .cb-player-volume { display: -webkit-box; display: -ms-flexbox; display: flex; position: absolute; left: 36px; top: 0; width: 100px; height: 36px; }
+.cb-player-volume-wrap--horizontal:not(:last-child) .cb-player-volume-container { width: 100px; }
 
-.cb-player-volume { background-color: #000; -webkit-transform: translateY(-50%); transform: translateY(-50%); position: relative; width: 90px; height: 5px; top: 50%; }
+.cb-player-volume-container { background-color: #000; -webkit-transform: translateY(-50%); transform: translateY(-50%); position: relative; width: 90px; height: 5px; top: 50%; }
 
 .cb-player-sound { cursor: pointer; width: 100%; height: 100%; }
 

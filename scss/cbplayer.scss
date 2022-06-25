@@ -310,45 +310,56 @@ audio{
 
 	&:hover,
 	.cb-player-is-setvolume &{
-		.cb-player-volume-vertical,
-		.cb-player-volume-horizontal{
+		.cb-player-volume{
 			visibility: visible;
 			opacity: 1;
 		}
 	}
 }
 
-.cb-player-volume-vertical{
-	transition: visibility $transitionHover, opacity $transitionHover;
-	background: $colorBackground;
-	display: flex;
-	transform: rotate(-90deg);
-	transform-origin: 0 0;
-	position: absolute;
-	left: 50%;
-	top: 0;
-	width: 100px;
-	height: 36px;
-	margin-left: -18px;
-	visibility: hidden;
-	opacity: 0;
+.cb-player-volume-wrap--vertical{
+	.cb-player-volume{
+		transition: visibility $transitionHover, opacity $transitionHover;
+		background: $colorBackground;
+		display: flex;
+		transform: rotate(-90deg);
+		transform-origin: 0 0;
+		position: absolute;
+		left: 50%;
+		top: 0;
+		width: 100px;
+		height: 36px;
+		margin-left: -18px;
+		visibility: hidden;
+		opacity: 0;
+	}
 }
 
-.cb-player-volume-horizontal{
-	transition: visibility $transitionHover, opacity $transitionHover;
-	background: $colorBackground;
-	display: flex;
-	position: absolute;
-	left: 50%;
-	top: 0;
-	width: 100px;
-	height: 36px;
-	margin-left: -18px;
-	visibility: hidden;
-	opacity: 0;
+
+.cb-player-volume-wrap--horizontal{
+	width: 136px;
+
+	.cb-player-sound{
+		width: 36px;
+	}
+
+	.cb-player-volume{
+		display: flex;
+		position: absolute;
+		left: 36px;
+		top: 0;
+		width: 100px;
+		height: 36px;
+	}
+
+	&:not(:last-child){
+		.cb-player-volume-container{
+			width: 100px;
+		}
+	}	
 }
 
-.cb-player-volume{
+.cb-player-volume-container{
 	background-color: #000;
 	transform: translateY(-50%);
 	position: relative;

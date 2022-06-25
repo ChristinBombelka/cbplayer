@@ -664,8 +664,8 @@
 		if(volume.target){
 			var e = volume;
 
-			var sliderContainerV = container.find(".cb-player-volume-vertical"),
-				sliderContainerH = container.find(".cb-player-volume-horizontal");
+			var sliderContainerV = container.find(".cb-player-volume-wrap--vertical"),
+				sliderContainerH = container.find(".cb-player-volume-wrap--horizontal");
 
 			if(sliderContainerH.length){
 				volume =(e.pageX - slider.offset().left) / slider.width() * 100;
@@ -1487,7 +1487,7 @@
 			const tpl_progress = $('<div class="cb-player-progress" aria-valuenow="0"><div class="cb-player-progress-hide"></div><div class="cb-player-progress-play"></div><div class="cb-player-progress-load"></div></div>')
 			const tpl_tooltip = $('<div class="cb-player-progress-tooltip"></div>')
 			const tpl_mute = $('<div class="cb-player-volume-wrap"><div class="cb-player-sound"><span class="cb-player-sound-on"></span><span class="cb-player-sound-off"></span></div></div>')
-			const tpl_volume = $('<div class="cb-player-volume-' + settings.volumeOrientation + '"><span class="cb-player-volume"><div class="cb-player-volume-hide" role="slider" aria-valuenow=""></div><div class="cb-player-volume-bar"></div></span></div>')
+			const tpl_volume = $('<div class="cb-player-volume"><span class="cb-player-volume-container"><div class="cb-player-volume-hide" role="slider" aria-valuenow=""></div><div class="cb-player-volume-bar"></div></span></div>')
 			const tpl_fullscreen = $('<div class="cb-player-fullscreen cb-player-toggle-fullscreen"><span class="cb-player-button-fullscreen-on"></span><span class="cb-player-button-fullscreen-off"></span></div>')
 			const tpl_subtitle = $('<div class="cb-player-subtitle"><div class="cb-player-subtitle-button"></div></div>')
 
@@ -1496,6 +1496,7 @@
 			}
 
 			if(settings.controlVolume){
+				tpl_mute.addClass('cb-player-volume-wrap--' + settings.volumeOrientation)
 				tpl_volume.appendTo(tpl_mute);
 			}
 
