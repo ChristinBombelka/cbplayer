@@ -465,7 +465,7 @@
 				}
 			});
 
-		}else if (source.mediaSrc.toLowerCase().match(/(.mp3)/)){
+		}else if (source.mediaSrc.toLowerCase().match(/(.mp3)/) || source.mediaSrc.toLowerCase().match(/(.wav)/)){
 
 			if(fileExist(source.mediaSrc) === false){
 				displayError(container, 'File not exist');
@@ -1241,6 +1241,10 @@
 			return "mp3";
 		}
 
+		if (url.toLowerCase().match(/(.wav)/)){
+			return "wav";
+		}
+
 		return null;
 	}
 
@@ -1505,7 +1509,7 @@
 				provider = getProvider(source.mediaSrc);
 
 			//check video/audio element exist
-			if(( provider == 'stream' || provider == 'mp4' || provider == 'mp3' ) && ( !wrap.find('video').length && !wrap.find('audio').length )){
+			if(( provider == 'stream' || provider == 'mp4' || provider == 'mp3' || provider == 'wav' ) && ( !wrap.find('video').length && !wrap.find('audio').length )){
 				el.remove();
 
 				let sourceType,
@@ -1518,9 +1522,12 @@
 						sourceType = 'application/x-mpegURL';
 					}
 
-				}else{
+				}else if(provider == 'mp3'){
 					targetType = 'audio';
 					sourceType = 'audio/mp3';
+				}else if(provider == 'wav'){
+					targetType = 'audio';
+					sourceType = 'audio/wav';
 				}
 
 				el = $('<'+targetType+' playsinline class="cb-player-media"><source src="' + source.mediaSrc + '" type="' + sourceType + '"/></'+targetType+'>');
