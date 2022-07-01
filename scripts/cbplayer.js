@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.6.5
- * 2022-06-25
+ * jQuery CBplayer 1.6.6
+ * 2022-07-01
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.6.5',
+		playerVersion = '1.6.6',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -247,6 +247,8 @@
 			return;
 		}
 
+        let provider = getProvider(source.mediaSrc);
+
 		if(source.mediaSrc.toLowerCase().match(/(.m3u8)/) && Hls.isSupported()){
 			var config = {
 				startPosition : -1,
@@ -421,7 +423,7 @@
 				container.removeClass("cb-player-is-loaded");
 			});
 
-		}else if(source.mediaSrc.toLowerCase().match(/(.mp4)/) || isVimeoVideoUrl(source.mediaSrc) || (source.mediaSrc.toLowerCase().match(/(.m3u8)/) && Hls) ){
+		}else if(source.mediaSrc.toLowerCase().match(/(.mp4)/) || isVimeoProgressive(source.mediaSrc) || (source.mediaSrc.toLowerCase().match(/(.m3u8)/) && Hls) ){
 			// (Hls && (!isSupported() && mediaSrc.match(/(.m3u8)/)) || mediaSrc.match(/(.mp4)/)
 
 			if(fileExist(source.mediaSrc) === false){
@@ -501,6 +503,8 @@
 				}
 			});
 
+        }else if(provider == 'vimeo' || provider == 'youtube'){
+            //check is Viemo or Youtube iFrame
 		}else{
 			displayError(container, 'File Type not Supported.');
 			return;
@@ -1273,7 +1277,7 @@
 		return undefined;
 	}
 
-	function isVimeoVideoUrl(url){
+	function isVimeoProgressive(url){
         var regex = /^.*(player.vimeo.com\/progressive_redirect\/playback\/(\d+)\/rendition\/(\d+[p])).*/;
         return url.match(regex) ? RegExp.$2 : false;
     }
