@@ -157,7 +157,7 @@ audio { display: block !important; }
 
 .cb-player-progressbar-off .cb-player-progress-hide { cursor: auto; }
 
-.cb-player-context { font: normal 12px/1.2 Arial; display: none; position: absolute; color: #fff; background-color: rgba(0, 0, 0, 0.8); padding-top: 5px; padding-bottom: 5px; z-index: 2; }
+.cb-player-context { font: normal 12px/1.2 Arial; display: none; position: absolute; color: #fff; background-color: rgba(0, 0, 0, 0.8); padding-top: 5px; padding-bottom: 5px; z-index: 3; }
 .cb-player-context.cb-player-context-active { display: block; }
 
 .cb-player-context-item { padding: 5px 15px; }
