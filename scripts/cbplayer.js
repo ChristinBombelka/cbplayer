@@ -1636,6 +1636,9 @@
 				if(settings.controlBar){
 					wrap.append(control);
 				}
+			}else if(settings.backgroundMode && wrap.find('.cb-player-controls').length){
+				//remove existin controls on backgroundmode
+				wrap.find('.cb-player-controls').remove()
 			}
 
 			if(wrap.find('.cb-player-progress').length){
