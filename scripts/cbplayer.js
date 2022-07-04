@@ -1819,6 +1819,12 @@
 
 									wrap.addClass('cb-player-is-loaded');
 
+								}else if(e.data == YT.PlayerState.ENDED){
+
+									if(settings.loop){
+										videoStart(wrap, false)
+									}
+
 								}else{
 									wrap.removeClass('cb-player-is-playing cb-player-is-loaded');
 
@@ -1858,11 +1864,7 @@
 								if(volume && settings.muted === false){
                                     setVolume(wrap, volume)
 								}else if(settings.muted){
-                                    setVolume(wrap, 0)
-                                }
-
-								if(loop){
-									instance.setLoop(true);
+									setVolume(wrap, 0)
 								}
 
 								setTimeout(function(){
