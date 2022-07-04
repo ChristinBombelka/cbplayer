@@ -1918,7 +1918,8 @@
 						byline: false,
 						portrait: false,
 						title: false,
-						transparent: false
+						transparent: false,
+						background: settings.backgroundMode
 					});
 
 					//Create a new DOM element
