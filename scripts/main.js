@@ -13,11 +13,6 @@ $(function() {
 	 	contextInfo: true,
 	});
 
- //    $(".js-player-vimeo").cbplayer({
- //      	contextInfo: true,
- //      	controlTimeBackwards: true,
- //    });
-
 	$(".js-player-self").cbplayer({
 		tpl: [
 			{name: 'play'},
@@ -32,7 +27,7 @@ $(function() {
 		controlLoadButton: true,
 	 	volume: 50,
 	 	contextInfo: false,
-	 	volumeOrientation: 'horizontal'
+	 	volumeOrientation: 'vertical'
 	});
 
 	$(".js-player-iframe").cbplayer({
@@ -40,12 +35,12 @@ $(function() {
 		backgroundMode: false,
 		loop: false,
 		autoplay: false,
-		volumeOrientation: 'horizontal'
 	});
 
-	// $(".js-player-4").cbplayer({
-	// 	volume: 50,
-	// 	backgroundMode: false,
-	// 	loop: false,
-	// });
+	$(".js-player-iframe-background").cbplayer({
+		muted: true,
+		backgroundMode: true,
+		loop: true,
+		autoplay: true
+	});
 });

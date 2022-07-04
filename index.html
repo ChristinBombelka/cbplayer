@@ -35,12 +35,17 @@
 
 <div class="block-video">
 
-	<h1>Audio</h1>
+	<h1>Audio WAV</h1>
     <div class="cb-player audio-test js-player-audio">
         <audio playsinline class="player">
-            <source data-src="files/KEYLOC-GainMatch.mp3" type="audio/mp3">
-            <track kind="subtitles" label="German" srclang="de" src="files/german.vtt" default>
-            <track kind="subtitles" label="English" srclang="en" src="files/english.vtt">
+            <source data-src="files/preamble.wav" type="audio/wav">
+        </audio>
+    </div>
+
+    <h1>Audio MP3</h1>
+    <div class="cb-player audio-test js-player-audio">
+        <audio playsinline class="player">
+            <source data-src="files/file_example_MP3_2MG.mp3" type="audio/mp3">
         </audio>
     </div>
 
@@ -74,6 +79,8 @@
     <h1>Vimeo iFrame</h1>
 	<div class="cb-player player js-player-iframe" data-src="https://vimeo.com/40648169"></div>
 
+    <h1>Vimeo iFrame background mode</h1>
+    <div class="cb-player player js-player-iframe-background" data-src="https://vimeo.com/162427937"></div>
 
 	<!-- <h1>File not exist</h1>
 	<div class="cb-player player js-player-4">
