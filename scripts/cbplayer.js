@@ -28,7 +28,17 @@
 		tpl : 'default',
 		/*
 			use custom player template
-			settings: default, false
+			settings: default, false, array[]
+			example: 
+			[
+	            {name: 'play'},
+	            {name: 'time', value: ['current']},
+	            {name: 'progress'},
+	            {name: 'time', value: ['duration']},
+	            {name: 'mute'},
+	            {name: 'subtitle'},
+	            {name: 'fullscreen'}
+	        ]
 		*/
 		controlBar: true,
 		/* enable/disable complete controls */
