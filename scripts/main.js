@@ -35,6 +35,21 @@ $(function() {
 		backgroundMode: false,
 		loop: false,
 		autoplay: false,
+		mediaIsInit: function(container){
+			console.log(container, 'is init')
+		},
+		mediaIsReady: function(container){
+			console.log(container, 'is ready')
+		},
+		mediaIsPlay: function(container){
+			console.log(container, 'is play')
+		},
+		mediaIsPause: function(container){
+			console.log(container, 'is pause')
+		},
+		mediaTimeupdate: function(container, time){
+			console.log(container, 'time update: ', time)
+		},
 	});
 
 	$(".js-player-iframe-background").cbplayer({

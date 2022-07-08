@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.6.7
- * 2022-07-04
+ * jQuery CBplayer 1.6.8
+ * 2022-07-08
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.6.7',
+		playerVersion = '1.6.8',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -100,7 +100,7 @@
 		mediaIsInit: false,
 		/* callback media container create */
 		mediaIsReady: false,
-		/* ballback media is ready to play*/
+		/* callback media is ready to play*/
 		mediaMetaIsLoaded: false,
 		/* wait for media meta data */
 		mediaIsPlay: false,
@@ -1782,7 +1782,8 @@
 
 					var id = uniqid(),
 						media = wrap.find('.cb-player-media'),
-						ytTimer;
+						ytTimer,
+						ytTimeupdate;
 
 					let mediaContainer = $('<div class="cb-player-media-container"></div>')
 					mediaContainer.appendTo(media)
@@ -1814,6 +1815,9 @@
 							'onStateChange': function(e){
 								var instance = e.target;
 
+								clearInterval(ytTimer)
+								clearInterval(ytTimeupdate)
+
 								if(e.data == YT.PlayerState.PLAYING){
 									stopPlayingAll(wrap)
 
@@ -1825,6 +1829,21 @@
 										watchTimer(wrap);
 									}, 250);
 
+									ytTimeupdate = setInterval(function(){
+										if ($.isFunction(settings.mediaTimeupdate)) {
+											settings.mediaTimeupdate.call(this, wrap, instance.getCurrentTime());
+										}
+									}, 1000)
+
+									if ($.isFunction(settings.mediaIsPlay)) {
+			                            settings.mediaIsPlay.call(this, wrap);
+			                        }
+			                    }else if(e.data == YT.PlayerState.PAUSED){
+
+			                    	if ($.isFunction(settings.mediaIsPause)) {
+			                            settings.mediaIsPause.call(this, wrap);
+			                        }
+
 								}else if(e.data == YT.PlayerState.BUFFERING){
 
 									wrap.addClass('cb-player-is-loaded');
@@ -1835,15 +1854,17 @@
 										videoStart(wrap, false)
 									}
 
+									if ($.isFunction(settings.mediaIsEnd)) {
+			                            settings.mediaIsEnd.call(this, wrap);
+			                        }
+
 								}else{
-									wrap.removeClass('cb-player-is-playing cb-player-is-loaded');
+									wrap.removeClass('cb-player-is-playing cb-player-is-loaded')
 
-									watchTimer(wrap);
+									watchTimer(wrap)
 
-									clearTimeout(watchControlHide);
-									controlsToggle(wrap, false);
-
-									clearInterval(ytTimer);
+									clearTimeout(watchControlHide)
+									controlsToggle(wrap, false)
 								}
 							},
 							'onReady': function(e){
@@ -1880,6 +1901,10 @@
 								setTimeout(function(){
 									setDuration(wrap);
 								});
+
+								if ($.isFunction(settings.mediaIsReady)) {
+		                            settings.mediaIsReady.call(this, wrap);
+		                        }
 							}
 						}
 					});
@@ -1967,6 +1992,12 @@
 						fitIframe(wrap);
 					});
 
+                    el.embed.ready().then(function(){
+                        if ($.isFunction(settings.mediaIsReady)) {
+                            settings.mediaIsReady.call(this, wrap);
+                        }
+                    })
+
 					el.embed.on('bufferstart', function(){
 						wrap.addClass('cb-player-is-loaded');
 					});
@@ -1981,6 +2012,10 @@
 						stopPlayingAll(wrap)
 						fitIframe(wrap)
                         hidePoster(wrap)
+
+                        if ($.isFunction(settings.mediaIsPlay)) {
+                            settings.mediaIsPlay.call(this, wrap);
+                        }
 					});
 
 					el.embed.on('pause', function(){
@@ -1988,10 +2023,18 @@
 
 						clearTimeout(watchControlHide);
 						controlsToggle(wrap, false);
+
+                        if ($.isFunction(settings.mediaIsPause)) {
+                            settings.mediaIsPause.call(this, wrap);
+                        }
 					});
 
 					el.embed.on('timeupdate', function(){
 						watchTimer(wrap);
+
+                        if ($.isFunction(settings.mediaTimeupdate)) {
+                            settings.mediaTimeupdate.call(this, wrap, media[0].currentTime);
+                        }
 					});
 
 					el.embed.on('seeked', function(){
@@ -2001,6 +2044,10 @@
 
 					el.embed.on('ended', function(data) {
 						wrap.addClass('cb-player-is-ended');
+
+                        if ($.isFunction(settings.mediaIsEnd)) {
+                            settings.mediaIsEnd.call(this, wrap);
+                        }
 					});
 
 					//set duration
@@ -2022,37 +2069,6 @@
 
 			var media = {
 				ready: function(el){
-
-					el.on("timeupdate", function(){
-						var container = $(this).closest(".cb-player"),
-							media = container.find('video, audio');
-
-						if ($.isFunction(settings.mediaTimeupdate)) {
-							settings.mediaTimeupdate.call(this, wrap, media[0].currentTime);
-						}
-
-						watchTimer(container);
-						watchSubtitles(container);
-					});
-
-					el.on('durationchange', function(e){
-						var container = $(this).closest(".cb-player"),
-							progress = container.find(".cb-player-progress"),
-							slider = progress.find(".cb-player-progress-hide");
-
-						if(container.data('pause') && container.data('is-livestream') && container.data('backtracking')){
-
-							if(slider.length){
-								//media backtracking duration - current duration - current playtime / backtracking duration * 100
-								var position = (container.data('duration') - getbacktrackingPosition(container)) / container.data('duration') * 100,
-									position = position.toFixed(4);
-
-								progress.attr('aria-valuenow', position);
-
-								container.data('pause', false);
-							}
-						}
-					});
 
 					var setLevel;
 					el.on('play', function(e){
@@ -2081,6 +2097,18 @@
 
 						startWatchControlHide(container);
                         hidePoster(container)
+					});
+
+					el.on("timeupdate", function(){
+						var container = $(this).closest(".cb-player"),
+							media = container.find('video, audio');
+
+						if ($.isFunction(settings.mediaTimeupdate)) {
+							settings.mediaTimeupdate.call(this, wrap, media[0].currentTime);
+						}
+
+						watchTimer(container);
+						watchSubtitles(container);
 					});
 
 					el.on('pause', function(e){
@@ -2127,6 +2155,25 @@
 						//check current time with duration - fix for firefox
 						if($(this)[0].currentTime < container.data('duration')){
 							container.addClass("cb-player-is-loaded");
+						}
+					});
+
+					el.on('durationchange', function(e){
+						var container = $(this).closest(".cb-player"),
+							progress = container.find(".cb-player-progress"),
+							slider = progress.find(".cb-player-progress-hide");
+
+						if(container.data('pause') && container.data('is-livestream') && container.data('backtracking')){
+
+							if(slider.length){
+								//media backtracking duration - current duration - current playtime / backtracking duration * 100
+								var position = (container.data('duration') - getbacktrackingPosition(container)) / container.data('duration') * 100,
+									position = position.toFixed(4);
+
+								progress.attr('aria-valuenow', position);
+
+								container.data('pause', false);
+							}
 						}
 					});
 
