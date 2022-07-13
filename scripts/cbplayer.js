@@ -1860,7 +1860,8 @@
 							'onReady': function(e){
 								var instance = e.target;
 
-								wrap.addClass('cb-media-is-ready');
+								wrap.removeClass('cb-player-initialized')
+								wrap.addClass('cb-media-is-ready')
 
 								//set functions
 								wrap.data('instance', instance);
