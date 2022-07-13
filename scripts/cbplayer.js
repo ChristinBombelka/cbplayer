@@ -12,7 +12,6 @@
 		watchProgress,
 		watchFullscreen,
 		watchControlHide,
-		timeoutMeta,
 		urls = {
 			vimeo: {
 				iframe: 'https://player.vimeo.com/video/{0}?{1}',
@@ -244,8 +243,7 @@
 		//container.removeClass("cb-payer-is-replay");
 
 		var settings = container.data('settings'),
-			media = container.find(".cb-player-media"),
-			timeoutMeta;
+			media = container.find(".cb-player-media");
 
 		let source = getSource(media);
 		if(!source){
@@ -450,9 +448,6 @@
 			});
 
 			media.on('loadedmetadata', function(){
-
-				clearTimeout(timeoutMeta);
-
 				var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"));
 				media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration);
 
@@ -492,9 +487,6 @@
 
 			media.on('loadedmetadata', function(){
 				var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"));
-
-				clearTimeout(timeoutMeta);
-
 				media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration);
 
 				container.addClass("cb-media-is-ready");
