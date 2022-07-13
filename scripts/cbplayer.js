@@ -2033,7 +2033,9 @@
 						watchTimer(wrap);
 
                         if ($.isFunction(settings.mediaTimeupdate)) {
-                            settings.mediaTimeupdate.call(this, wrap, media[0].currentTime);
+                        	el.embed.getCurrentTime().then(function(seconds){
+								settings.mediaTimeupdate.call(this, wrap, seconds);
+							}) 
                         }
 					});
 
