@@ -1832,6 +1832,11 @@
 			                        }
 			                    }else if(e.data == YT.PlayerState.PAUSED){
 
+			                    	wrap.removeClass('cb-player-is-playing cb-player-is-loaded')
+
+			                    	clearTimeout(watchControlHide)
+									controlsToggle(wrap, false)
+
 			                    	if ($.isFunction(settings.mediaIsPause)) {
 			                            settings.mediaIsPause.call(this, wrap);
 			                        }
@@ -1850,13 +1855,6 @@
 			                            settings.mediaIsEnd.call(this, wrap);
 			                        }
 
-								}else{
-									wrap.removeClass('cb-player-is-playing cb-player-is-loaded')
-
-									watchTimer(wrap)
-
-									clearTimeout(watchControlHide)
-									controlsToggle(wrap, false)
 								}
 							},
 							'onReady': function(e){
