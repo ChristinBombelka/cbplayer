@@ -22,8 +22,9 @@
 			},
 		},
 		youtubeInit = false,
-		vimeoInit = false,
-		defaults = {
+		vimeoInit = false;
+
+	let defaults = {
 		tpl : 'default',
 		/*
 			use custom player template
@@ -1774,7 +1775,8 @@
 
 					var id = uniqid(),
 						media = wrap.find('.cb-player-media'),
-						ytTimer;
+						ytTimer,
+						ytBufferTimer;
 
 					let mediaContainer = $('<div class="cb-player-media-container"></div>')
 					mediaContainer.appendTo(media)
@@ -1807,6 +1809,7 @@
 								var instance = e.target;
 
 								clearTimeout(ytTimer)
+								clearTimeout(ytBufferTimer)
 
 								if(e.data == YT.PlayerState.PLAYING){
 									stopPlayingAll(wrap)
@@ -1843,8 +1846,10 @@
 
 								}else if(e.data == YT.PlayerState.BUFFERING){
 
-									wrap.addClass('cb-player-is-loaded');
-
+									ytBufferTimer = setTimeout(() =>{
+										wrap.addClass('cb-player-is-loaded');
+									}, 400)
+									
 								}else if(e.data == YT.PlayerState.ENDED){
 
 									if(settings.loop){
