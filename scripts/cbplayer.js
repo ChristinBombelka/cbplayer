@@ -1782,8 +1782,7 @@
 
 					var id = uniqid(),
 						media = wrap.find('.cb-player-media'),
-						ytTimer,
-						ytTimeupdate;
+						ytTimer;
 
 					let mediaContainer = $('<div class="cb-player-media-container"></div>')
 					mediaContainer.appendTo(media)
@@ -1815,25 +1814,24 @@
 							'onStateChange': function(e){
 								var instance = e.target;
 
-								clearInterval(ytTimer)
-								clearInterval(ytTimeupdate)
+								clearTimeout(ytTimer)
 
 								if(e.data == YT.PlayerState.PLAYING){
 									stopPlayingAll(wrap)
 
 									wrap.addClass('cb-player-is-playing').removeClass('cb-player-is-loaded');
 
-                                    hidePoster(wrap)
-
-									ytTimer = setInterval(function(){
+									function ytTimeupdate(){
 										watchTimer(wrap);
-									}, 250);
-
-									ytTimeupdate = setInterval(function(){
 										if ($.isFunction(settings.mediaTimeupdate)) {
 											settings.mediaTimeupdate.call(this, wrap, instance.getCurrentTime());
 										}
-									}, 1000)
+
+										ytTimer = setTimeout(function(){
+											ytTimeupdate()
+										}, 250)
+									}
+									ytTimeupdate()
 
 									hidePoster(wrap)
 
