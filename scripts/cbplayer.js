@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.6.8
- * 2022-07-08
+ * jQuery CBplayer 1.6.9
+ * 2022-07-13
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.6.8',
+		playerVersion = '1.6.9',
 		hls,
 		watchProgress,
 		watchFullscreen,
