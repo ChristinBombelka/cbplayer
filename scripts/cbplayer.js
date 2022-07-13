@@ -1835,6 +1835,8 @@
 										}
 									}, 1000)
 
+									hidePoster(wrap)
+
 									if ($.isFunction(settings.mediaIsPlay)) {
 			                            settings.mediaIsPlay.call(this, wrap);
 			                        }
