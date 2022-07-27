@@ -88,10 +88,15 @@ audio{
 }
 
 .cb-player-media{
-	//cursor: pointer;
-	display: block;
+    display: block;
 	width: 100%;
 	height: 100%;
+}
+
+.cb-player-media-source{
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
 .cb-player-controls{

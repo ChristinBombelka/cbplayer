@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.6.9
- * 2022-07-13
+ * jQuery CBplayer 1.6.10
+ * 2022-07-27
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.6.9',
+		playerVersion = '1.6.10',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -29,16 +29,16 @@
 		/*
 			use custom player template
 			settings: default, false, array[]
-			example: 
+			example:
 			[
-	            {name: 'play'},
-	            {name: 'time', value: ['current']},
-	            {name: 'progress'},
-	            {name: 'time', value: ['duration']},
-	            {name: 'mute'},
-	            {name: 'subtitle'},
-	            {name: 'fullscreen'}
-	        ]
+				{name: 'play'},
+				{name: 'time', value: ['current']},
+				{name: 'progress'},
+				{name: 'time', value: ['duration']},
+				{name: 'mute'},
+				{name: 'subtitle'},
+				{name: 'fullscreen'}
+			]
 		*/
 		controlBar: true,
 		/* enable/disable complete controls */
@@ -84,11 +84,11 @@
 		/* video loop*/
 		youtube: {
 			noCookie: true,
-            showinfo: 0, // Hide Video Info
-            controls: 0, // Disable YouTube controls
-            disablekb: 1, // Disable key navigation
-            playsinline: 1, // IOS play video inline
-            rel: 0, // Related videos
+			showinfo: 0, // Hide Video Info
+			controls: 0, // Disable YouTube controls
+			disablekb: 1, // Disable key navigation
+			playsinline: 1, // IOS play video inline
+			rel: 0, // Related videos
 		},
 		vimeo: {
 			referrerPolicy: null, // https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/referrerPolicy
@@ -137,7 +137,7 @@
 	}
 
 	function videoBuffer(container) {
-		var player = container.find('.cb-player-media')[0];
+		var player = container.find('.cb-player-media-source')[0];
 		var buffer = player.buffered;
 		var bufferingDuration;
 
@@ -244,7 +244,7 @@
 		//container.removeClass("cb-payer-is-replay");
 
 		var settings = container.data('settings'),
-			media = container.find(".cb-player-media");
+			media = container.find(".cb-player-media-source");
 
 		let source = getSource(media);
 		if(!source){
@@ -256,7 +256,7 @@
 			return;
 		}
 
-        let provider = getProvider(source.mediaSrc);
+		let provider = getProvider(source.mediaSrc);
 
 		if(source.mediaSrc.toLowerCase().match(/(.m3u8)/) && Hls.isSupported()){
 			var config = {
@@ -506,8 +506,8 @@
 				}
 			});
 
-        }else if(provider == 'vimeo' || provider == 'youtube'){
-            //check is Viemo or Youtube iFrame
+		}else if(provider == 'vimeo' || provider == 'youtube'){
+			//check is Viemo or Youtube iFrame
 		}else{
 			displayError(container, 'File Type not Supported.');
 			return;
@@ -521,7 +521,7 @@
 	function stopPlayingAll(el){
 		$('.cb-player-is-playing').not(el).each(function(){
 			var container = $(this),
-				player = container.find('.cb-player-media')[0];
+				player = container.find('.cb-player-media-source')[0];
 
 			if(!container.data('backgroundMode')){
 				if(container.hasClass('cb-media-is-ready') && !player.paused){
@@ -583,12 +583,12 @@
 		}
 	}
 
-    function hidePoster(container){
-        container.find('.cb-player-poster').hide()
-    }
+	function hidePoster(container){
+		container.find('.cb-player-poster').hide()
+	}
 
 	function toggleMediaPlayPause (container){
-		var player = container.find('.cb-player-media')[0];
+		var player = container.find('.cb-player-media-source')[0];
 
 		if(!container.data('backgroundMode')){
 			stopPlayingAll(container);
@@ -605,9 +605,9 @@
 				//5/-1 unstarted
 
 				if(container.data('instance').getPlayerState() != 1){
-                    videoStart(container, false)
+					videoStart(container, false)
 				}else if(container.data('instance').getPlayerState() == 1){
-                    videoStop(container, false)
+					videoStop(container, false)
 				}
 			}else if(container.data('iframe') == 'vimeo'){
 				var embedPlayer = container.data('embed');
@@ -664,7 +664,7 @@
 	}
 
 	function setVolume(container, volume) {
-		var player = container.find('.cb-player-media'),
+		var player = container.find('.cb-player-media-source'),
 			slider = container.find(".cb-player-volume-hide"),
 			progress = container.find(".cb-player-volume-bar");
 
@@ -805,7 +805,7 @@
 	}
 
 	function setCurrentTime(container, time){
-		var player = container.find('.cb-player-media');
+		var player = container.find('.cb-player-media-source');
 
 		if(container.data('iframe')){
 			if(container.data('iframe') == 'youtube'){
@@ -876,7 +876,7 @@
 	}
 
 	function watchTimer(container) {
-		var player = container.find('.cb-player-media'),
+		var player = container.find('.cb-player-media-source'),
 			progress = container.find('.cb-player-progress'),
 			progressVisibile = container.find('.cb-player-progress-play'),
 			progresstime,
@@ -938,12 +938,12 @@
 				if(container.data('level')){
 					container.find('.cb-debug-levels').text(container.data('level') + ' of ' + container.data('levels').length);
 				}
-				
+
 				if(container.data('buffer')){
 					container.find('.cb-debug-buffer').text(Math.round(container.data('buffer')) + 's');
 				}
 			}
-	
+
 			container.find('.cb-debug-duration').text(container.data('duration') + 's');
 		}
 
@@ -1087,7 +1087,7 @@
 			displaytime = container.data('duration') * position / 100;
 
 		}else{
-			player = container.find('.cb-player-media');
+			player = container.find('.cb-player-media-source');
 			displaytime = player[0].duration * position / 100;
 		}
 
@@ -1143,7 +1143,7 @@
 			tooltip(container, position);
 
 			if(e.type != 'touchmove'){
-				playPosition(container.find(".cb-player-media"), position);
+				playPosition(container.find(".cb-player-media-source"), position);
 			}
 
 			if(e.type == 'touchmove'){
@@ -1179,7 +1179,7 @@
 	}
 
 	function watchSubtitles(container){
-		var el = container.find('.cb-player-media'),
+		var el = container.find('.cb-player-media-source'),
 			tracks = el[0].textTracks,
 			lastCueId = container.data('lastCueId'),
 			settings = container.data('settings');
@@ -1262,7 +1262,7 @@
 
 	function setDuration(container){
 		if(container.data('duration')){
-			var media = container.find('.cb-player-media');
+			var media = container.find('.cb-player-media-source');
 
 			container.find('.cb-player-time-duration').text(formatTime(container.data('duration'), container));
 		}
@@ -1281,9 +1281,9 @@
 	}
 
 	function isVimeoProgressive(url){
-        var regex = /^.*(player.vimeo.com\/progressive_redirect\/playback\/(\d+)\/rendition\/(\d+[p])).*/;
-        return url.match(regex) ? RegExp.$2 : false;
-    }
+		var regex = /^.*(player.vimeo.com\/progressive_redirect\/playback\/(\d+)\/rendition\/(\d+[p])).*/;
+		return url.match(regex) ? RegExp.$2 : false;
+	}
 
 	function getVimeoId(url){
 		var regex = /^.*(vimeo\.com\/(video\/|))([0-9]+)/;
@@ -1339,7 +1339,7 @@
 				if(containerRatio > container.data('ratio')){
 					container.addClass('cb-player--iframe-fit')
 					let newWidth = containerHeight * container.data('ratio');
-					
+
 					media.css({
 						'height': containerHeight,
 						'width': newWidth
@@ -1355,7 +1355,7 @@
 				if(containerRatio > container.data('ratio')){
 					container.addClass('cb-player--iframe-fit')
 					let newWidth = containerHeight * container.data('ratio');
-					
+
 					media.css({
 						'height': containerHeight,
 						'width': newWidth,
@@ -1393,14 +1393,14 @@
 		container.data('controlsHidden', controlsHidden);
 	}
 
-    function addPoster(container, image){
-        if(!container.find('.cb-player-poster').length){
-            let poster = $('<div class="cb-player-poster"></div>')
+	function addPoster(container, image){
+		if(!container.find('.cb-player-poster').length){
+			let poster = $('<div class="cb-player-poster"></div>')
 
-            poster.css('background-image', 'url(' + image + ')')
-            poster.appendTo(container);
-        }
-    }
+			poster.css('background-image', 'url(' + image + ')')
+			poster.appendTo(container);
+		}
+	}
 
 	function CBplayer( element, options ) {
 		this.options = $.extend( {}, defaults, options );
@@ -1434,34 +1434,36 @@
 
 			var settings = options; // $.extend(settings, options);
 
-			var	spinner = $('<div class="cb-player-spinner-wrap"><div class="cb-player-spinner"></div></div>'),
+			var spinner = $('<div class="cb-player-spinner-wrap"><div class="cb-player-spinner"></div></div>'),
 				overlayerButton = $('<div class="cb-player-overlayer-button"></div>');
 
-			if(el.is("audio")){
-				el.addClass('cb-player-media');
-				el.wrap('<div class="cb-player"></div>');
+			if(el.is("video") || el.is("audio")){
+				el.addClass('cb-player-media-source')
+
+				container = el.wrap('<div class="cb-player"></div>');
+				container.wrap('<div class="cb-player-media"></div>');
 
 				wrap = el.closest('.cb-player');
-			}else if(el.is("video")){
-				el.addClass('cb-player-media');
-				el.wrap('<div class="cb-player"></div>');
 
-				wrap = el.closest('.cb-player');
 			}else{
 				wrap = el;
 
-                if(!wrap.hasClass('cb-player')){
-                    wrap.addClass('cb-player')
-                }
+				if(!wrap.hasClass('cb-player')){
+					wrap.addClass('cb-player')
+				}
 
 				el = wrap.find("video, audio");
 
-                if(el.length && !el.hasClass('cb-player-media')){
-                    el.addClass('cb-player-media')
-                }
+				if(el.length && !el.closest('.cb-player-media').length){
+					el.wrap('<div class="cb-player-media"></div>');
+				}
 
-				if(wrap.find('.cb-player-media').length){
-					el = wrap.find('.cb-player-media')
+				if(el.length && !el.hasClass('cb-player-media-source')){
+					el.addClass('cb-player-media-source')
+				}
+
+				if(wrap.find('.cb-player-media-source').length){
+					el = wrap.find('.cb-player-media-source')
 				}else if(!el.length){
 					el = $('<div>').appendTo(wrap);
 					el.addClass('cb-player-media');
@@ -1482,7 +1484,7 @@
 			}
 
 			if(wrap.data('poster')){
-                addPoster(wrap, wrap.data('poster'))
+				addPoster(wrap, wrap.data('poster'))
 			}
 
 			const control = $('<div class="cb-player-controls"></div>')
@@ -1513,8 +1515,8 @@
 
 			var context = $('<ul class="cb-player-context"><li class="cb-player-context-item">CBplayer ' + playerVersion + '</li></ul>');
 
-			let source = getSource(el),
-				provider = getProvider(source.mediaSrc);
+			let source = getSource(el)
+			let provider = getProvider(source.mediaSrc);
 
 			//check video/audio element exist
 			if(( provider == 'stream' || provider == 'mp4' || provider == 'mp3' || provider == 'wav' ) && ( !wrap.find('video').length && !wrap.find('audio').length )){
@@ -1538,8 +1540,14 @@
 					sourceType = 'audio/wav';
 				}
 
-				el = $('<'+targetType+' playsinline class="cb-player-media"><source src="' + source.mediaSrc + '" type="' + sourceType + '"/></'+targetType+'>');
-				el.prependTo(wrap);
+				let media = wrap.find('.cb-player-media')
+				if(!media.length){
+					wrap.prepend('<div class="cb-player-media"></div>')
+					media = wrap.find('.cb-player-media')
+				}
+
+				el = $('<'+targetType+' playsinline class="cb-player-media-source"><source data-src="' + source.mediaSrc + '" type="' + sourceType + '"/></'+targetType+'>');
+				el.prependTo(media);
 			}
 
 			if(el.is("video")){
@@ -1647,7 +1655,7 @@
 			if(wrap.find('.cb-player-progress').length){
 				wrap.find('.cb-player-progress').attr('role', 'slider');
 			}
-			
+
 			function createTrackItem(id, lang, label){
 				var item = $('<li>');
 
@@ -1781,28 +1789,28 @@
 					let mediaContainer = $('<div class="cb-player-media-container"></div>')
 					mediaContainer.appendTo(media)
 
-                    var wrapper = document.createElement('div');
-                    wrapper.setAttribute('class', 'cb-player-media-embed');
-                    $(wrapper).appendTo(mediaContainer);
+					var wrapper = document.createElement('div');
+					wrapper.setAttribute('class', 'cb-player-media-embed');
+					$(wrapper).appendTo(mediaContainer);
 
 					el = $('<div>')
 						.attr('id', id)
 						.appendTo(wrapper);
 
-                    const thump = 'http://img.youtube.com/vi/'+videoId+'/maxresdefault.jpg'
-                    addPoster(wrap, thump)
+					const thump = 'http://img.youtube.com/vi/'+videoId+'/maxresdefault.jpg'
+					addPoster(wrap, thump)
 
-					el.addClass('cb-player-media-iframe');
+					el.addClass('cb-player-media-iframe cb-player-media-source');
 
 					el.embed = new window.YT.Player(id, {
 						videoId: videoId,
 						host: getYoutubeHost(settings),
 						playerVars: {
 							showinfo: settings.youtube.showinfo,
-                            controls: settings.youtube.controls,
-                            disablekb: settings.youtube.disablekb,
-                            playsinline: settings.youtube.playsinline,
-                            rel: settings.youtube.rel
+							controls: settings.youtube.controls,
+							disablekb: settings.youtube.disablekb,
+							playsinline: settings.youtube.playsinline,
+							rel: settings.youtube.rel
 						},
 						events: {
 							'onStateChange': function(e){
@@ -1831,25 +1839,25 @@
 									hidePoster(wrap)
 
 									if ($.isFunction(settings.mediaIsPlay)) {
-			                            settings.mediaIsPlay.call(this, wrap);
-			                        }
-			                    }else if(e.data == YT.PlayerState.PAUSED){
+										settings.mediaIsPlay.call(this, wrap);
+									}
+								}else if(e.data == YT.PlayerState.PAUSED){
 
-			                    	wrap.removeClass('cb-player-is-playing cb-player-is-loaded')
+									wrap.removeClass('cb-player-is-playing cb-player-is-loaded')
 
-			                    	clearTimeout(watchControlHide)
+									clearTimeout(watchControlHide)
 									controlsToggle(wrap, false)
 
-			                    	if ($.isFunction(settings.mediaIsPause)) {
-			                            settings.mediaIsPause.call(this, wrap);
-			                        }
+									if ($.isFunction(settings.mediaIsPause)) {
+										settings.mediaIsPause.call(this, wrap);
+									}
 
 								}else if(e.data == YT.PlayerState.BUFFERING){
 
 									ytBufferTimer = setTimeout(() =>{
 										wrap.addClass('cb-player-is-loaded');
 									}, 400)
-									
+
 								}else if(e.data == YT.PlayerState.ENDED){
 
 									if(settings.loop){
@@ -1857,8 +1865,8 @@
 									}
 
 									if ($.isFunction(settings.mediaIsEnd)) {
-			                            settings.mediaIsEnd.call(this, wrap);
-			                        }
+										settings.mediaIsEnd.call(this, wrap);
+									}
 
 								}
 							},
@@ -1878,18 +1886,18 @@
 								let videoData = instance.j.i
 								if(jQuery.type(videoData) == 'object'){
 									wrap.data('ratio', videoData.width / videoData.height)
-								}	
+								}
 
 								if(settings.backgroundMode){
 									instance.mute();
 								}
 
 								if(settings.autoplay){
-                                    videoStart(wrap, false)
+									videoStart(wrap, false)
 								}
 
 								if(volume && settings.muted === false){
-                                    setVolume(wrap, volume)
+									setVolume(wrap, volume)
 								}else if(settings.muted){
 									setVolume(wrap, 0)
 								}
@@ -1899,8 +1907,8 @@
 								});
 
 								if ($.isFunction(settings.mediaIsReady)) {
-		                            settings.mediaIsReady.call(this, wrap);
-		                        }
+									settings.mediaIsReady.call(this, wrap);
+								}
 							}
 						}
 					});
@@ -1930,7 +1938,7 @@
 					videoId = getVimeoId(source.mediaSrc);
 
 					wrap.addClass('cb-media-is-ready');
-	
+
 					var media = wrap.find('.cb-player-media');
 
 					let mediaContainer = $('<div class="cb-player-media-container"></div>')
@@ -1967,11 +1975,11 @@
 					}
 
 					$(iframe).appendTo(wrapper);
-					$(iframe).addClass('cb-player-media-iframe');
+					$(iframe).addClass('cb-player-media-iframe cb-player-media-source');
 
 					// var poster = $('<div>')
-					// 	.addClass('cb-player-media-poster')
-					// 	.appendTo(media);
+					//  .addClass('cb-player-media-poster')
+					//  .appendTo(media);
 
 					el.embed = new window.Vimeo.Player(iframe, {
 						autopause: 1,
@@ -1988,11 +1996,11 @@
 						fitIframe(wrap);
 					});
 
-                    el.embed.ready().then(function(){
-                        if ($.isFunction(settings.mediaIsReady)) {
-                            settings.mediaIsReady.call(this, wrap);
-                        }
-                    })
+					el.embed.ready().then(function(){
+						if ($.isFunction(settings.mediaIsReady)) {
+							settings.mediaIsReady.call(this, wrap);
+						}
+					})
 
 					el.embed.on('bufferstart', function(){
 						wrap.addClass('cb-player-is-loaded');
@@ -2007,11 +2015,11 @@
 
 						stopPlayingAll(wrap)
 						fitIframe(wrap)
-                        hidePoster(wrap)
+						hidePoster(wrap)
 
-                        if ($.isFunction(settings.mediaIsPlay)) {
-                            settings.mediaIsPlay.call(this, wrap);
-                        }
+						if ($.isFunction(settings.mediaIsPlay)) {
+							settings.mediaIsPlay.call(this, wrap);
+						}
 					});
 
 					el.embed.on('pause', function(){
@@ -2020,19 +2028,19 @@
 						clearTimeout(watchControlHide);
 						controlsToggle(wrap, false);
 
-                        if ($.isFunction(settings.mediaIsPause)) {
-                            settings.mediaIsPause.call(this, wrap);
-                        }
+						if ($.isFunction(settings.mediaIsPause)) {
+							settings.mediaIsPause.call(this, wrap);
+						}
 					});
 
 					el.embed.on('timeupdate', function(){
 						watchTimer(wrap);
 
-                        if ($.isFunction(settings.mediaTimeupdate)) {
-                        	el.embed.getCurrentTime().then(function(seconds){
+						if ($.isFunction(settings.mediaTimeupdate)) {
+							el.embed.getCurrentTime().then(function(seconds){
 								settings.mediaTimeupdate.call(this, wrap, seconds);
-							}) 
-                        }
+							})
+						}
 					});
 
 					el.embed.on('seeked', function(){
@@ -2043,9 +2051,9 @@
 					el.embed.on('ended', function(data) {
 						wrap.addClass('cb-player-is-ended');
 
-                        if ($.isFunction(settings.mediaIsEnd)) {
-                            settings.mediaIsEnd.call(this, wrap);
-                        }
+						if ($.isFunction(settings.mediaIsEnd)) {
+							settings.mediaIsEnd.call(this, wrap);
+						}
 					});
 
 					//set duration
@@ -2094,7 +2102,7 @@
 							.removeClass('cb-payer-is-ended');
 
 						startWatchControlHide(container);
-                        hidePoster(container)
+						hidePoster(container)
 					});
 
 					el.on("timeupdate", function(){
@@ -2380,7 +2388,7 @@
 
 				var progress = $(this),
 					container = $(this).closest('.cb-player'),
-					player = container.find('.cb-player-media');
+					player = container.find('.cb-player-media-source');
 
 				container.addClass("cb-player-is-seeking");
 
@@ -2438,7 +2446,7 @@
 			});
 
 			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-sound', function(){
-				var player = container.find('.cb-player-media'),
+				var player = container.find('.cb-player-media-source'),
 					volumevalue;
 
 				if(container.data('iframe')){
@@ -2485,7 +2493,7 @@
 			});
 
 			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-toggle-fullscreen', function(){
-				var player = container.find(".cb-player-media")[0];
+				var player = container.find(".cb-player-media-source")[0];
 
 				toggleFullscreen(container, player);
 			});
@@ -2535,7 +2543,7 @@
 
 			container.on('click', '.cb-player-subtitle-item', function(){
 				var item = $(this),
-					video = container.find('.cb-player-media')[0];
+					video = container.find('.cb-player-media-source')[0];
 
 				item.closest('.cb-player-subtitle-items').find('.cb-player-subtitle-item').removeClass('cb-player-subtitle--selected');
 				item.addClass('cb-player-subtitle--selected');
@@ -2596,7 +2604,7 @@
 				$(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function(e){
 					var container = $('.cb-player-is-seeking'),
 						progress = container.find('.cb-player-progress'),
-						player = container.find('.cb-player-media');
+						player = container.find('.cb-player-media-source');
 
 					if((e.type == 'touchend' || e.type == "mouseup") && container.hasClass("cb-player-is-seeking")){
 						if(e.which != 1 && e.type == "mouseup"){
@@ -2638,7 +2646,7 @@
 						setTimeout(function(){
 							fitIframe(player);
 						})
-						
+
 					});
 				});
 
@@ -2653,7 +2661,7 @@
 
 			$(this).each(function(){
 				var container = $(this).closest('.cb-player'),
-					media = container.find('.cb-player-media');
+					media = container.find('.cb-player-media-source');
 
 				if(volume.length){
 					volume = volume.toString();
@@ -2673,7 +2681,7 @@
 
 			$(this).each(function(){
 				var container = $(this).closest('.cb-player'),
-					media = container.find('.cb-player-media');
+					media = container.find('.cb-player-media-source');
 
 				if(time.length && container.hasClass('cb-media-is-ready')){
 					time = time.toString();
@@ -2750,7 +2758,7 @@
 					});
 				}
 
-				var media = container.find('.cb-player-media')[0];
+				var media = container.find('.cb-player-media-source')[0];
 
 				videoStop(container, media);
 				return;
@@ -2764,14 +2772,14 @@
 				if(!container.hasClass('cb-media-is-ready')){
 					initPlayer(container);
 				}else{
-					var media = container.find('.cb-player-media')[0];
+					var media = container.find('.cb-player-media-source')[0];
 					videoStart(container, media);
 				}
 				return;
 			}
 
 			if (options == "mediaRestart") {
-				var media = container.find('.cb-player-media')[0];
+				var media = container.find('.cb-player-media-source')[0];
 
 				media.currentTime = 0;
 				if(!container.hasClass('cb-media-is-ready')){

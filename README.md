@@ -254,11 +254,13 @@ Set new time in hh:mm:ss or ss
 ## Template
  ```html
 <div class="cb-player cb-player--with-subtitles cb-media-is-ready">
-    <video playsinline="" class="player js-player-self cb-player-media" poster="image.jpg">
-        <source data-src="files/sample.mp4" type="video/mp4">
-        <track default="" kind="subtitles" label="German" srclang="de" src="files/german.vtt">
-        <track kind="subtitles" label="English" srclang="en" src="files/english.vtt">
-    </video>
+    <div class="cb-player-media">
+        <video playsinline="" class="player js-player-self cb-player-media-source" poster="image.jpg">
+            <source data-src="files/sample.mp4" type="video/mp4">
+            <track default="" kind="subtitles" label="German" srclang="de" src="files/german.vtt">
+            <track kind="subtitles" label="English" srclang="en" src="files/english.vtt">
+        </video>
+    </div>
     <div class="cb-player-spinner-wrap">
         <div class="cb-player-spinner"></div>
     </div>
