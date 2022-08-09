@@ -1962,6 +1962,8 @@
 					$(wrapper).appendTo(mediaContainer);
 
 					var params = buildUrlParams({
+						background: settings.backgroundMode,
+						autopause: 0,
 						loop: settings.loop,
 						autoplay: settings.autoplay,
 						muted: settings.muted,
@@ -1970,8 +1972,7 @@
 						byline: false,
 						portrait: false,
 						title: false,
-						transparent: false,
-						background: settings.backgroundMode
+						transparent: false
 					});
 
 					//Create a new DOM element
