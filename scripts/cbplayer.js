@@ -583,6 +583,10 @@
 		}
 	}
 
+    function showPoster(container){
+        container.find('.cb-player-poster').show()
+    }
+
 	function hidePoster(container){
 		container.find('.cb-player-poster').hide()
 	}
