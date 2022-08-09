@@ -1019,8 +1019,10 @@
 			}
 
 		} else if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.webkitDisplayingFullscreen) {
-			$(".cb-player-is-fullscreen").removeClass("cb-player-is-fullscreen");
-			controlsToggle($(".cb-player-is-fullscreen"), false);
+            const fullscreenPlayer = $('.cb-player-is-fullscreen')
+            controlsToggle(fullscreenPlayer, false);
+
+            fullscreenPlayer.removeClass('cb-player-is-fullscreen');
 
 			clearInterval(watchFullscreen);
 		}
