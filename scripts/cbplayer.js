@@ -1866,6 +1866,13 @@
 
 								}else if(e.data == YT.PlayerState.ENDED){
 
+                                    wrap.addClass('cb-player-is-ended');
+                                    wrap.removeClass('cb-player-is-playing')
+
+                                    clearTimeout(watchControlHide)
+                                    controlsToggle(wrap, false)
+                                    showPoster(wrap)
+
 									if(settings.loop){
 										videoStart(wrap, false)
 									}
