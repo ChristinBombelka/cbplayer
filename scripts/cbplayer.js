@@ -791,7 +791,7 @@
 		setTimeformat(container, 'mm:ss');
 
 
-		s = Math.floor(Math.abs(time) % 60);
+		s = Math.ceil(Math.abs(time) % 60);
 		s = (s >= 10) ? s : "0" + s;
 		timeArray.push(s.toString());
 
