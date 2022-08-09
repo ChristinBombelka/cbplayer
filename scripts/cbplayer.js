@@ -2294,7 +2294,7 @@
 				}
 
 				if(container.hasClass('cb-player-control-hide')){
-					//show controls on tocuh start
+					//show controls on touchstart
 					controlsToggle(container, false);
 
 				}else{
