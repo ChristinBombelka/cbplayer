@@ -1797,7 +1797,7 @@
 						.attr('id', id)
 						.appendTo(wrapper);
 
-					const thump = 'http://img.youtube.com/vi/'+videoId+'/maxresdefault.jpg'
+					const thump = 'https://img.youtube.com/vi/'+videoId+'/maxresdefault.jpg'
 					addPoster(wrap, thump)
 
 					el.addClass('cb-player-media-iframe cb-player-media-source');
