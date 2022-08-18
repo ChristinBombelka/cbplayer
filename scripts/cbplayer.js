@@ -188,6 +188,9 @@
 	}
 
 	function displayError(container, message){
+        if(!container.find('.cb-player-error').length){
+            $('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(container);
+        }
 		container.find('.cb-player-error-message').text(message);
 		container.addClass('cb-media-is-error');
 		container.removeClass('cb-player-is-loaded');
@@ -1723,10 +1726,6 @@
 						wrap.addClass('cb-player--with-subtitles');
 					}
 				});
-			}
-
-			if(!wrap.find('.cb-player-error').length){
-				$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(wrap);
 			}
 
 			let volume = settings.volume;
