@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.7.0
- * 2022-08-17
+ * jQuery CBplayer 1.7.1
+ * 2022-09-19
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.7.0',
+		playerVersion = '1.7.1',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -2553,6 +2553,10 @@
 				}
 			});
 
+            container.on('touchmove', targetsTouch.join(','), function(e){
+                touchtimer = false
+            })
+
 			var targetsClick = ['.cb-player-toggle-play', '.cb-player-overlayer-button'];
 			if(options.disableClick == false){
 				targetsClick.push('.cb-player-media');
@@ -2586,7 +2590,9 @@
 						initPlayer(container);
 
 						touchtimer = false;
-					}
+					}else if(container.hasClass('cb-player--media-playing')){
+                        startWatchControlHide(container)
+                    }
 				}else{
 					initPlayer(container);
 				}
