@@ -1127,7 +1127,9 @@
 	function toggleFullscreen(container, player){
 		if(!$('.cb-player--fullscreen').length){
 
+            let settings = container.data('settings')
 			let fullscreenActive = true
+
 			if (player.requestFullScreen) {
 				player.requestFullScreen();
 			} else if (player.mozRequestFullScreen) {
