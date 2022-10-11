@@ -1,0 +1,19 @@
+{
+  "name": "cbplayer",
+  "version": "1.0.0",
+  "description": "cbplayer is a HTML5 Video and Audio Player.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChristinBombelka/cbplayer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChristinBombelka/cbplayer/issues"
+  },
+  "scripts":{
+    "sass": "sass -w --no-source-map scss/:styles/"
+  }
+}
