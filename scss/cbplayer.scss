@@ -598,6 +598,16 @@ audio{
 	}
 }
 
+.cb-player--error-consent{
+    .cb-player-error{
+        display: block;
+    }
+
+    .cb-player-overlayer-button{
+    	display: none;
+    }
+}
+
 .cb-player-error{
 	display: none;
 	position: absolute;

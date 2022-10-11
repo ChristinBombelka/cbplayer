@@ -5,7 +5,8 @@
 $(function() {
 	$(".js-player-audio").cbplayer({
 	 	contextInfo: true,
-	 	volumeOrientation: 'horizontal'
+	 	volumeOrientation: 'horizontal',
+        overlayButton: false,
 	});
 
 	$(".js-player-1").cbplayer({
@@ -30,26 +31,31 @@ $(function() {
 	 	volumeOrientation: 'vertical'
 	});
 
+    $(".js-player-self").cbplayer('initSource')
+
 	$(".js-player-iframe").cbplayer({
 		volume: 100,
 		backgroundMode: false,
 		loop: false,
 		autoplay: false,
-		mediaIsInit: function(container){
-			console.log(container, 'is init')
-		},
-		mediaIsReady: function(container){
-			console.log(container, 'is ready')
-		},
-		mediaIsPlay: function(container){
-			console.log(container, 'is play')
-		},
-		mediaIsPause: function(container){
-			console.log(container, 'is pause')
-		},
-		mediaTimeupdate: function(container, time){
-			console.log(container, 'time update: ', time)
-		},
+		// getConsent: function(){
+		// 	return false
+		// }
+		// mediaIsInit: function(container){
+		// 	console.log(container, 'is init')
+		// },
+		// mediaIsReady: function(container){
+		// 	console.log(container, 'is ready')
+		// },
+		// mediaIsPlay: function(container){
+		// 	console.log(container, 'is play')
+		// },
+		// mediaIsPause: function(container){
+		// 	console.log(container, 'is pause')
+		// },
+		// mediaTimeupdate: function(container, time){
+		// 	console.log(container, 'time update: ', time)
+		// },
 	});
 
 	$(".js-player-iframe-background").cbplayer({
