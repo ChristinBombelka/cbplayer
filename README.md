@@ -14,13 +14,13 @@ This player supportet m3u8 live streaming, include [hls.js](https://github.com/v
 
 <body>
 
-<video class="js-cbplayer" poster="image.jpg" data-duration="250">
+<video class="js-cbplayer" poster="image.jpg">
     <source data-src="my/video.mp4" type="video/mp4">
     <track kind="subtitles" label="German" srclang="de" src="german.vtt">
     <track kind="subtitles" label="English" srclang="en" src="english.vtt">
 </video>
 
-<script type="text/javascript" src="scripts/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="scripts/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="scripts/hls.light.min.js"></script>
 <script type="text/javascript" src="scripts/cbplayer.js"></script>
 <script>
@@ -102,15 +102,12 @@ $(".js-cbplayer").cbplayer();
     /*  Values: Number
      *   Duration for hide controls on stop mouse moving
      */
+    constentMessage: 'Your Message'
     backtracking: true,
     /*  Values: true, false
      *  Disable backtracking in progressbar
      */
-    controlShowLoad: true,
-    /* Values: true, false
-     * Show loading animation on Play/Pause/Replay button position 
-     */
-    hlsStopLoad: true,
+    hlsStopLoad: false,
     /*  Values: true, false
     *   Stopp buffering livestreaming on stop video
     */
@@ -214,6 +211,10 @@ Call init source from data attribute
 
 `$('classname').cbplayer('initSource')`
 
+### getConsent
+
+### consentChanged
+
 ### mediaPauseAll
 
 Call to pause all played videos, with the exception of videos in backgroundmode
@@ -279,7 +280,7 @@ Set new time in hh:mm:ss or ss
             <span class="cb-player-time-seperator">/</span>
             <span class="cb-player-time-duration">00:00</span>
         </div>
-        <div class="cb-player-progress" aria-valuenow="" role="slider">
+        <div class="cb-player-progress">
             <div class="cb-player-progress-tooltip"></div>
             <div class="cb-player-progress-hide"></div>
             <div class="cb-player-progress-play"></div>
@@ -292,8 +293,8 @@ Set new time in hh:mm:ss or ss
             </div>
             <div class="cb-player-volume-vertical">
                 <span class="cb-player-volume">
-                    <div class="cb-player-volume-hide" role="slider" aria-valuenow="50"></div>
-                    <div class="cb-player-volume-bar" style="width: 50%;"></div>
+                    <div class="cb-player-volume-hide"></div>
+                    <div class="cb-player-volume-bar"></div>
                 </span>
             </div>
         </div>
