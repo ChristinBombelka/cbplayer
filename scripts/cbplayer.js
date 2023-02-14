@@ -1,19 +1,20 @@
 /*!
- * jQuery CBplayer 1.8.0
- * 2022-10-11
+ * jQuery CBplayer 1.8.1
+ * 2023-02-14
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.8.0',
+		playerVersion = '1.8.1',
 		hls,
 		watchProgress,
 		watchFullscreen,
 		watchControlHide,
 		urls = {
 			vimeo: {
+				event: 'https://vimeo.com/event/{0}/embed/{1}',
 				iframe: 'https://player.vimeo.com/video/{0}?{1}',
 				sdk: 'https://player.vimeo.com/api/player.js',
 			},
@@ -1443,8 +1444,26 @@
 	}
 
 	function getVimeoId(url){
-		var regex = /^.*(vimeo\.com\/(video\/|))([0-9]+)/;
-		return url.match(regex) ? RegExp.$3 : url;
+		const regex = /^.*(vimeo\.com\/(video\/|))([0-9]+)/;
+        const result = url.match(regex)
+        if(result){
+            return {
+                'id': RegExp.$3,
+                'type': 'vimeovideo'
+            }
+        }
+
+        const regexEvent = /^.*(vimeo\.com\/event\/)([0-9]+)\/(embed\/|)([0-9]+)/;
+        const resultEvent = url.match(regexEvent)
+        if(resultEvent){
+            return {
+                'id': RegExp.$2,
+                'id2': RegExp.$4,
+                'type': 'vimeoevent'
+            }
+        }
+
+		return url;
 	}
 
 	function format(input) {
@@ -1727,7 +1746,7 @@
             },
             ready: function(){
 
-                videoId = getVimeoId(source.mediaSrc)
+                const getVimeo = getVimeoId(source.mediaSrc);
 
                 wrap
                     .addClass('cb-player--media-ready')
@@ -1761,7 +1780,13 @@
                 //Create a new DOM element
                 //Use this to prevent play() failed error
                 let iframe = document.createElement('iframe')
-                let src = format(urls.vimeo.iframe, videoId, params)
+                let src
+
+                if(getVimeo.type == 'vimeovideo'){
+                    src = format(urls.vimeo.iframe, getVimeo.id, params)
+                }else{
+                    src = format(urls.vimeo.event, getVimeo.id, getVimeo.id2)
+                }
 
                 iframe.setAttribute('src', src);
                 iframe.setAttribute('allowfullscreen', '');
