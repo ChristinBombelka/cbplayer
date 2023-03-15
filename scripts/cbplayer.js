@@ -1151,9 +1151,6 @@
 			let settings = container.data('settings')
 			let fullscreenActive = true
 
-			let settings = container.data('settings')
-			let fullscreenActive = true
-
 			if (player.requestFullScreen) {
 				player.requestFullScreen();
 			} else if (container[0].mozRequestFullScreen) {
