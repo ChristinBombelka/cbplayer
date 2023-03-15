@@ -589,6 +589,15 @@
             container.find('.cb-player-play').attr('aria-label', settings.labels.pause)
 		}else{
 
+			let saveVolume = false
+			// iPad fix play video on first tab
+			if (container.data('iframe') == 'vimeo' && container.data('isIPadOs')) {
+				saveVolume = container.data('volume')
+
+				// Mutet video 
+				setVolume(container, 0)
+			}
+
 			if(container.data('iframe') == 'vimeo'){
 				player = container.data('embed');
 			}
@@ -605,6 +614,11 @@
 
                     container.find('.cb-player-play').attr('aria-label', settings.labels.pause)
 
+                    // Restore volume
+					if (saveVolume !== false) {
+						setVolume(container, saveVolume)
+					}
+                    
 					watchProgress = setInterval(function(){
 						watchProgressLoading(player);
 					}, 500);
@@ -811,6 +825,9 @@
 				player.prop('muted', false);
 			}
 		}
+
+		// Save current volumne
+		container.data('volume', volume)
 
 		settings = container.data('settings');
 		if ($.isFunction(settings.mediaChangeVolume)) {
@@ -2396,6 +2413,9 @@
                 wrap.addClass('cb-player--backgroundmode')
             }
 
+            const isIPadOs = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+			const isIos = /iPad|iPhone|iPod/gi.test(navigator.userAgent) && navigator.maxTouchPoints > 1;
+
 			wrap.data({
 				'initialized': true,
 				'backtracking': settings.backtracking,
@@ -2408,6 +2428,8 @@
 				'settings': settings,
                 'source': source,
                 'isConsent': null,
+                'isIPadOs': isIPadOs,
+				'isIos': isIos,
 			});
 
 			var media = {
