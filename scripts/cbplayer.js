@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.8.1
- * 2023-02-14
+ * jQuery CBplayer 1.8.2
+ * 2023-03-15
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.8.1',
+		playerVersion = '1.8.2',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1148,30 +1148,33 @@
 	function toggleFullscreen(container, player){
 		if(!$('.cb-player--fullscreen').length){
 
-            let settings = container.data('settings')
+			let settings = container.data('settings')
+			let fullscreenActive = true
+
+			let settings = container.data('settings')
 			let fullscreenActive = true
 
 			if (player.requestFullScreen) {
 				player.requestFullScreen();
-			} else if (player.mozRequestFullScreen) {
+			} else if (container[0].mozRequestFullScreen) {
 				container[0].mozRequestFullScreen();
-			}else if (player.webkitRequestFullscreen) {
-				//fullscreen support android
+			} else if (container[0].webkitRequestFullscreen) {
+				//fullscreen support webkit
 				container[0].webkitRequestFullscreen();
-			} else if (player.msRequestFullscreen) {
+			} else if (container[0].msRequestFullscreen) {
 				//fullscreen IE 11
 				container[0].msRequestFullscreen();
-			}else if(player.webkitSupportsFullscreen){
+			} else if (player.webkitSupportsFullscreen) {
 				//fullscreen support for ios
 				player.webkitEnterFullScreen();
-			}else{
+			} else {
+				// Use nativ fullscreen
 				fullscreenActive = false
 
-				//show native fulscreen for vimeo
-				if(container.data('iframe') == 'vimeo'){
+				if (container.data('iframe') == 'vimeo') {
 					player = container.data('embed')
 
-					player.requestFullscreen().then(function() {
+						player.requestFullscreen().then(function () {
 						watchFullscreen = setInterval(watchFullscreenActive, 250)
 
                         container.addClass('cb-player--fullscreen-native');
@@ -1806,7 +1809,7 @@
                 }
 
                 iframe.setAttribute('src', src);
-                iframe.setAttribute('allowfullscreen', '');
+                iframe.setAttribute('allowfullscreen', 'allowfullscreen');
                 iframe.setAttribute('allow', 'fullscreen; autoplay; picture-in-picture; encrypted-media; accelerometer; gyroscope');
 
                 if(settings.vimeo.referrerPolicy != null){
@@ -2923,11 +2926,12 @@
 				}
 			});
 
-			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-toggle-fullscreen', function(){
-				var player = container.find(".cb-player-media-source")[0];
+			// Not working on iPad
+			// container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-toggle-fullscreen', function(){
+			// 	var player = container.find(".cb-player-media-source")[0];
 
-				toggleFullscreen(container, player);
-			});
+			// 	toggleFullscreen(container, player);
+			// });
 
 			container.on('contextmenu', function(e){
 				var container = $(e.target).closest('.cb-player');
@@ -3072,6 +3076,15 @@
             })
 
 			if (!$(document).data('cbplayer-initialized')) {
+
+				// Fix iPad fullscreen button
+                // Use document not specific element
+                $(document).on('click', '.cb-player-fullscreen', function (e) {
+                    const container = $(this).closest('.cb-player')
+                    const player = container.find('.cb-player-media-source')
+
+                    toggleFullscreen(container, player);
+                })
 
                 $(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function(e){
 					var container = $('.cb-player--change-volume');
