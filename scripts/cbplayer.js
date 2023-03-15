@@ -65,7 +65,7 @@
 		/* hide controls on leave container or mousemove stop longer as 'controlHideTimeout' */
 		controlHideTimeout: 3000,
 		/* timeout to hide control on mousemove */
-        consentMessage: "To view the video, please accept the consent",
+		consentMessage: "To view the video, please accept the consent",
 		backtracking: true,
 		/* disable duratuon/progressbar */
 		hlsStopLoad: false,
@@ -96,18 +96,18 @@
 			referrerPolicy: null, // https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/referrerPolicy
 			fitIframe: true,
 		},
-        labels: {
-            play: 'Play',
-            pause: 'Pause',
-            slider: 'Slider',
-            sliderOf: 'of',
-            mute: 'Mute',
-            unmute: 'Unmute',
-            volume: 'Volume',
-            subtitles: 'Subtitles',
-            fullscreenOn: 'Fullscreen on',
-            fullscreenOff: 'Fullscreen off'
-        },
+		labels: {
+			play: 'Play',
+			pause: 'Pause',
+			slider: 'Slider',
+			sliderOf: 'of',
+			mute: 'Mute',
+			unmute: 'Unmute',
+			volume: 'Volume',
+			subtitles: 'Subtitles',
+			fullscreenOn: 'Fullscreen on',
+			fullscreenOff: 'Fullscreen off'
+		},
 		/* config youtube */
 		disableClick: false,
 		/* disable click events on media */
@@ -130,8 +130,8 @@
 		mediaControlsChange: false,
 		/* callback controls hide/show */
 		initSource: $,
-        getConsent: $,
-        consentChanged: $,
+		getConsent: $,
+		consentChanged: $,
 		mediaPauseAll: $,
 		mediaPause: $,
 		mediaPlay: $,
@@ -204,9 +204,9 @@
 	}
 
 	function displayError(container, message, type = 'error'){
-        if(!container.find('.cb-player-error').length){
-            $('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(container);
-        }
+		if(!container.find('.cb-player-error').length){
+			$('<div class="cb-player-error"><div class="cb-player-error-message"></div></div>').appendTo(container);
+		}
 
 		container.find('.cb-player-error-message').html(message);
 		container.addClass('cb-player--' + type);
@@ -214,27 +214,27 @@
 	}
 
 	function fileExist(src, done){
-        return new Promise(function (resolve, reject){
-            let xhr = new XMLHttpRequest();
+		return new Promise(function (resolve, reject){
+			let xhr = new XMLHttpRequest();
 
-            xhr.open('HEAD', src, true);
-            xhr.onload = function() {
-                if(xhr.status >= 200 && xhr.status < 300){
-                    resolve(xhr.response)
-                }else{
-                    reject({
-                        status: xhr.status
-                    })
-                }
-            }
-            xhr.onerror = function() {
-                reject({
-                    status: xhr.status
-                })
-            }
+			xhr.open('HEAD', src, true);
+			xhr.onload = function() {
+				if(xhr.status >= 200 && xhr.status < 300){
+					resolve(xhr.response)
+				}else{
+					reject({
+						status: xhr.status
+					})
+				}
+			}
+			xhr.onerror = function() {
+				reject({
+					status: xhr.status
+				})
+			}
 
-            xhr.send()
-        })
+			xhr.send()
+		})
 	}
 
 	function getSource(media){
@@ -344,8 +344,8 @@
 			hls.attachMedia(media[0])
 			hls.loadSource(source.mediaSrc)
 
-            container.addClass('cb-player--media-ready')
-            container.removeClass('cb-player--control-force-visibile')
+			container.addClass('cb-player--media-ready')
+			container.removeClass('cb-player--control-force-visibile')
 
 			hls.on(Hls.Events.ERROR,function(event, data) {
 				if(container.hasClass('cb-player--media-playing')){
@@ -432,8 +432,8 @@
 						'fragmentDuration': data.details.averagetargetduration,
 					})
 				}else{
-                    container.find('.cb-player-progress-slider').attr('tabindex', 0)
-                }
+					container.find('.cb-player-progress-slider').attr('tabindex', 0)
+				}
 
 				if(firstLoad){
 
@@ -472,81 +472,81 @@
 		}else if(source.mediaSrc.toLowerCase().match(/(.mp4)/) || isVimeoProgressive(source.mediaSrc) || (source.mediaSrc.toLowerCase().match(/(.m3u8)/) && Hls) ){
 			// (Hls && (!isSupported() && mediaSrc.match(/(.m3u8)/)) || mediaSrc.match(/(.mp4)/)
 
-            fileExist(source.mediaSrc).then(function(e){
-    			source.mediaSrcEl.attr("src", source.mediaSrc);
+			fileExist(source.mediaSrc).then(function(e){
+				source.mediaSrcEl.attr("src", source.mediaSrc);
 
-    			//fix firefox content by ajax
-    			setTimeout(function(){
-    				media[0].load();
-    				container.addClass("cb-player--media-loaded");
-    			});
+				//fix firefox content by ajax
+				setTimeout(function(){
+					media[0].load();
+					container.addClass("cb-player--media-loaded");
+				});
 
-    			media.on('loadedmetadata', function(){
-    				var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"))
-    				media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration)
+				media.on('loadedmetadata', function(){
+					var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"))
+					media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration)
 
-    				container.addClass('cb-player--media-ready')
-    				container.removeClass('cb-player--initialized')
-                    container.removeClass('cb-player--control-force-visibile')
-                    container.find('.cb-player-progress-slider').attr('tabindex', 0)
+					container.addClass('cb-player--media-ready')
+					container.removeClass('cb-player--initialized')
+					container.removeClass('cb-player--control-force-visibile')
+					container.find('.cb-player-progress-slider').attr('tabindex', 0)
 
-    				container.data({
-    					'videowidth': media[0].videoWidth,
-    					'videoheight': media[0].videoHeight,
-    					'ratio': media[0].videoWidth / media[0].videoHeight,
-    					'duration': Math.floor(media[0].duration)
-    				})
+					container.data({
+						'videowidth': media[0].videoWidth,
+						'videoheight': media[0].videoHeight,
+						'ratio': media[0].videoWidth / media[0].videoHeight,
+						'duration': Math.floor(media[0].duration)
+					})
 
-    				setVolume(container, container.data('volume'))
+					setVolume(container, container.data('volume'))
 
-    				if(autostart){
-    					toggleMediaPlayPause(container)
-    				}
+					if(autostart){
+						toggleMediaPlayPause(container)
+					}
 
-    				if ($.isFunction(settings.mediaMetaIsLoaded)) {
-    					settings.mediaMetaIsLoaded.call(this, container);
-    				}
-    			})
-            }).catch(function(err){
-                displayError(container, 'File not exist');
-                return;
-            })
+					if ($.isFunction(settings.mediaMetaIsLoaded)) {
+						settings.mediaMetaIsLoaded.call(this, container);
+					}
+				})
+			}).catch(function(err){
+				displayError(container, 'File not exist');
+				return;
+			})
 
 		}else if (source.mediaSrc.toLowerCase().match(/(.mp3)/) || source.mediaSrc.toLowerCase().match(/(.wav)/)){
 
-            fileExist(source.mediaSrc).then(function(e){
-    			source.mediaSrcEl.attr("src", source.mediaSrc);
+			fileExist(source.mediaSrc).then(function(e){
+				source.mediaSrcEl.attr("src", source.mediaSrc);
 
-    			setTimeout(function(){
-    				media[0].load();
-    				container.addClass("cb-player--media-loaded");
-    			});
+				setTimeout(function(){
+					media[0].load();
+					container.addClass("cb-player--media-loaded");
+				});
 
-    			media.on('loadedmetadata', function(){
-    				var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"))
-    				media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration)
+				media.on('loadedmetadata', function(){
+					var mediaDuration = formatTime(media[0].duration, media.closest(".cb-player"))
+					media.closest(".cb-player").find(".cb-player-time-duration").text(mediaDuration)
 
-    				container.addClass('cb-player--media-ready')
-    				container.removeClass('cb-player--initialized')
-                    container.removeClass('cb-player--control-force-visibile')
-                    container.find('.cb-player-progress-slider').attr('tabindex', 0)
+					container.addClass('cb-player--media-ready')
+					container.removeClass('cb-player--initialized')
+					container.removeClass('cb-player--control-force-visibile')
+					container.find('.cb-player-progress-slider').attr('tabindex', 0)
 
-    				container.data({
-    					'duration': media[0].duration
-    				})
+					container.data({
+						'duration': media[0].duration
+					})
 
-    				if(autostart){
-    					toggleMediaPlayPause(container)
-    				}
+					if(autostart){
+						toggleMediaPlayPause(container)
+					}
 
-    				if ($.isFunction(settings.mediaMetaIsLoaded)) {
-    					settings.mediaMetaIsLoaded.call(this, container)
-    				}
-    			});
-            }).catch(function(err){
-                displayError(container, 'File not exist');
-                return;
-            })
+					if ($.isFunction(settings.mediaMetaIsLoaded)) {
+						settings.mediaMetaIsLoaded.call(this, container)
+					}
+				});
+			}).catch(function(err){
+				displayError(container, 'File not exist');
+				return;
+			})
 
 		}else if(provider == 'vimeo' || provider == 'youtube'){
 			//check is Viemo or Youtube iFrame
@@ -581,12 +581,12 @@
 			hls.startLoad()
 		}
 
-        let settings = container.data('settings')
+		let settings = container.data('settings')
 
 		if(container.data('iframe') && container.data('iframe') == 'youtube'){
 			container.data('instance').playVideo()
 
-            container.find('.cb-player-play').attr('aria-label', settings.labels.pause)
+			container.find('.cb-player-play').attr('aria-label', settings.labels.pause)
 		}else{
 
 			let saveVolume = false
@@ -612,13 +612,13 @@
 						stopPlayingAll(container);
 					}
 
-                    container.find('.cb-player-play').attr('aria-label', settings.labels.pause)
+					container.find('.cb-player-play').attr('aria-label', settings.labels.pause)
 
-                    // Restore volume
+					// Restore volume
 					if (saveVolume !== false) {
 						setVolume(container, saveVolume)
 					}
-                    
+					
 					watchProgress = setInterval(function(){
 						watchProgressLoading(player);
 					}, 500);
@@ -630,7 +630,7 @@
 	}
 
 	function videoStop(container, player){
-        let settings = container.data('settings')
+		let settings = container.data('settings')
 
 		if(container.data('iframe')){
 			if(container.data('iframe') == 'youtube'){
@@ -642,19 +642,19 @@
 				clearInterval(watchProgress);
 			}
 
-            container.find('.cb-player-play').attr('aria-label', settings.labels.play)
+			container.find('.cb-player-play').attr('aria-label', settings.labels.play)
 
 		}else{
 			player.pause();
 			clearInterval(watchProgress);
 
-            container.find('.cb-player-play').attr('aria-label', settings.labels.play)
+			container.find('.cb-player-play').attr('aria-label', settings.labels.play)
 		}
 	}
 
-    function showPoster(container){
-        container.find('.cb-player-poster').show()
-    }
+	function showPoster(container){
+		container.find('.cb-player-poster').show()
+	}
 
 	function hidePoster(container){
 		container.find('.cb-player-poster').hide()
@@ -740,15 +740,15 @@
 		let player = container.find('.cb-player-media-source')
 		let slider = container.find('.cb-player-volume-slider')
 		let progress = container.find('.cb-player-volume-bar')
-        let settings = container.data('settings')
+		let settings = container.data('settings')
 
 		if(volume.target){
-            // Is event
-            let e = volume
+			// Is event
+			let e = volume
 
-            if(volume.type == 'touchmove' || volume.type == 'touchstart'){
-                e = volume.originalEvent.touches[0]
-            }
+			if(volume.type == 'touchmove' || volume.type == 'touchstart'){
+				e = volume.originalEvent.touches[0]
+			}
 
 			let sliderContainerV = container.find(".cb-player-volume-wrap--vertical")
 			let sliderContainerH = container.find(".cb-player-volume-wrap--horizontal")
@@ -788,19 +788,19 @@
 		}
 
 		if(slider.length && progress.length){
-            slider.attr('aria-valuenow', volume)
-            slider.attr('aria-valuetext', settings.labels.volume + ' ' + volume + '%')
+			slider.attr('aria-valuenow', volume)
+			slider.attr('aria-valuetext', settings.labels.volume + ' ' + volume + '%')
 
 			progress.css('width', volume + '%')
 		}
 
-        let soundButton = container.find('.cb-player-sound')
+		let soundButton = container.find('.cb-player-sound')
 		if(volume == 0){
 			container.addClass("cb-player--media-muted")
 
-            if(soundButton.length){
-                soundButton.attr('aria-label', settings.labels.unmute)
-            }
+			if(soundButton.length){
+				soundButton.attr('aria-label', settings.labels.unmute)
+			}
 
 			if(container.data('iframe')){
 				if(container.data('iframe') == 'youtube'){
@@ -813,9 +813,9 @@
 		}else{
 			container.removeClass("cb-player--media-muted");
 
-            if(soundButton.length){
-                soundButton.attr('aria-label', settings.labels.mute)
-            }
+			if(soundButton.length){
+				soundButton.attr('aria-label', settings.labels.mute)
+			}
 
 			if(container.data('iframe')){
 				if(container.data('iframe') == 'youtube'){
@@ -835,22 +835,22 @@
 		}
 	}
 
-    function changeVolume(container, value){
-        let volumeSlider = container.find('.cb-player-volume-slider')
+	function changeVolume(container, value){
+		let volumeSlider = container.find('.cb-player-volume-slider')
 
-        if(volumeSlider.length){
-            let newVolume = parseInt(volumeSlider.attr('aria-valuenow')) + value
+		if(volumeSlider.length){
+			let newVolume = parseInt(volumeSlider.attr('aria-valuenow')) + value
 
-            // Set limits
-            if(newVolume < 0){
-                newVolume = 0
-            }else if(newVolume > 100){
-                newVolume = 100
-            }
+			// Set limits
+			if(newVolume < 0){
+				newVolume = 0
+			}else if(newVolume > 100){
+				newVolume = 100
+			}
 
-            setVolume(container, newVolume)
-        }
-    }
+			setVolume(container, newVolume)
+		}
+	}
 
 	function setTimeformat(el, format){
 		if(!el.data('timeformat')){
@@ -987,7 +987,7 @@
 		let player = container.find('.cb-player-media-source')
 		let progressSlider = container.find('.cb-player-progress-slider')
 		let progressVisibile = container.find('.cb-player-progress-play')
-        let settings = container.data('settings')
+		let settings = container.data('settings')
 		let progresstime, playtime
 
 		if(!player[0].duration && !container.data('iframe') && !container.hasClass('cb-player--media-ready')){
@@ -1010,7 +1010,7 @@
 				playtime = container.data('instance').getCurrentTime();
 				progresstime = playtime * (100 / container.data('duration'));
 
-                progressSlider.attr('aria-valuetext', formatTime(playtime, container, true) + ' ' + settings.labels.sliderOf + ' ' + formatTime(container.data('duration'), container, true))
+				progressSlider.attr('aria-valuetext', formatTime(playtime, container, true) + ' ' + settings.labels.sliderOf + ' ' + formatTime(container.data('duration'), container, true))
 
 			}else if(container.data('iframe') == 'vimeo'){
 
@@ -1022,14 +1022,14 @@
 					progresstime = seconds * (100 / container.data('duration'));
 					updateProgress(container, progresstime)
 
-                    progressSlider.attr('aria-valuetext', formatTime(seconds, container, true) + ' ' + settings.labels.sliderOf + ' ' + formatTime(container.data('duration'), container, true))
+					progressSlider.attr('aria-valuetext', formatTime(seconds, container, true) + ' ' + settings.labels.sliderOf + ' ' + formatTime(container.data('duration'), container, true))
 				});
 			}
 		}else{
 			playtime = player[0].currentTime;
 			progresstime = player[0].currentTime * (100 / player[0].duration);
 
-            progressSlider.attr('aria-valuetext', formatTime(playtime, container, true) + ' ' + settings.labels.sliderOf + ' ' + formatTime(container.data('duration'), container, true))
+			progressSlider.attr('aria-valuetext', formatTime(playtime, container, true) + ' ' + settings.labels.sliderOf + ' ' + formatTime(container.data('duration'), container, true))
 		}
 
 		if(container.data('contextInfo')){
@@ -1123,23 +1123,23 @@
 			if(nativeFullscreen.data('iframe') == 'vimeo'){
 				player = nativeFullscreen.data('embed');
 				player.getFullscreen().then(function(fullscreen){
-                    if(fullscreen === false){
-                        let settings = nativeFullscreen.data('settings')
+					if(fullscreen === false){
+						let settings = nativeFullscreen.data('settings')
 
 						nativeFullscreen.removeClass('cb-player--fullscreen-native')
-                        nativeFullscreen.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOff)
+						nativeFullscreen.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOff)
 						clearInterval(watchFullscreen)
 					}
 				});
 			}
 		} else if(!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement && !document.webkitDisplayingFullscreen) {
-            const container = $('.cb-player.cb-player--fullscreen')
-            const settings = container.data('settings')
+			const container = $('.cb-player.cb-player--fullscreen')
+			const settings = container.data('settings')
 
-            controlsToggle(container, false);
+			controlsToggle(container, false);
 
-            container.removeClass('cb-player--fullscreen');
-            container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOff)
+			container.removeClass('cb-player--fullscreen');
+			container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOff)
 
 			clearInterval(watchFullscreen);
 		}
@@ -1177,8 +1177,8 @@
 						player.requestFullscreen().then(function () {
 						watchFullscreen = setInterval(watchFullscreenActive, 250)
 
-                        container.addClass('cb-player--fullscreen-native');
-                        container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOn)
+						container.addClass('cb-player--fullscreen-native');
+						container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOn)
 					})
 				}
 			}
@@ -1186,8 +1186,8 @@
 			if(fullscreenActive){
 				watchFullscreen = setInterval(watchFullscreenActive, 250)
 
-                container.addClass('cb-player--fullscreen')
-                container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOn)
+				container.addClass('cb-player--fullscreen')
+				container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOn)
 			}
 
 		} else {
@@ -1251,10 +1251,10 @@
 		}
 
 		let progress = container.find('.cb-player-progress')
-        let progressSLider = progress.find('.cb-player-progress-slider')
+		let progressSLider = progress.find('.cb-player-progress-slider')
 		let position = (x - progress.offset().left) / progress.width() * 100
 
-        position = position.toFixed(4);
+		position = position.toFixed(4);
 
 		// container.find('.cb-player-poster').remove();
 
@@ -1282,52 +1282,52 @@
 		}
 	}
 
-    function seekToSecond(container, second){
-        let player = container.find('.cb-player-media-source')
-        let currentTime, newTime
-        let setting = container.data('setting')
+	function seekToSecond(container, second){
+		let player = container.find('.cb-player-media-source')
+		let currentTime, newTime
+		let setting = container.data('setting')
 
-        // Get current time
-        if(container.data('iframe')){
-            if(container.data('iframe') == 'youtube'){
-                currentTime = container.data('instance').getCurrentTime()
-            }else if(container.data('iframe') == 'vimeo'){
-                let embedPlayer = container.data('embed')
+		// Get current time
+		if(container.data('iframe')){
+			if(container.data('iframe') == 'youtube'){
+				currentTime = container.data('instance').getCurrentTime()
+			}else if(container.data('iframe') == 'vimeo'){
+				let embedPlayer = container.data('embed')
 
-                embedPlayer.getCurrentTime().then(function(seconds){
-                    let currentTime = seconds
+				embedPlayer.getCurrentTime().then(function(seconds){
+					let currentTime = seconds
 
-                    // Set new time
-                    let newTime = currentTime + second
+					// Set new time
+					let newTime = currentTime + second
 
-                    // Check limits
-                    if(newTime <= 0){
-                        newTime = 0
-                    }else if(newTime > container.data('duration')){
-                        newTime = container.data('duration')
-                    }
+					// Check limits
+					if(newTime <= 0){
+						newTime = 0
+					}else if(newTime > container.data('duration')){
+						newTime = container.data('duration')
+					}
 
-                    setCurrentTime(container, newTime)
-                });
+					setCurrentTime(container, newTime)
+				});
 
-                return;
-            }
-        }else{
-            currentTime = player[0].currentTime
-        }
+				return;
+			}
+		}else{
+			currentTime = player[0].currentTime
+		}
 
-        // Set new time
-        newTime = currentTime + second
+		// Set new time
+		newTime = currentTime + second
 
-        // Check limits
-        if(newTime <= 0){
-            newTime = 0
-        }else if(newTime > container.data('duration')){
-            newTime = container.data('duration')
-        }
+		// Check limits
+		if(newTime <= 0){
+			newTime = 0
+		}else if(newTime > container.data('duration')){
+			newTime = container.data('duration')
+		}
 
-        setCurrentTime(container, newTime)
-    }
+		setCurrentTime(container, newTime)
+	}
 
 	function getbacktrackingPosition(container){
 		var media = container.find('video, audio');
@@ -1343,12 +1343,12 @@
 	}
 
 	function startWatchControlHide(container){
-    	let settings = container.data('settings')
+		let settings = container.data('settings')
 
 		if(container.hasClass('cb-player--media-playing') && settings.controlHide){
 
-            clearTimeout(watchControlHide)
-            controlsToggle(container, false)
+			clearTimeout(watchControlHide)
+			controlsToggle(container, false)
 
 			watchControlHide = setTimeout(function(){
 				controlsToggle(container, true)
@@ -1465,23 +1465,23 @@
 
 	function getVimeoId(url){
 		const regex = /^.*(vimeo\.com\/(video\/|))([0-9]+)/;
-        const result = url.match(regex)
-        if(result){
-            return {
-                'id': RegExp.$3,
-                'type': 'vimeovideo'
-            }
-        }
+		const result = url.match(regex)
+		if(result){
+			return {
+				'id': RegExp.$3,
+				'type': 'vimeovideo'
+			}
+		}
 
-        const regexEvent = /^.*(vimeo\.com\/event\/)([0-9]+)\/(embed\/|)([0-9]+)/;
-        const resultEvent = url.match(regexEvent)
-        if(resultEvent){
-            return {
-                'id': RegExp.$2,
-                'id2': RegExp.$4,
-                'type': 'vimeoevent'
-            }
-        }
+		const regexEvent = /^.*(vimeo\.com\/event\/)([0-9]+)\/(embed\/|)([0-9]+)/;
+		const resultEvent = url.match(regexEvent)
+		if(resultEvent){
+			return {
+				'id': RegExp.$2,
+				'id2': RegExp.$4,
+				'type': 'vimeoevent'
+			}
+		}
 
 		return url;
 	}
@@ -1567,402 +1567,402 @@
 		}
 	}
 
-    function initIframes(wrap, _this){
-        const source = wrap.data('source')
-        const settings = wrap.data('settings')
-        const provider = getProvider(source.mediaSrc)
-
-        let youtube = {
-            setup: function(){
-                if(window.YT && window.YT.Player){
-                    youtube.ready.call(_this);
-                }else{
-                    var callback = window.onYouTubeIframeAPIReady;
+	function initIframes(wrap, _this){
+		const source = wrap.data('source')
+		const settings = wrap.data('settings')
+		const provider = getProvider(source.mediaSrc)
+
+		let youtube = {
+			setup: function(){
+				if(window.YT && window.YT.Player){
+					youtube.ready.call(_this);
+				}else{
+					var callback = window.onYouTubeIframeAPIReady;
 
-                    window.onYouTubeIframeAPIReady = function () {
-                        youtube.ready.call(_this);
-                    };
+					window.onYouTubeIframeAPIReady = function () {
+						youtube.ready.call(_this);
+					};
 
-                    $.getScript(urls.youtube.sdk, function(jd) {});
+					$.getScript(urls.youtube.sdk, function(jd) {});
 
-                    youtubeInit = true;
-                }
-            },
-            ready: function ready() {
+					youtubeInit = true;
+				}
+			},
+			ready: function ready() {
 
-                videoId = getYoutubeId(source.mediaSrc);
+				videoId = getYoutubeId(source.mediaSrc);
 
-                var id = uniqid(),
-                    media = wrap.find('.cb-player-media'),
-                    ytTimer,
-                    ytBufferTimer;
+				var id = uniqid(),
+					media = wrap.find('.cb-player-media'),
+					ytTimer,
+					ytBufferTimer;
 
-                let mediaContainer = $('<div class="cb-player-media-container"></div>')
-                mediaContainer.appendTo(media)
+				let mediaContainer = $('<div class="cb-player-media-container"></div>')
+				mediaContainer.appendTo(media)
 
-                var wrapper = document.createElement('div');
-                wrapper.setAttribute('class', 'cb-player-media-embed');
-                $(wrapper).appendTo(mediaContainer);
+				var wrapper = document.createElement('div');
+				wrapper.setAttribute('class', 'cb-player-media-embed');
+				$(wrapper).appendTo(mediaContainer);
 
-                el = $('<div>')
-                    .attr('id', id)
-                    .appendTo(wrapper);
+				el = $('<div>')
+					.attr('id', id)
+					.appendTo(wrapper);
 
-                const thump = 'https://img.youtube.com/vi/'+videoId+'/maxresdefault.jpg'
-                addPoster(wrap, thump)
+				const thump = 'https://img.youtube.com/vi/'+videoId+'/maxresdefault.jpg'
+				addPoster(wrap, thump)
 
-                el.addClass('cb-player-media-iframe cb-player-media-source')
-                el.attr('tabindex', '-1') // Disable focus iframe
+				el.addClass('cb-player-media-iframe cb-player-media-source')
+				el.attr('tabindex', '-1') // Disable focus iframe
 
-                let ytLastEvent
+				let ytLastEvent
 
-                el.embed = new window.YT.Player(id, {
-                    videoId: videoId,
-                    host: getYoutubeHost(settings),
-                    playerVars: {
-                        showinfo: settings.youtube.showinfo,
-                        controls: settings.youtube.controls,
-                        disablekb: settings.youtube.disablekb,
-                        playsinline: settings.youtube.playsinline,
-                        rel: settings.youtube.rel
-                    },
-                    events: {
-                        'onStateChange': function(e){
-                            let instance = e.target
+				el.embed = new window.YT.Player(id, {
+					videoId: videoId,
+					host: getYoutubeHost(settings),
+					playerVars: {
+						showinfo: settings.youtube.showinfo,
+						controls: settings.youtube.controls,
+						disablekb: settings.youtube.disablekb,
+						playsinline: settings.youtube.playsinline,
+						rel: settings.youtube.rel
+					},
+					events: {
+						'onStateChange': function(e){
+							let instance = e.target
 
-                            clearTimeout(ytTimer)
-                            clearTimeout(ytBufferTimer)
-
-                            if(e.data == YT.PlayerState.PLAYING){
-                                wrap.addClass('cb-player--media-playing').removeClass('cb-player--media-loaded');
+							clearTimeout(ytTimer)
+							clearTimeout(ytBufferTimer)
+
+							if(e.data == YT.PlayerState.PLAYING){
+								wrap.addClass('cb-player--media-playing').removeClass('cb-player--media-loaded');
 
-                                function ytTimeupdate(){
-                                    watchTimer(wrap);
-                                    if ($.isFunction(settings.mediaTimeupdate)) {
-                                        settings.mediaTimeupdate.call(this, wrap, instance.getCurrentTime());
-                                    }
-
-                                    ytTimer = setTimeout(function(){
-                                        ytTimeupdate()
-                                    }, 250)
-                                }
-                                ytTimeupdate()
-
-                                stopPlayingAll(wrap)
-                                hidePoster(wrap)
-
-                                if(ytLastEvent != 'play'){
-                                    startWatchControlHide(wrap)
-                                }
-
-                                if ($.isFunction(settings.mediaIsPlay)) {
-                                    settings.mediaIsPlay.call(this, wrap);
-                                }
-
-                                ytLastEvent = 'play'
-
-                            }else if(e.data == YT.PlayerState.PAUSED){
-
-                                wrap.removeClass('cb-player--media-playing cb-player--media-loaded')
-
-                                clearTimeout(watchControlHide)
-                                controlsToggle(wrap, false)
-
-                                if ($.isFunction(settings.mediaIsPause)) {
-                                    settings.mediaIsPause.call(this, wrap);
-                                }
+								function ytTimeupdate(){
+									watchTimer(wrap);
+									if ($.isFunction(settings.mediaTimeupdate)) {
+										settings.mediaTimeupdate.call(this, wrap, instance.getCurrentTime());
+									}
+
+									ytTimer = setTimeout(function(){
+										ytTimeupdate()
+									}, 250)
+								}
+								ytTimeupdate()
+
+								stopPlayingAll(wrap)
+								hidePoster(wrap)
+
+								if(ytLastEvent != 'play'){
+									startWatchControlHide(wrap)
+								}
+
+								if ($.isFunction(settings.mediaIsPlay)) {
+									settings.mediaIsPlay.call(this, wrap);
+								}
+
+								ytLastEvent = 'play'
+
+							}else if(e.data == YT.PlayerState.PAUSED){
+
+								wrap.removeClass('cb-player--media-playing cb-player--media-loaded')
+
+								clearTimeout(watchControlHide)
+								controlsToggle(wrap, false)
+
+								if ($.isFunction(settings.mediaIsPause)) {
+									settings.mediaIsPause.call(this, wrap);
+								}
 
-                                ytLastEvent = 'pause'
+								ytLastEvent = 'pause'
 
-                            }else if(e.data == YT.PlayerState.BUFFERING){
+							}else if(e.data == YT.PlayerState.BUFFERING){
 
-                                ytBufferTimer = setTimeout(() =>{
-                                    wrap.addClass('cb-player--media-loaded');
-                                }, 400)
+								ytBufferTimer = setTimeout(() =>{
+									wrap.addClass('cb-player--media-loaded');
+								}, 400)
 
-                            }else if(e.data == YT.PlayerState.ENDED){
+							}else if(e.data == YT.PlayerState.ENDED){
 
-                                wrap.addClass('cb-player--media-ended');
-                                wrap.removeClass('cb-player--media-playing')
+								wrap.addClass('cb-player--media-ended');
+								wrap.removeClass('cb-player--media-playing')
 
-                                clearTimeout(watchControlHide)
-                                controlsToggle(wrap, false)
-                                showPoster(wrap)
+								clearTimeout(watchControlHide)
+								controlsToggle(wrap, false)
+								showPoster(wrap)
 
-                                if(settings.loop){
-                                    videoStart(wrap, false)
-                                }
-
-                                if ($.isFunction(settings.mediaIsEnd)) {
-                                    settings.mediaIsEnd.call(this, wrap);
-                                }
-
-                                ytLastEvent = 'ended'
-                            }
-                        },
-                        'onReady': function(e){
-                            var instance = e.target;
-
-                            wrap.removeClass('cb-player--initialized')
-                            wrap.addClass('cb-player--media-ready')
-                            wrap.find('.cb-player-progress-slider').attr('tabindex', 0)
-
-                            //set functions
-                            wrap.data('instance', instance);
-
-                            //set duration
-                            wrap.data('duration', instance.getDuration());
-
-                            //set video ratio
-                            let videoData = instance.j.i
-                            if(jQuery.type(videoData) == 'object'){
-                                wrap.data('ratio', videoData.width / videoData.height)
-                            }
-
-                            if(settings.backgroundMode){
-                                instance.mute();
-                            }
-
-                            if(settings.autoplay){
-                                videoStart(wrap, false)
-                            }
-
-                            if(settings.volume && settings.muted === false){
-                                setVolume(wrap, settings.volume)
-                            }else if(settings.muted){
-                                setVolume(wrap, 0)
-                            }
-
-                            setTimeout(function(){
-                                setDuration(wrap);
-                            });
-
-                            if ($.isFunction(settings.mediaIsReady)) {
-                                settings.mediaIsReady.call(this, wrap);
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        let vimeo = {
-            setup: function(){
-                if(window.Vimeo && window.Vimeo.Player){
-                    vimeo.ready.call(_this);
-                }else{
-                    $.getScript(urls.vimeo.sdk)
-                        .done(function(script, status){
-
-                            vimeo.ready.call(_this);
-
-                            vimeoInit = true;
-
-                        }).fail(function(jqxhr, settings, exception){
-                            console.warn('Vimeo SDK failed to load', jqxhr);
-                        });
-
-                }
-            },
-            ready: function(){
-
-                const getVimeo = getVimeoId(source.mediaSrc);
-
-                wrap
-                    .addClass('cb-player--media-ready')
-                    .removeClass('cb-player--initialized')
-
-                wrap.find('.cb-player-progress-slider').attr('tabindex', 0)
-
-                var media = wrap.find('.cb-player-media')
-
-                let mediaContainer = $('<div class="cb-player-media-container"></div>')
-                mediaContainer.appendTo(media)
-
-                var wrapper = document.createElement('div')
-                wrapper.setAttribute('class', 'cb-player-media-embed')
-                $(wrapper).appendTo(mediaContainer)
-
-                var params = buildUrlParams({
-                    background: settings.backgroundMode,
-                    autopause: 0,
-                    loop: settings.loop,
-                    autoplay: settings.autoplay,
-                    muted: settings.muted,
-                    gesture: 'media',
-                    playsinline: true,
-                    byline: false,
-                    portrait: false,
-                    title: false,
-                    transparent: false
-                })
-
-                //Create a new DOM element
-                //Use this to prevent play() failed error
-                let iframe = document.createElement('iframe')
-                let src
-
-                if(getVimeo.type == 'vimeovideo'){
-                    src = format(urls.vimeo.iframe, getVimeo.id, params)
-                }else{
-                    src = format(urls.vimeo.event, getVimeo.id, getVimeo.id2)
-                }
-
-                iframe.setAttribute('src', src);
-                iframe.setAttribute('allowfullscreen', 'allowfullscreen');
-                iframe.setAttribute('allow', 'fullscreen; autoplay; picture-in-picture; encrypted-media; accelerometer; gyroscope');
-
-                if(settings.vimeo.referrerPolicy != null){
-                    iframe.setAttribute('referrerpolicy', settings.vimeo.referrerPolicy)
-                }
-
-                $(iframe).appendTo(wrapper)
-                $(iframe).addClass('cb-player-media-iframe cb-player-media-source')
-                $(iframe).attr('tabindex', '-1') // Disable focus iframe
-
-                // var poster = $('<div>')
-                //  .addClass('cb-player-media-poster')
-                //  .appendTo(media);
-
-                let el = wrap.find('.cb-player-media')
-
-                el.embed = new window.Vimeo.Player(iframe, {
-                    autopause: 1,
-                    muted: settings.muted
-                });
-
-                wrap.data('embed', el.embed);
-
-                //get video ratio
-                Promise.all([el.embed.getVideoWidth(), el.embed.getVideoHeight()]).then((dimensions) => {
-                    const ratio = dimensions[0] / dimensions[1];
-                    wrap.data('ratio', ratio)
-
-                    fitIframe(wrap);
-                });
-
-                el.embed.ready().then(function(){
-                    if ($.isFunction(settings.mediaIsReady)) {
-                        settings.mediaIsReady.call(this, wrap);
-                    }
-                })
-
-                el.embed.on('bufferstart', function(){
-                    wrap.addClass('cb-player--media-loaded');
-                });
-
-                el.embed.on('bufferend', function(){
-                    wrap.removeClass('cb-player--media-loaded');
-                });
-
-                el.embed.on('play', function(){
-                    wrap.addClass('cb-player--media-playing').removeClass('cb-player--media-ended cb-player--media-loaded');
-
-                    stopPlayingAll(wrap)
-                    fitIframe(wrap)
-                    hidePoster(wrap)
-                    startWatchControlHide(wrap)
-
-                    if ($.isFunction(settings.mediaIsPlay)) {
-                        settings.mediaIsPlay.call(this, wrap);
-                    }
-                });
-
-                el.embed.on('pause', function(){
-                    wrap.removeClass('cb-player--media-playing cb-player--media-loaded');
-
-                    clearTimeout(watchControlHide);
-                    controlsToggle(wrap, false);
-
-                    if ($.isFunction(settings.mediaIsPause)) {
-                        settings.mediaIsPause.call(this, wrap);
-                    }
-                });
-
-                el.embed.on('timeupdate', function(){
-                    watchTimer(wrap);
-
-                    if ($.isFunction(settings.mediaTimeupdate)) {
-                        el.embed.getCurrentTime().then(function(seconds){
-                            settings.mediaTimeupdate.call(this, wrap, seconds);
-                        })
-                    }
-                });
-
-                el.embed.on('seeked', function(e){
-                    // clearTimeout(watchControlHide)
-                    // controlsToggle(wrap, false)
-                });
-
-                el.embed.on('ended', function(data) {
-                    wrap.addClass('cb-player--media-ended');
-
-                    if ($.isFunction(settings.mediaIsEnd)) {
-                        settings.mediaIsEnd.call(this, wrap);
-                    }
-                });
-
-                //set duration
-                el.embed.getDuration().then(function(duration) {
-                    wrap.data('duration', duration);
-
-                    setTimeout(function(){
-                        setDuration(wrap);
-                    });
-                }).catch(function(e){
-                    displayError(el.closest(".cb-player"), e);
-                });
-
-                if(settings.muted){
-                    setVolume(el.closest(".cb-player"), 0);
-                }
-            }
-        }
-
-        if(wrap.data('isConsent') === false){
-            // Disable init iframes
-            return
-        }
-
-        if(provider == 'youtube' || provider == 'vimeo'){
-            if(provider == 'youtube'){
-                var checkYoutubeApiReady = function(){
-                    if(youtubeInit == false || (typeof window.YT !== 'undefined' && window.YT.Player)){
-                        youtube.setup(_this);
-                    }else{
-                        setTimeout(checkYoutubeApiReady, 100);
-                    }
-                }
-                checkYoutubeApiReady();
-            }else if(provider == 'vimeo'){
-
-                var checkViemoApiReady = function(){
-                    if(vimeoInit == false || (typeof window.Vimeo !== 'undefined' && window.Vimeo.Player)){
-                        vimeo.setup(_this);
-                    }else{
-                        setTimeout(checkViemoApiReady, 100);
-                    }
-                }
-                checkViemoApiReady();
-            }
-        }
-    }
-
-    function destroyIframe(container){
-        const settings = container.data('settings')
-
-        container.removeClass('cb-player--media-ready')
-        container.find('.cb-player-media').empty()
-
-        if(container.data('isConsent') === false){
-            let message = container.data('no-consent-message')
-            if(!message){
-                message =  settings.consentMessage
-            }
-
-            displayError(container, message, 'error-consent')
-        }
-    }
+								if(settings.loop){
+									videoStart(wrap, false)
+								}
+
+								if ($.isFunction(settings.mediaIsEnd)) {
+									settings.mediaIsEnd.call(this, wrap);
+								}
+
+								ytLastEvent = 'ended'
+							}
+						},
+						'onReady': function(e){
+							var instance = e.target;
+
+							wrap.removeClass('cb-player--initialized')
+							wrap.addClass('cb-player--media-ready')
+							wrap.find('.cb-player-progress-slider').attr('tabindex', 0)
+
+							//set functions
+							wrap.data('instance', instance);
+
+							//set duration
+							wrap.data('duration', instance.getDuration());
+
+							//set video ratio
+							let videoData = instance.j.i
+							if(jQuery.type(videoData) == 'object'){
+								wrap.data('ratio', videoData.width / videoData.height)
+							}
+
+							if(settings.backgroundMode){
+								instance.mute();
+							}
+
+							if(settings.autoplay){
+								videoStart(wrap, false)
+							}
+
+							if(settings.volume && settings.muted === false){
+								setVolume(wrap, settings.volume)
+							}else if(settings.muted){
+								setVolume(wrap, 0)
+							}
+
+							setTimeout(function(){
+								setDuration(wrap);
+							});
+
+							if ($.isFunction(settings.mediaIsReady)) {
+								settings.mediaIsReady.call(this, wrap);
+							}
+						}
+					}
+				});
+			}
+		}
+
+		let vimeo = {
+			setup: function(){
+				if(window.Vimeo && window.Vimeo.Player){
+					vimeo.ready.call(_this);
+				}else{
+					$.getScript(urls.vimeo.sdk)
+						.done(function(script, status){
+
+							vimeo.ready.call(_this);
+
+							vimeoInit = true;
+
+						}).fail(function(jqxhr, settings, exception){
+							console.warn('Vimeo SDK failed to load', jqxhr);
+						});
+
+				}
+			},
+			ready: function(){
+
+				const getVimeo = getVimeoId(source.mediaSrc);
+
+				wrap
+					.addClass('cb-player--media-ready')
+					.removeClass('cb-player--initialized')
+
+				wrap.find('.cb-player-progress-slider').attr('tabindex', 0)
+
+				var media = wrap.find('.cb-player-media')
+
+				let mediaContainer = $('<div class="cb-player-media-container"></div>')
+				mediaContainer.appendTo(media)
+
+				var wrapper = document.createElement('div')
+				wrapper.setAttribute('class', 'cb-player-media-embed')
+				$(wrapper).appendTo(mediaContainer)
+
+				var params = buildUrlParams({
+					background: settings.backgroundMode,
+					autopause: 0,
+					loop: settings.loop,
+					autoplay: settings.autoplay,
+					muted: settings.muted,
+					gesture: 'media',
+					playsinline: true,
+					byline: false,
+					portrait: false,
+					title: false,
+					transparent: false
+				})
+
+				//Create a new DOM element
+				//Use this to prevent play() failed error
+				let iframe = document.createElement('iframe')
+				let src
+
+				if(getVimeo.type == 'vimeovideo'){
+					src = format(urls.vimeo.iframe, getVimeo.id, params)
+				}else{
+					src = format(urls.vimeo.event, getVimeo.id, getVimeo.id2)
+				}
+
+				iframe.setAttribute('src', src);
+				iframe.setAttribute('allowfullscreen', 'allowfullscreen');
+				iframe.setAttribute('allow', 'fullscreen; autoplay; picture-in-picture; encrypted-media; accelerometer; gyroscope');
+
+				if(settings.vimeo.referrerPolicy != null){
+					iframe.setAttribute('referrerpolicy', settings.vimeo.referrerPolicy)
+				}
+
+				$(iframe).appendTo(wrapper)
+				$(iframe).addClass('cb-player-media-iframe cb-player-media-source')
+				$(iframe).attr('tabindex', '-1') // Disable focus iframe
+
+				// var poster = $('<div>')
+				//  .addClass('cb-player-media-poster')
+				//  .appendTo(media);
+
+				let el = wrap.find('.cb-player-media')
+
+				el.embed = new window.Vimeo.Player(iframe, {
+					autopause: 1,
+					muted: settings.muted
+				});
+
+				wrap.data('embed', el.embed);
+
+				//get video ratio
+				Promise.all([el.embed.getVideoWidth(), el.embed.getVideoHeight()]).then((dimensions) => {
+					const ratio = dimensions[0] / dimensions[1];
+					wrap.data('ratio', ratio)
+
+					fitIframe(wrap);
+				});
+
+				el.embed.ready().then(function(){
+					if ($.isFunction(settings.mediaIsReady)) {
+						settings.mediaIsReady.call(this, wrap);
+					}
+				})
+
+				el.embed.on('bufferstart', function(){
+					wrap.addClass('cb-player--media-loaded');
+				});
+
+				el.embed.on('bufferend', function(){
+					wrap.removeClass('cb-player--media-loaded');
+				});
+
+				el.embed.on('play', function(){
+					wrap.addClass('cb-player--media-playing').removeClass('cb-player--media-ended cb-player--media-loaded');
+
+					stopPlayingAll(wrap)
+					fitIframe(wrap)
+					hidePoster(wrap)
+					startWatchControlHide(wrap)
+
+					if ($.isFunction(settings.mediaIsPlay)) {
+						settings.mediaIsPlay.call(this, wrap);
+					}
+				});
+
+				el.embed.on('pause', function(){
+					wrap.removeClass('cb-player--media-playing cb-player--media-loaded');
+
+					clearTimeout(watchControlHide);
+					controlsToggle(wrap, false);
+
+					if ($.isFunction(settings.mediaIsPause)) {
+						settings.mediaIsPause.call(this, wrap);
+					}
+				});
+
+				el.embed.on('timeupdate', function(){
+					watchTimer(wrap);
+
+					if ($.isFunction(settings.mediaTimeupdate)) {
+						el.embed.getCurrentTime().then(function(seconds){
+							settings.mediaTimeupdate.call(this, wrap, seconds);
+						})
+					}
+				});
+
+				el.embed.on('seeked', function(e){
+					// clearTimeout(watchControlHide)
+					// controlsToggle(wrap, false)
+				});
+
+				el.embed.on('ended', function(data) {
+					wrap.addClass('cb-player--media-ended');
+
+					if ($.isFunction(settings.mediaIsEnd)) {
+						settings.mediaIsEnd.call(this, wrap);
+					}
+				});
+
+				//set duration
+				el.embed.getDuration().then(function(duration) {
+					wrap.data('duration', duration);
+
+					setTimeout(function(){
+						setDuration(wrap);
+					});
+				}).catch(function(e){
+					displayError(el.closest(".cb-player"), e);
+				});
+
+				if(settings.muted){
+					setVolume(el.closest(".cb-player"), 0);
+				}
+			}
+		}
+
+		if(wrap.data('isConsent') === false){
+			// Disable init iframes
+			return
+		}
+
+		if(provider == 'youtube' || provider == 'vimeo'){
+			if(provider == 'youtube'){
+				var checkYoutubeApiReady = function(){
+					if(youtubeInit == false || (typeof window.YT !== 'undefined' && window.YT.Player)){
+						youtube.setup(_this);
+					}else{
+						setTimeout(checkYoutubeApiReady, 100);
+					}
+				}
+				checkYoutubeApiReady();
+			}else if(provider == 'vimeo'){
+
+				var checkViemoApiReady = function(){
+					if(vimeoInit == false || (typeof window.Vimeo !== 'undefined' && window.Vimeo.Player)){
+						vimeo.setup(_this);
+					}else{
+						setTimeout(checkViemoApiReady, 100);
+					}
+				}
+				checkViemoApiReady();
+			}
+		}
+	}
+
+	function destroyIframe(container){
+		const settings = container.data('settings')
+
+		container.removeClass('cb-player--media-ready')
+		container.find('.cb-player-media').empty()
+
+		if(container.data('isConsent') === false){
+			let message = container.data('no-consent-message')
+			if(!message){
+				message =  settings.consentMessage
+			}
+
+			displayError(container, message, 'error-consent')
+		}
+	}
 
 	function controlsToggle(container, conrolsHide){
 		let lastStatus = container.data('controlsHidden')
@@ -1976,9 +1976,9 @@
 			controlsHidden = false
 		}
 
-        container.data('controlsHidden', controlsHidden)
+		container.data('controlsHidden', controlsHidden)
 
-        let settings = container.data('settings')
+		let settings = container.data('settings')
 		if(lastStatus != controlsHidden){
 			if ($.isFunction(settings.mediaControlsChange)) {
 				settings.mediaControlsChange.call(this, container, controlsHidden);
@@ -1995,29 +1995,29 @@
 		}
 	}
 
-    function createTrackItem(id, lang, label){
-        let item = $('<li>')
+	function createTrackItem(id, lang, label){
+		let item = $('<li>')
 
-        item.addClass('cb-player-subtitle-track')
-            .attr('data-lang', lang)
-            .attr('tabindex', 0)
-            .text(label)
+		item.addClass('cb-player-subtitle-track')
+			.attr('data-lang', lang)
+			.attr('tabindex', 0)
+			.text(label)
 
-        return item
-    }
+		return item
+	}
 
-    function changeConsent(container){
-        const settings = container.data('settings')
+	function changeConsent(container){
+		const settings = container.data('settings')
 
-        if ($.isFunction(settings.getConsent)) {
-            const consent = settings.getConsent.apply(this, arguments)
+		if ($.isFunction(settings.getConsent)) {
+			const consent = settings.getConsent.apply(this, arguments)
 
-            container.data('isConsent', consent ? true : false);
+			container.data('isConsent', consent ? true : false);
 
-            container.removeClass('cb-player--error-consent');
-            container.find('.cb-player-error').remove()
-        }
-    }
+			container.removeClass('cb-player--error-consent');
+			container.find('.cb-player-error').remove()
+		}
+	}
 
 	function CBplayer( element, options ) {
 		this.options = $.extend( {}, defaults, options );
@@ -2261,13 +2261,13 @@
 				wrap.find('.cb-player-controls').remove()
 			}
 
-            if(settings.overlayButton && !wrap.find('.cb-player-overlayer-button').length){
-                overlayerButton.prependTo(wrap);
-            }
+			if(settings.overlayButton && !wrap.find('.cb-player-overlayer-button').length){
+				overlayerButton.prependTo(wrap);
+			}
 
-            if(settings.overlaySpinner && !wrap.find('.cb-player-spinner-wrap').length){
-                spinner.prependTo(wrap);
-            }
+			if(settings.overlaySpinner && !wrap.find('.cb-player-spinner-wrap').length){
+				spinner.prependTo(wrap);
+			}
 
 			let tracks = el.find('track')
 			if(tracks.length){
@@ -2348,75 +2348,75 @@
 				wrap.find('.cb-player-play').addClass('cb-player-with-load');
 			}
 
-            let videoTitle = el.data('title')
+			let videoTitle = el.data('title')
 
-            // Set play attributes
-            let overlayerButtonAttr = wrap.find('.cb-player-overlayer-button')
-            if(overlayerButtonAttr.length){
-                overlayerButtonAttr.attr('aria-label', settings.labels.play)
+			// Set play attributes
+			let overlayerButtonAttr = wrap.find('.cb-player-overlayer-button')
+			if(overlayerButtonAttr.length){
+				overlayerButtonAttr.attr('aria-label', settings.labels.play)
 
-                if(videoTitle){
-                    overlayerButtonAttr.attr('aria-valuetext', videoTitle)
-                }
-            }
+				if(videoTitle){
+					overlayerButtonAttr.attr('aria-valuetext', videoTitle)
+				}
+			}
 
-            // Set play attributes
-            let playButton = wrap.find('.cb-player-play')
-            if(playButton.length){
-                playButton.attr('aria-label', settings.labels.play)
+			// Set play attributes
+			let playButton = wrap.find('.cb-player-play')
+			if(playButton.length){
+				playButton.attr('aria-label', settings.labels.play)
 
-                if(videoTitle){
-                    playButton.attr('aria-valuetext', videoTitle)
-                }
-            }
+				if(videoTitle){
+					playButton.attr('aria-valuetext', videoTitle)
+				}
+			}
 
-            // Set porgress slider attributes
-            let progressSlider = wrap.find('.cb-player-progress-slider')
-            if(progressSlider.length){
-                progressSlider.attr('tabindex', -1)
-                progressSlider.attr('role', 'slider')
-                progressSlider.attr('aria-valuenow', 0)
-                progressSlider.attr('aria-label', settings.labels.slider)
-                progressSlider.attr('aria-valuetext', '')
-            }
+			// Set porgress slider attributes
+			let progressSlider = wrap.find('.cb-player-progress-slider')
+			if(progressSlider.length){
+				progressSlider.attr('tabindex', -1)
+				progressSlider.attr('role', 'slider')
+				progressSlider.attr('aria-valuenow', 0)
+				progressSlider.attr('aria-label', settings.labels.slider)
+				progressSlider.attr('aria-valuetext', '')
+			}
 
-            // Set sound attributes
-            let muteButton = wrap.find('.cb-player-sound')
-            if(muteButton.length){
-                if(volume == 0){
-                    muteButton.attr('aria-label', settings.labels.unmute)
-                }else{
-                    muteButton.attr('aria-label', settings.labels.mute)
-                }
-            }
+			// Set sound attributes
+			let muteButton = wrap.find('.cb-player-sound')
+			if(muteButton.length){
+				if(volume == 0){
+					muteButton.attr('aria-label', settings.labels.unmute)
+				}else{
+					muteButton.attr('aria-label', settings.labels.mute)
+				}
+			}
 
-            // Set volume attributes
-            let volumeSlider = wrap.find('.cb-player-volume-slider')
-            if(volumeSlider.length){
-                volumeSlider.attr('tabindex', 0)
-                volumeSlider.attr('role', 'slider')
-                volumeSlider.attr('aria-valuenow', volume)
-                volumeSlider.attr('aria-valuetext', settings.labels.volume + ' ' + volume + '%')
-            }
+			// Set volume attributes
+			let volumeSlider = wrap.find('.cb-player-volume-slider')
+			if(volumeSlider.length){
+				volumeSlider.attr('tabindex', 0)
+				volumeSlider.attr('role', 'slider')
+				volumeSlider.attr('aria-valuenow', volume)
+				volumeSlider.attr('aria-valuetext', settings.labels.volume + ' ' + volume + '%')
+			}
 
-            // Set subtitle attributes
-            let subtitleButton = wrap.find('.cb-player-subtitle-button')
-            if(subtitleButton.length){
-                subtitleButton.attr('aria-label', settings.labels.subtitles)
-                subtitleButton.attr('aria-expanded', false)
-            }
+			// Set subtitle attributes
+			let subtitleButton = wrap.find('.cb-player-subtitle-button')
+			if(subtitleButton.length){
+				subtitleButton.attr('aria-label', settings.labels.subtitles)
+				subtitleButton.attr('aria-expanded', false)
+			}
 
-            // Set fullscreen attributes
-            let fullscreenButton = wrap.find('.cb-player-fullscreen')
-            if(fullscreenButton.length){
-                fullscreenButton.attr('aria-label', settings.labels.fullscreenOn)
-            }
+			// Set fullscreen attributes
+			let fullscreenButton = wrap.find('.cb-player-fullscreen')
+			if(fullscreenButton.length){
+				fullscreenButton.attr('aria-label', settings.labels.fullscreenOn)
+			}
 
-            if(settings.backgroundMode){
-                wrap.addClass('cb-player--backgroundmode')
-            }
+			if(settings.backgroundMode){
+				wrap.addClass('cb-player--backgroundmode')
+			}
 
-            const isIPadOs = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+			const isIPadOs = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
 			const isIos = /iPad|iPhone|iPod/gi.test(navigator.userAgent) && navigator.maxTouchPoints > 1;
 
 			wrap.data({
@@ -2429,9 +2429,9 @@
 				'loop': loop,
 				'hlsStopLoad': settings.hlsStopLoad,
 				'settings': settings,
-                'source': source,
-                'isConsent': null,
-                'isIPadOs': isIPadOs,
+				'source': source,
+				'isConsent': null,
+				'isIPadOs': isIPadOs,
 				'isIos': isIos,
 			});
 
@@ -2443,11 +2443,11 @@
 						let container = $(this).closest('.cb-player')
 						let progress = container.find('.cb-player-progress')
 
-                        container
-                            .addClass('cb-player--media-playing')
-                            .removeClass('cb-player--media-ended')
+						container
+							.addClass('cb-player--media-playing')
+							.removeClass('cb-player--media-ended')
 
-                        startWatchControlHide(container)
+						startWatchControlHide(container)
 
 						//is current position behind media duration, set new position
 						if(getbacktrackingPosition(container) >= container.data('duration') && container.data('backtracking') && container.data('is-livestream')){
@@ -2469,7 +2469,7 @@
 							.addClass('cb-player--media-playing')
 							.removeClass('cb-player--media-ended')
 
-                        hidePoster(container)
+						hidePoster(container)
 					});
 
 					el.on('timeupdate', function(){
@@ -2577,27 +2577,27 @@
 				}
 			}
 
-            // Set dafault consent
-            if ($.isFunction(settings.getConsent)) {
-                const consent = settings.getConsent.apply(this, arguments)
-                wrap.data('isConsent', consent ? true : false)
+			// Set dafault consent
+			if ($.isFunction(settings.getConsent)) {
+				const consent = settings.getConsent.apply(this, arguments)
+				wrap.data('isConsent', consent ? true : false)
 
-                if(consent === false){
+				if(consent === false){
 
-                    let message = wrap.data('no-consent-message')
-                    if(!message){
-                        message =  settings.consentMessage
-                    }
+					let message = wrap.data('no-consent-message')
+					if(!message){
+						message =  settings.consentMessage
+					}
 
-                    displayError(wrap, message, 'error-consent')
-                }
-            }
+					displayError(wrap, message, 'error-consent')
+				}
+			}
 
 			if(provider == 'youtube' || provider == 'vimeo'){
-                wrap.data('iframe', provider);
-                wrap.addClass('cb-player--' + provider);
+				wrap.data('iframe', provider);
+				wrap.addClass('cb-player--' + provider);
 
-                initIframes(wrap, _this)
+				initIframes(wrap, _this)
 			}else{
 				media.ready(el)
 			}
@@ -2623,8 +2623,8 @@
 				var container = $(this);
 				let target = $(e.target)
 
-                clearTimeout(watchControlHide)
-                controlsToggle(container, false)
+				clearTimeout(watchControlHide)
+				controlsToggle(container, false)
 
 				if(target.closest('.cb-player-controls').length || target.hasClass('cb-player-controls')){
 					return
@@ -2646,7 +2646,7 @@
 		attachEvents: function(el, options) {
 			let touchtimer = false
 			let container = $(el).closest('.cb-player')
-            let isKeypress = false
+			let isKeypress = false
 
 			var targetsTouch = ['.cb-player-toggle-play', '.cb-player-overlayer-button'];
 			if(options.disableClick == false){
@@ -2671,9 +2671,9 @@
 				}
 			});
 
-            container.on('touchmove', targetsTouch.join(','), function(e){
-                touchtimer = false
-            })
+			container.on('touchmove', targetsTouch.join(','), function(e){
+				touchtimer = false
+			})
 
 			var targetsClick = ['.cb-player-toggle-play', '.cb-player-overlayer-button'];
 			if(options.disableClick == false){
@@ -2682,26 +2682,26 @@
 
 			container.on(isTouchDevice() ? 'touchend' : 'click keydown', targetsClick.join(',') , function(e){
 				if(isKeypress){
-                    return
-                }
+					return
+				}
 
-                if (e.type == 'keydown') {
-                  if (e.keyCode != 13) {
-                        return
-                    }
-                }
+				if (e.type == 'keydown') {
+				  if (e.keyCode != 13) {
+						return
+					}
+				}
 
-                if(container.hasClass('cb-player--media-loaded') || container.data('backgroundMode')){
+				if(container.hasClass('cb-player--media-loaded') || container.data('backgroundMode')){
 					return;
 				}
 
-                if(e.type == 'keydown' && !container.data('iframe')){
-                    container.addClass('cb-player--control-force-visibile')
+				if(e.type == 'keydown' && !container.data('iframe')){
+					container.addClass('cb-player--control-force-visibile')
 
-                    setTimeout(function(){
-                        container.find('.cb-player-play').focus()
-                    }, 50)
-                }
+					setTimeout(function(){
+						container.find('.cb-player-play').focus()
+					}, 50)
+				}
 
 				if(e.type == 'touchend'){
 					if(touchtimer){
@@ -2709,17 +2709,17 @@
 
 						touchtimer = false;
 					}else if(container.hasClass('cb-player--media-playing')){
-                        startWatchControlHide(container)
-                    }
+						startWatchControlHide(container)
+					}
 				}else{
 					initPlayer(container);
 				}
 
-                isKeypress = true
+				isKeypress = true
 
-                setTimeout(function(){
-                    isKeypress = false
-                }, 150)
+				setTimeout(function(){
+					isKeypress = false
+				}, 150)
 			});
 
 			container.on(isTouchDevice() ? 'touchstart' : 'mouseenter', '.cb-player-progress-slider', function(e){
@@ -2744,7 +2744,7 @@
 				let progress = $(this).closest('.cb-player-progress')
 				let position = (e.pageX - progress.offset().left) / progress.width() * 100
 
-                position = position.toFixed(4)
+				position = position.toFixed(4)
 
 				if(!container.hasClass('cb-player--media-ready')){
 					return;
@@ -2775,27 +2775,27 @@
 				}
 			});
 
-            container.on('keydown', '.cb-player-progress-slider', function(e){
-                let keycode = e.keyCode
+			container.on('keydown', '.cb-player-progress-slider', function(e){
+				let keycode = e.keyCode
 
-                if(keycode != 37 && keycode != 39){
-                    return
-                }
+				if(keycode != 37 && keycode != 39){
+					return
+				}
 
-                if(container.hasClass('cb-player--media-ready')){
-                    if(keycode == 37){
-                        // Arrow left
-                        seekToSecond(container, -5)
-                    }else if(keycode == 39){
-                        // Arrow right
-                        seekToSecond(container, +5)
-                    }
-                }
+				if(container.hasClass('cb-player--media-ready')){
+					if(keycode == 37){
+						// Arrow left
+						seekToSecond(container, -5)
+					}else if(keycode == 39){
+						// Arrow right
+						seekToSecond(container, +5)
+					}
+				}
 
-                if(container.hasClass('cb-player--media-playing')){
-                    startWatchControlHide(container)
-                }
-            })
+				if(container.hasClass('cb-player--media-playing')){
+					startWatchControlHide(container)
+				}
+			})
 
 			container.on(isTouchDevice() ? 'touchstart' : 'mousedown' ,'.cb-player-progress', function(e){
 				if(e.type == "mousedown"){
@@ -2839,45 +2839,45 @@
 				//e.preventDefault();
 			});
 
-            container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-sound', function(){
-                var player = container.find('.cb-player-media-source'),
-                    volumevalue;
+			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-sound', function(){
+				var player = container.find('.cb-player-media-source'),
+					volumevalue;
 
-                if(container.data('iframe')){
+				if(container.data('iframe')){
 
-                    if(container.data('iframe') == 'youtube'){
-                        if(container.data('instance').isMuted()){
-                            volumevalue = 100;
-                        }else{
-                            volumevalue = 0;
-                        }
-                    }else if(container.data('iframe') == 'vimeo'){
-                        var embedPlayer = container.data('embed');
+					if(container.data('iframe') == 'youtube'){
+						if(container.data('instance').isMuted()){
+							volumevalue = 100;
+						}else{
+							volumevalue = 0;
+						}
+					}else if(container.data('iframe') == 'vimeo'){
+						var embedPlayer = container.data('embed');
 
-                        embedPlayer.getVolume().then(function(volume){
+						embedPlayer.getVolume().then(function(volume){
 
-                            if(volume == 0){
-                                volumevalue = 100;
-                            }else{
-                                volumevalue = 0;
-                            }
+							if(volume == 0){
+								volumevalue = 100;
+							}else{
+								volumevalue = 0;
+							}
 
-                            setVolume(container, volumevalue);
-                        });
-                    }
+							setVolume(container, volumevalue);
+						});
+					}
 
-                }else{
-                    if(player.prop('muted')){
-                        volumevalue = 100;
-                    }else{
-                        volumevalue = 0;
-                    }
-                }
+				}else{
+					if(player.prop('muted')){
+						volumevalue = 100;
+					}else{
+						volumevalue = 0;
+					}
+				}
 
-                if(container.data('iframe') != 'vimeo'){
-                    setVolume(container, volumevalue);
-                }
-            })
+				if(container.data('iframe') != 'vimeo'){
+					setVolume(container, volumevalue);
+				}
+			})
 
 			container.on(isTouchDevice() ? 'touchstart' : 'mousedown','.cb-player-volume-slider', function(e){
 				if(e.type == "mousedown"){
@@ -2889,7 +2889,7 @@
 				let progress = $(this)
 				let container = $(this).closest('.cb-player')
 
-                setVolume(container, e)
+				setVolume(container, e)
 
 				container.addClass('cb-player--change-volume')
 
@@ -2901,23 +2901,23 @@
 				e.stopPropagation()
 			})
 
-            container.on('keydown', '.cb-player-volume-slider', function(e){
-                let keycode = e.keyCode
+			container.on('keydown', '.cb-player-volume-slider', function(e){
+				let keycode = e.keyCode
 
-                if(keycode != 40 && keycode != 39 && keycode != 38 && keycode != 37){
-                    return
-                }
+				if(keycode != 40 && keycode != 39 && keycode != 38 && keycode != 37){
+					return
+				}
 
-                e.preventDefault()
+				e.preventDefault()
 
-                if(keycode == 38 || keycode == 39){
-                    // Arrow up or right
-                    changeVolume(container, +5)
-                }else if(keycode == 40 || keycode == 37){
-                    // Arrow down or left
-                    changeVolume(container, -5)
-                }
-            })
+				if(keycode == 38 || keycode == 39){
+					// Arrow up or right
+					changeVolume(container, +5)
+				}else if(keycode == 40 || keycode == 37){
+					// Arrow down or left
+					changeVolume(container, -5)
+				}
+			})
 
 			container.on('mouseenter', '.cb-player-controls', function(){
 				if(container.hasClass('cb-player--media-playing')){
@@ -2977,11 +2977,11 @@
 			});
 
 			container.on('click keydown', '.cb-player-subtitle-track', function(e){
-                if (e.type == 'keydown') {
-                  if (e.keyCode != 13) {
-                    return
-                  }
-                }
+				if (e.type == 'keydown') {
+				  if (e.keyCode != 13) {
+					return
+				  }
+				}
 
 				let item = $(this)
 				let video = container.find('.cb-player-media-source')[0]
@@ -3010,83 +3010,83 @@
 			});
 
 			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-subtitle-button', function(e){
-                if(container.hasClass('cb-player--show-subtitles')){
-                    container.removeClass('cb-player--show-subtitles')
-                    container.find('.cb-player-subtitle-button').attr('aria-expanded', false)
-                }else{
-                    container.addClass('cb-player--show-subtitles')
-                    container.find('.cb-player-subtitle-button').attr('aria-expanded', true)
-                }
+				if(container.hasClass('cb-player--show-subtitles')){
+					container.removeClass('cb-player--show-subtitles')
+					container.find('.cb-player-subtitle-button').attr('aria-expanded', false)
+				}else{
+					container.addClass('cb-player--show-subtitles')
+					container.find('.cb-player-subtitle-button').attr('aria-expanded', true)
+				}
 			});
 
 			container.on('mouseleave', '.cb-player-subtitle', function(){
 				container.removeClass('cb-player--show-subtitles')
-                container.find('.cb-player-subtitle-button').attr('aria-expanded', false)
+				container.find('.cb-player-subtitle-button').attr('aria-expanded', false)
 			})
 
-            let targetsFocus = [
-                '.cb-player-play',
-                '.cb-player-progress-slider',
-                '.cb-player-sound',
-                '.cb-player-volume-slider',
-                '.cb-player-subtitle-button',
-                '.cb-player-subtitle-track',
-                '.cb-player-fullscreen'
-            ]
+			let targetsFocus = [
+				'.cb-player-play',
+				'.cb-player-progress-slider',
+				'.cb-player-sound',
+				'.cb-player-volume-slider',
+				'.cb-player-subtitle-button',
+				'.cb-player-subtitle-track',
+				'.cb-player-fullscreen'
+			]
 
-            container.on('keydown', targetsFocus.join(','), function(e){
-                // Only for hide controls after tab
+			container.on('keydown', targetsFocus.join(','), function(e){
+				// Only for hide controls after tab
 
-                let target = $(e.target)
-                let keycode = e.keyCode
+				let target = $(e.target)
+				let keycode = e.keyCode
 
-                // Tab or Enter
-                if(keycode != 9){
-                    return
-                }
+				// Tab or Enter
+				if(keycode != 9){
+					return
+				}
 
-                if(container.hasClass('cb-player--media-playing')){
-                    startWatchControlHide(container)
-                }
-            })
+				if(container.hasClass('cb-player--media-playing')){
+					startWatchControlHide(container)
+				}
+			})
 
-            container.on('focus', targetsFocus.join(','), function(e){
-                let target = $(e.target)
+			container.on('focus', targetsFocus.join(','), function(e){
+				let target = $(e.target)
 
-                if(target.hasClass('cb-player-sound')){
-                    container.addClass('cb-player--focus-mute')
-                }else if(target.hasClass('cb-player-volume-slider')){
-                    container.addClass('cb-player--focus-volume')
-                }
+				if(target.hasClass('cb-player-sound')){
+					container.addClass('cb-player--focus-mute')
+				}else if(target.hasClass('cb-player-volume-slider')){
+					container.addClass('cb-player--focus-volume')
+				}
 
-                if(!target.closest('.cb-player-subtitle').length){
-                    container.removeClass('cb-player--show-subtitles')
-                    container.find('.cb-player-subtitle-button').attr('aria-expanded', false)
-                }
-            })
+				if(!target.closest('.cb-player-subtitle').length){
+					container.removeClass('cb-player--show-subtitles')
+					container.find('.cb-player-subtitle-button').attr('aria-expanded', false)
+				}
+			})
 
-            container.on('blur', targetsFocus.join(','), function(e){
-                let target = $(e.target)
+			container.on('blur', targetsFocus.join(','), function(e){
+				let target = $(e.target)
 
-                if(target.hasClass('cb-player-sound')){
-                    container.removeClass('cb-player--focus-mute')
-                }else if(target.hasClass('cb-player-volume-slider')){
-                    container.removeClass('cb-player--focus-volume')
-                }
-            })
+				if(target.hasClass('cb-player-sound')){
+					container.removeClass('cb-player--focus-mute')
+				}else if(target.hasClass('cb-player-volume-slider')){
+					container.removeClass('cb-player--focus-volume')
+				}
+			})
 
 			if (!$(document).data('cbplayer-initialized')) {
 
 				// Fix iPad fullscreen button
-                // Use document not specific element
-                $(document).on('click', '.cb-player-fullscreen', function (e) {
-                    const container = $(this).closest('.cb-player')
-                    const player = container.find('.cb-player-media-source')
+				// Use document not specific element
+				$(document).on('click', '.cb-player-fullscreen', function (e) {
+					const container = $(this).closest('.cb-player')
+					const player = container.find('.cb-player-media-source')
 
-                    toggleFullscreen(container, player);
-                })
+					toggleFullscreen(container, player);
+				})
 
-                $(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function(e){
+				$(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function(e){
 					var container = $('.cb-player--change-volume');
 
 					if((e.type == 'touchend' || e.type == "mouseup") && container.hasClass('cb-player--change-volume')){
@@ -3095,7 +3095,7 @@
 						}
 
 						$(this).unbind('mousemove.cb-player--move-volume-slider')
-                        $(this).unbind('touchmove.cb-player--move-volume-slider')
+						$(this).unbind('touchmove.cb-player--move-volume-slider')
 
 						container.removeClass('cb-player--change-volume')
 
@@ -3235,20 +3235,20 @@
 				container = container.closest('.cb-player');
 			}
 
-            if(options == 'consentChanged'){
+			if(options == 'consentChanged'){
 
-                if(container.data('initialized') && container.data('iframe')){
-                    changeConsent(container)
+				if(container.data('initialized') && container.data('iframe')){
+					changeConsent(container)
 
-                    if(!container.hasClass('cb-player--media-ready')){
-                        initIframes(container, container.data('plugin_cbplayer'))
-                    }else if(container.hasClass('cb-player--media-ready')){
-                        destroyIframe(container)
-                    }
+					if(!container.hasClass('cb-player--media-ready')){
+						initIframes(container, container.data('plugin_cbplayer'))
+					}else if(container.hasClass('cb-player--media-ready')){
+						destroyIframe(container)
+					}
 
-                }
-                return
-            }
+				}
+				return
+			}
 
 			if (!$.data(this, 'plugin_' + pluginName)) {
 				$.data(this, 'plugin_' + pluginName, new CBplayer(this, options));
@@ -3264,7 +3264,7 @@
 
 				container.data('initSource', true);
 
-                getPlayerSrc(container, false);
+				getPlayerSrc(container, false);
 
 				return;
 			}
