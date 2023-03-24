@@ -1711,9 +1711,8 @@
 							wrap.data('duration', instance.getDuration());
 
 							//set video ratio
-							let videoData = instance.j.i
-							if(jQuery.type(videoData) == 'object'){
-								wrap.data('ratio', videoData.width / videoData.height)
+							if (instance.i.h) {
+								wrap.data('ratio', instance.i.h.width / instance.i.h.height)
 							}
 
 							if(settings.backgroundMode){
