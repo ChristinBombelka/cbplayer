@@ -1,23 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 20.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1"
-	 id="layer1" inkscape:version="0.48.3.1 r9886" sodipodi:docname="Mute_Icon.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 id="layer1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 400 400"
 	 style="enable-background:new 0 0 400 400;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FFFFFF;}
-</style>
-<sodipodi:namedview  bordercolor="#666666" borderopacity="1" gridtolerance="10" guidetolerance="10" id="namedview3005" inkscape:current-layer="g1" inkscape:cx="-282.4196" inkscape:cy="171.8348" inkscape:guide-bbox="true" inkscape:object-paths="false" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:snap-smooth-nodes="false" inkscape:window-height="1028" inkscape:window-maximized="1" inkscape:window-width="1920" inkscape:window-x="-8" inkscape:window-y="-8" inkscape:zoom="0.649" objecttolerance="10" pagecolor="#ffffff" showgrid="false" showguides="true">
-	<sodipodi:guide  id="guide3009" orientation="0,1" position="42.491779,326.85984"></sodipodi:guide>
-	<sodipodi:guide  id="guide3011" orientation="0,1" position="118.64407,164.86903"></sodipodi:guide>
-	<sodipodi:guide  id="guide3005" orientation="1,0" position="324.34515,194.53005"></sodipodi:guide>
-	<sodipodi:guide  id="guide3007" orientation="1,0" position="462.63482,170.64715"></sodipodi:guide>
-</sodipodi:namedview>
-<g id="g1">
-	<polygon id="polygon1" class="st0" points="210.1,73.4 118.6,152.6 32,152.6 32,254.4 117.3,254.4 210.1,334.7 	"/>
-	<path class="st0" d="M259.5,280.6c-2.9,0-5.8-1-8.1-3c-5.2-4.5-5.9-12.4-1.4-17.6l110.6-129.6c4.5-5.3,12.4-5.9,17.6-1.4
-		c5.2,4.5,5.9,12.4,1.4,17.6L269,276.2C266.5,279.1,263,280.6,259.5,280.6z"/>
-	<path class="st0" d="M370.1,280.6c-3.5,0-7-1.5-9.5-4.4L250,146.6c-4.5-5.3-3.9-13.1,1.4-17.6c5.3-4.5,13.1-3.9,17.6,1.4L379.6,260
-		c4.5,5.3,3.9,13.1-1.4,17.6C375.9,279.6,373,280.6,370.1,280.6z"/>
-</g>
+<path fill="#FFFFFF" d="M210.1,73.4l-91.5,79.2H32v101.8h85.3l92.8,80.3V73.4z M378.2,277.6c-2.3,2-5.2,3-8.1,3c-3.5,0-7-1.5-9.5-4.4
+	l-45.8-53.7L269,276.2c-2.5,2.9-6,4.4-9.5,4.4c-2.9,0-5.8-1-8.1-3c-5.2-4.5-5.9-12.4-1.4-17.6l48.4-56.7L250,146.6
+	c-4.5-5.3-3.9-13.1,1.4-17.6s13.1-3.9,17.6,1.4l45.8,53.7l45.8-53.7c4.5-5.3,12.4-5.9,17.6-1.4s5.9,12.4,1.4,17.6l-48.4,56.7
+	l48.4,56.7C384.1,265.3,383.5,273.1,378.2,277.6z"/>
 </svg>
