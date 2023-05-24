@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.8.3
- * 2023-03-24
+ * jQuery CBplayer 1.8.4
+ * 2023-05-24
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.8.3',
+		playerVersion = '1.8.4',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -101,6 +101,9 @@
 			pause: 'Pause',
 			slider: 'Slider',
 			sliderOf: 'of',
+            hours: 'Hours',
+            minutes: 'Minutes',
+            seconds: 'Seconds',
 			mute: 'Mute',
 			unmute: 'Unmute',
 			volume: 'Volume',
@@ -912,6 +915,24 @@
 		return t;
 	}
 
+    function formatTimeAccessibility(time, container){
+
+        let settings = container.data('settings')
+        let out = [];
+        if(container.data('timeformat') == 'hh:mm:ss'){
+            h = Math.floor(Math.abs(time) / 3600);
+            out.push( h + ' ' + settings.labels.hours)
+        }
+
+        m = Math.floor(Math.abs(time) / 60) % 60;
+        out.push( m + ' ' + settings.labels.minutes)
+
+        s = Math.ceil(Math.abs(time) % 60);
+        out.push( s + ' ' + settings.labels.seconds)
+
+        return out.join(' ')
+    }
+
 	function setCurrentTime(container, time){
 		var player = container.find('.cb-player-media-source');
 
@@ -1010,7 +1031,7 @@
 				playtime = container.data('instance').getCurrentTime();
 				progresstime = playtime * (100 / container.data('duration'));
 
-				progressSlider.attr('aria-valuetext', formatTime(playtime, container, true) + ' ' + settings.labels.sliderOf + ' ' + formatTime(container.data('duration'), container, true))
+				progressSlider.attr('aria-valuetext', formatTimeAccessibility(playtime, container) + ' ' + settings.labels.sliderOf + ' ' + formatTimeAccessibility(container.data('duration'), container))
 
 			}else if(container.data('iframe') == 'vimeo'){
 
@@ -1022,14 +1043,14 @@
 					progresstime = seconds * (100 / container.data('duration'));
 					updateProgress(container, progresstime)
 
-					progressSlider.attr('aria-valuetext', formatTime(seconds, container, true) + ' ' + settings.labels.sliderOf + ' ' + formatTime(container.data('duration'), container, true))
+					progressSlider.attr('aria-valuetext', formatTimeAccessibility(seconds, container) + ' ' + settings.labels.sliderOf + ' ' + formatTimeAccessibility(container.data('duration'), container))
 				});
 			}
 		}else{
 			playtime = player[0].currentTime;
 			progresstime = player[0].currentTime * (100 / player[0].duration);
 
-			progressSlider.attr('aria-valuetext', formatTime(playtime, container, true) + ' ' + settings.labels.sliderOf + ' ' + formatTime(container.data('duration'), container, true))
+			progressSlider.attr('aria-valuetext', formatTimeAccessibility(playtime, container) + ' ' + settings.labels.sliderOf + ' ' + formatTimeAccessibility(container.data('duration'), container))
 		}
 
 		if(container.data('contextInfo')){
