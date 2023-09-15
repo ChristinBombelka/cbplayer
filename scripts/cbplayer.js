@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.8.4
- * 2023-05-24
+ * jQuery CBplayer 1.8.5
+ * 2023-09-15
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.8.4',
+		playerVersion = '1.8.5',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1491,7 +1491,7 @@
 			}
 		}
 
-		const regexEvent = /^.*(vimeo\.com\/event\/)([0-9]+)\/(embed\/|)([0-9]+)/;
+		const regexEvent = /^.*(vimeo\.com\/event\/)([0-9]+)\/(embed|embed\/|)([0-9]+)?/;
 		const resultEvent = url.match(regexEvent)
 		if(resultEvent){
 			return {
