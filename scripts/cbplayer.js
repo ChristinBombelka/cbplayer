@@ -1924,6 +1924,8 @@
 				el.embed.on('ended', function(data) {
 					wrap.addClass('cb-player--media-ended');
 
+					showPoster(wrap)
+
 					if ($.isFunction(settings.mediaIsEnd)) {
 						settings.mediaIsEnd.call(this, wrap);
 					}
