@@ -158,7 +158,6 @@
 	function videoBuffer(container) {
 		var player = container.find('.cb-player-media-source')[0];
 		var buffer = player.buffered;
-		var bufferingDuration;
 
 		if (buffer) {
 			var pos = player.currentTime,bufferLen;
@@ -424,8 +423,7 @@
 				}
 			});
 
-			var firstLoad = true,
-				watchLiveDuration = 0;
+			var firstLoad = true;
 			hls.on(Hls.Events.LEVEL_LOADED,function(event,data) {
 
 				if(data.details.live){
