@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.8.5
- * 2023-09-15
+ * jQuery CBplayer 1.8.6
+ * 2023-12-15
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ;(function ( $, window, document, undefined ) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.8.5',
+		playerVersion = '1.8.6',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1673,8 +1673,11 @@
 									}, 250)
 								}
 								ytTimeupdate()
+								
+								if(!wrap.data('backgroundMode')){
+									stopPlayingAll(wrap)
+								}
 
-								stopPlayingAll(wrap)
 								hidePoster(wrap)
 
 								if(ytLastEvent != 'play'){
