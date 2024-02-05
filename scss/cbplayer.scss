@@ -529,6 +529,18 @@ audio {
 	height: 36px;
 }
 
+.cb-player--fullscreen-fallback {
+	background-color: #000;
+	border-radius: 0 !important;
+	bottom: 0;
+	top: 0;
+	left: 0;
+	position: fixed !important;
+	height: 100% !important;
+	width: 100% !important;
+	z-index: 1000000000;
+}
+
 .cb-player-button-fullscreen-on,
 .cb-player-button-fullscreen-off {
 	width: 100%;
@@ -556,7 +568,7 @@ audio {
 	}
 
 	.cb-player-controls {
-		max-width: 900px;
+		max-width: 90ch;
 		z-index: 2147483648;
 	}
 

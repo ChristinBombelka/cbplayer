@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.8.6
- * 2023-12-15
+ * jQuery CBplayer 1.9.0
+ * 2024-02-05
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ; (function ($, window, document, undefined) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.8.6',
+		playerVersion = '1.9.0',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1165,8 +1165,20 @@
 	}
 
 	function toggleFullscreen(container, player) {
-		if (!$('.cb-player--fullscreen').length) {
+		// https://webkit.org/blog/7929/designing-websites-for-iphone-x/
 
+		let viewport = $('meta[name="viewport"]')[0];
+		const property = 'viewport-fit=cover';
+
+		// Inject the viewport meta if required
+		if (!viewport) {
+			viewport = document.createElement('meta');
+			viewport.setAttribute('name', 'viewport');
+		}
+
+		const hasProperty = viewport.content.includes(property);
+
+		if (!$('.cb-player--fullscreen').length) {
 			let settings = container.data('settings')
 			let fullscreenActive = true
 
@@ -1196,6 +1208,19 @@
 						container.addClass('cb-player--fullscreen-native');
 						container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOn)
 					})
+				} else if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+					// Fallback fullscreen 
+
+					// Change viewport on ios
+					if (hasProperty == false) {
+						viewport.content += `, ${property}`;
+					}
+
+					$('html').addClass('html-cb-player-fullscreen-fallback-active')
+					$('body').css('overflow', 'hidden')
+
+					container.addClass('cb-player--fullscreen cb-player--fullscreen-fallback')
+					return
 				}
 			}
 
@@ -1207,14 +1232,31 @@
 			}
 
 		} else {
-			if (document.cancelFullScreen) {
-				document.cancelFullScreen();
-			} else if (document.mozCancelFullScreen) {
-				document.mozCancelFullScreen();
-			} else if (document.webkitCancelFullScreen) {
-				document.webkitCancelFullScreen();
-			} else if (document.msExitFullscreen) {
-				document.msExitFullscreen();
+
+			if (container.hasClass('cb-player--fullscreen-fallback')) {
+
+				// Change viewport on ios
+				if (hasProperty) {
+					viewport.content = viewport.content
+						.split(',')
+						.filter((part) => part.trim() !== property)
+						.join(',');
+				}
+
+				$('html').removeClass('html-cb-player-fullscreen-fallback-active')
+				$('body').css('overflow', '')
+
+				container.removeClass('cb-player--fullscreen cb-player--fullscreen-fallback')
+			} else {
+				if (document.cancelFullScreen) {
+					document.cancelFullScreen();
+				} else if (document.mozCancelFullScreen) {
+					document.mozCancelFullScreen();
+				} else if (document.webkitCancelFullScreen) {
+					document.webkitCancelFullScreen();
+				} else if (document.msExitFullscreen) {
+					document.msExitFullscreen();
+				}
 			}
 		}
 	};
@@ -3116,6 +3158,15 @@
 					const player = container.find('.cb-player-media-source')
 
 					toggleFullscreen(container, player);
+				})
+
+				$(document).on('keyup', function (e) {
+					const fullscreenElement = $('.cb-player--fullscreen-fallback')
+
+					// Close fallback fullscreen with ESC
+					if (e.keyCode == 27 && fullscreenElement.length) {
+						toggleFullscreen(fullscreenElement, false)
+					}
 				})
 
 				$(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function (e) {
