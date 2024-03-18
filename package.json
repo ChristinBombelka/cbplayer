@@ -14,6 +14,6 @@
     "url": "https://github.com/ChristinBombelka/cbplayer/issues"
   },
   "scripts":{
-    "sass": "sass -w --no-source-map scss/:styles/"
+    "sass": "sass -w --no-source-map scss/:styles/ --style compressed"
   }
 }
