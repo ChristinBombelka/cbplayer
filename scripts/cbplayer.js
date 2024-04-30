@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.9.0
- * 2024-02-05
+ * jQuery CBplayer 1.9.1
+ * 2024-04-30
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ; (function ($, window, document, undefined) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.9.0',
+		playerVersion = '1.9.1',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -141,10 +141,6 @@
 		mediaRestart: $,
 		mediaSetVolume: $,
 		mediaSetTime: $
-	}
-
-	function isTouchDevice() {
-		return 'ontouchstart' in window || navigator.maxTouchPoints > 1;
 	}
 
 	function timeRangesToString(r) {
@@ -2754,11 +2750,7 @@
 				targetsClick.push('.cb-player-media');
 			}
 
-			container.on(isTouchDevice() ? 'touchend' : 'click keydown', targetsClick.join(','), function (e) {
-				if (isKeypress) {
-					return
-				}
-
+			container.on('click keydown touchend', targetsClick.join(','), function (e) {
 				if (e.type == 'keydown') {
 					if (e.keyCode != 13) {
 						return
@@ -2789,14 +2781,11 @@
 					initPlayer(container);
 				}
 
-				isKeypress = true
-
-				setTimeout(function () {
-					isKeypress = false
-				}, 150)
+				// Returning false from an event handler will automatically call event.stopPropagation() and event.preventDefault(). 
+				return false
 			});
 
-			container.on(isTouchDevice() ? 'touchstart' : 'mouseenter', '.cb-player-progress-slider', function (e) {
+			container.on('touchstart mouseenter', '.cb-player-progress-slider', function (e) {
 				if (!container.hasClass('cb-player--media-ready')) {
 					return;
 				}
@@ -2804,6 +2793,9 @@
 				if (container.data('backtracking') && e.type == "mouseenter") {
 					container.find('.cb-player-progress-tooltip').stop().fadeIn(250);
 				}
+
+				// Returning false from an event handler will automatically call event.stopPropagation() and event.preventDefault(). 
+				return false
 			});
 
 			container.on('mouseleave', '.cb-player-progress-slider', function (e) {
@@ -2871,16 +2863,15 @@
 				}
 			})
 
-			container.on(isTouchDevice() ? 'touchstart' : 'mousedown', '.cb-player-progress', function (e) {
+			container.on('touchstart mousedown', '.cb-player-progress-slider', function (e) {
 				if (e.type == "mousedown") {
 					if (e.which != 1) {
 						return false;
 					}
 				}
 
-				var progress = $(this),
-					container = $(this).closest('.cb-player'),
-					player = container.find('.cb-player-media-source');
+				const container = $(this).closest('.cb-player')
+				const player = container.find('.cb-player-media-source')
 
 				container.addClass("cb-player--media-seeking");
 
@@ -2911,9 +2902,11 @@
 
 				e.stopPropagation();
 				//e.preventDefault();
+
+				return false
 			});
 
-			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-sound', function () {
+			container.on('touchstart click', '.cb-player-sound', function () {
 				var player = container.find('.cb-player-media-source'),
 					volumevalue;
 
@@ -2951,9 +2944,11 @@
 				if (container.data('iframe') != 'vimeo') {
 					setVolume(container, volumevalue);
 				}
+
+				return false
 			})
 
-			container.on(isTouchDevice() ? 'touchstart' : 'mousedown', '.cb-player-volume-slider', function (e) {
+			container.on('touchstart mousedown', '.cb-player-volume-slider', function (e) {
 				if (e.type == "mousedown") {
 					if (e.which != 1) {
 						return false;
@@ -2973,6 +2968,7 @@
 
 				e.preventDefault()
 				e.stopPropagation()
+				return false
 			})
 
 			container.on('keydown', '.cb-player-volume-slider', function (e) {
@@ -2999,13 +2995,6 @@
 					controlsToggle(container, false);
 				}
 			});
-
-			// Not working on iPad
-			// container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-toggle-fullscreen', function(){
-			// 	var player = container.find(".cb-player-media-source")[0];
-
-			// 	toggleFullscreen(container, player);
-			// });
 
 			container.on('contextmenu', function (e) {
 				var container = $(e.target).closest('.cb-player');
@@ -3083,7 +3072,7 @@
 				container.removeClass('cb-player--show-subtitles');
 			});
 
-			container.on(isTouchDevice() ? 'touchstart' : 'click', '.cb-player-subtitle-button', function (e) {
+			container.on('touchstart click', '.cb-player-subtitle-button', function (e) {
 				if (container.hasClass('cb-player--show-subtitles')) {
 					container.removeClass('cb-player--show-subtitles')
 					container.find('.cb-player-subtitle-button').attr('aria-expanded', false)
@@ -3091,6 +3080,8 @@
 					container.addClass('cb-player--show-subtitles')
 					container.find('.cb-player-subtitle-button').attr('aria-expanded', true)
 				}
+
+				return false
 			});
 
 			container.on('mouseleave', '.cb-player-subtitle', function () {
@@ -3153,11 +3144,13 @@
 
 				// Fix iPad fullscreen button
 				// Use document not specific element
-				$(document).on('click', '.cb-player-fullscreen', function (e) {
+				$(document).on('touchend click', '.cb-player-fullscreen', function (e) {
 					const container = $(this).closest('.cb-player')
 					const player = container.find('.cb-player-media-source')
 
 					toggleFullscreen(container, player);
+
+					return false
 				})
 
 				$(document).on('keyup', function (e) {
@@ -3169,7 +3162,7 @@
 					}
 				})
 
-				$(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function (e) {
+				$(document).on('touchend mouseup', function (e) {
 					var container = $('.cb-player--change-volume');
 
 					if ((e.type == 'touchend' || e.type == "mouseup") && container.hasClass('cb-player--change-volume')) {
@@ -3185,9 +3178,11 @@
 						e.stopPropagation();
 						e.preventDefault();
 					}
+
+					return false
 				});
 
-				$(document).on(isTouchDevice() ? 'touchend' : 'mouseup', function (e) {
+				$(document).on('touchend mouseup', function (e) {
 					var container = $('.cb-player--media-seeking'),
 						progress = container.find('.cb-player-progress'),
 						player = container.find('.cb-player-media-source');
@@ -3217,6 +3212,8 @@
 
 						e.stopPropagation();
 					}
+
+					return false
 				});
 
 				$(document).on('click', function () {
