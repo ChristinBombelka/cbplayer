@@ -3184,11 +3184,11 @@
 
 						container.removeClass('cb-player--change-volume')
 
-						e.stopPropagation();
-						e.preventDefault();
-					}
+						// e.stopPropagation();
+						// e.preventDefault();
 
-					return false
+						return false
+					}
 				});
 
 				$(document).on('touchend mouseup', function (e) {
@@ -3219,10 +3219,10 @@
 							seeking(e, container);
 						}
 
-						e.stopPropagation();
-					}
+						// e.stopPropagation();
 
-					return false
+						return false
+					}
 				});
 
 				$(document).on('click', function () {
