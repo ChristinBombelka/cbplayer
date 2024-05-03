@@ -2040,7 +2040,13 @@
 
 	function controlsToggle(container, conrolsHide) {
 		let lastStatus = container.data('controlsHidden')
+		let settings = container.data('settings')
 		let controlsHidden
+
+		// Fix remove video/overlay with playing video
+		if (typeof settings === "undefined") {
+			return
+		}
 
 		if (conrolsHide) {
 			container.addClass('cb-player--control-hide')
@@ -2052,7 +2058,6 @@
 
 		container.data('controlsHidden', controlsHidden)
 
-		let settings = container.data('settings')
 		if (lastStatus != controlsHidden) {
 			if ($.isFunction(settings.mediaControlsChange)) {
 				settings.mediaControlsChange.call(this, container, controlsHidden);
