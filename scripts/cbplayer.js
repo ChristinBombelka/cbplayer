@@ -143,6 +143,10 @@
 		mediaSetTime: $
 	}
 
+	function isTouchDevice() {
+		return 'ontouchstart' in window || navigator.maxTouchPoints > 1;
+	}
+
 	function timeRangesToString(r) {
 		var log = [];
 		for (var i = 0; i < r.length; i++) {
