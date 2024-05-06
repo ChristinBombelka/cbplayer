@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.9.1
- * 2024-04-30
+ * jQuery CBplayer 1.9.2
+ * 2024-05-05
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ; (function ($, window, document, undefined) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.9.1',
+		playerVersion = '1.9.2',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -141,10 +141,6 @@
 		mediaRestart: $,
 		mediaSetVolume: $,
 		mediaSetTime: $
-	}
-
-	function isTouchDevice() {
-		return 'ontouchstart' in window || navigator.maxTouchPoints > 1;
 	}
 
 	function timeRangesToString(r) {
@@ -1296,8 +1292,10 @@
 
 	var lastTouchCoordinate = null;
 	function seeking(e, container) {
+		let x
+
 		if (e.type == 'touchmove' || e.type == 'touchstart') {
-			var x = e.originalEvent.touches[0].pageX;
+			x = e.originalEvent.touches[0].pageX;
 
 			lastTouchCoordinate = x;
 		} else if (e.type == 'touchend') {
@@ -1305,7 +1303,7 @@
 
 			lastTouchCoordinate = null;
 		} else {
-			var x = e.pageX;
+			x = e.pageX;
 		}
 
 		let progress = container.find('.cb-player-progress')
@@ -1343,7 +1341,6 @@
 	function seekToSecond(container, second) {
 		let player = container.find('.cb-player-media-source')
 		let currentTime, newTime
-		let setting = container.data('setting')
 
 		// Get current time
 		if (container.data('iframe')) {
@@ -2725,7 +2722,6 @@
 		attachEvents: function (el, options) {
 			let touchtimer = false
 			let container = $(el).closest('.cb-player')
-			let isKeypress = false
 
 			var targetsTouch = ['.cb-player-toggle-play', '.cb-player-overlayer-button'];
 			if (options.disableClick == false) {
@@ -2964,7 +2960,6 @@
 					}
 				}
 
-				let progress = $(this)
 				let container = $(this).closest('.cb-player')
 
 				setVolume(container, e)
@@ -3039,7 +3034,7 @@
 			});
 
 			container.on('click', '.cb-player-context-item.link', function () {
-				var item = $(this);
+				const item = $(this);
 
 				container.find('.cb-player-' + item.data('link')).css('display', 'block');
 			});
@@ -3064,8 +3059,6 @@
 				if (!item.data('lang')) {
 					container.find('.cb-player-subtitle-layer').remove();
 				}
-
-				var tracks = container.find('track');
 
 				for (var i = 0; i < video.textTracks.length; i++) {
 
@@ -3192,9 +3185,8 @@
 				});
 
 				$(document).on('touchend mouseup', function (e) {
-					var container = $('.cb-player--media-seeking'),
-						progress = container.find('.cb-player-progress'),
-						player = container.find('.cb-player-media-source');
+					const container = $('.cb-player--media-seeking')
+					const	player = container.find('.cb-player-media-source')
 
 					if ((e.type == 'touchend' || e.type == "mouseup") && container.hasClass("cb-player--media-seeking")) {
 						if (e.which != 1 && e.type == "mouseup") {
@@ -3249,11 +3241,10 @@
 
 	$.fn.cbplayer = function (options) {
 		if (options == "mediaSetVolume") {
-			var volume = Array.prototype.slice.call(arguments, 1);
+			let volume = Array.prototype.slice.call(arguments, 1);
 
 			$(this).each(function () {
-				var container = $(this).closest('.cb-player'),
-					media = container.find('.cb-player-media-source');
+				const container = $(this).closest('.cb-player');
 
 				if (volume.length) {
 					volume = volume.toString();
@@ -3269,11 +3260,10 @@
 		}
 
 		if (options == "mediaSetTime") {
-			var time = Array.prototype.slice.call(arguments, 1);
+			let time = Array.prototype.slice.call(arguments, 1);
 
 			$(this).each(function () {
-				var container = $(this).closest('.cb-player'),
-					media = container.find('.cb-player-media-source');
+				const container = $(this).closest('.cb-player');
 
 				if (time.length && container.hasClass('cb-player--media-ready')) {
 					time = time.toString();
@@ -3284,16 +3274,16 @@
 
 						if (time.length == 3) {
 
-							var h = time[0] * 60 * 60,
-								m = time[1] * 60,
-								s = time[2];
+							let h = time[0] * 60 * 60
+							let m = time[1] * 60
+							let s = time[2]
 
 							time = parseFloat(h) + parseFloat(m) + parseFloat(s);
 
 						} else if (time.length == 2) {
 
-							var m = time[0] * 60,
-								s = time[1];
+							let m = time[0] * 60
+							let s = time[1]
 
 							time = parseFloat(m) + parseFloat(s);
 
@@ -3366,7 +3356,7 @@
 					});
 				}
 
-				var media = container.find('.cb-player-media-source')[0];
+				const media = container.find('.cb-player-media-source')[0];
 
 				videoStop(container, media);
 				return;
@@ -3380,14 +3370,14 @@
 				if (!container.hasClass('cb-player--media-ready')) {
 					initPlayer(container);
 				} else {
-					var media = container.find('.cb-player-media-source')[0];
+					const media = container.find('.cb-player-media-source')[0];
 					videoStart(container, media);
 				}
 				return;
 			}
 
 			if (options == "mediaRestart") {
-				var media = container.find('.cb-player-media-source')[0];
+				const media = container.find('.cb-player-media-source')[0];
 
 				media.currentTime = 0;
 				if (!container.hasClass('cb-player--media-ready')) {
