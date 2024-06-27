@@ -1,6 +1,6 @@
 /*!
- * jQuery CBplayer 1.9.2
- * 2024-05-05
+ * jQuery CBplayer 1.9.3
+ * 2024-06-27
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
@@ -629,9 +629,18 @@
 	function videoStop(container, player) {
 		let settings = container.data('settings')
 
+		// Disable pause on background videos by call mediaPause
+		if (container.data('backgroundMode')) {
+			return
+		}
+
 		if (container.data('iframe')) {
 			if (container.data('iframe') == 'youtube') {
-				container.data('instance').pauseVideo();
+
+				// Check youtube instance exist  
+				if (container.data('instance')) {
+					container.data('instance').pauseVideo();
+				}
 			} else if (container.data('iframe') == 'vimeo') {
 				player = container.data('embed');
 
@@ -3186,7 +3195,7 @@
 
 				$(document).on('touchend mouseup', function (e) {
 					const container = $('.cb-player--media-seeking')
-					const	player = container.find('.cb-player-media-source')
+					const player = container.find('.cb-player-media-source')
 
 					if ((e.type == 'touchend' || e.type == "mouseup") && container.hasClass("cb-player--media-seeking")) {
 						if (e.which != 1 && e.type == "mouseup") {
