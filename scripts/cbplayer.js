@@ -1939,7 +1939,10 @@
 				el.embed.on('play', function () {
 					wrap.addClass('cb-player--media-playing').removeClass('cb-player--media-ended cb-player--media-loaded');
 
-					stopPlayingAll(wrap)
+					if (!wrap.data('backgroundMode')) {
+						stopPlayingAll(wrap)
+					}
+
 					fitIframe(wrap)
 					hidePoster(wrap)
 					startWatchControlHide(wrap)
