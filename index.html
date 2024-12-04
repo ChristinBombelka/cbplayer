@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,26 +9,26 @@
 </head>
 
 <style type="text/css">
-	h1{
+	h1 {
 		font-size: 30px;
 		line-height: 1;
 	}
 
-	div + h1{
+	div+h1 {
 		margin-top: 20px;
 	}
 
-	.block-video{
+	.block-video {
 		width: 50%;
 	}
 
-	.inline-video-buttons{
+	.inline-video-buttons {
 		display: none;
 	}
 
 	@media only screen and (max-width: 600px) {
 
-		.block-video{
+		.block-video {
 			width: 100%;
 		}
 	}
@@ -35,19 +36,16 @@
 
 <div class="block-video">
 
-	<h1>Audio WAV</h1>
-    <div class="cb-player audio-test js-player-audio">
-        <audio playsinline class="player">
-            <source data-src="files/preamble.wav" type="audio/wav">
-        </audio>
-    </div>
+	<h1>Audio M4A</h1>
+	<div class="audio-test js-player-audio" data-src="files/sample4.m4a"></div>
 
-    <h1>Audio MP3</h1>
-    <div class="cb-player audio-test js-player-audio">
-        <audio playsinline class="player">
-            <source data-src="files/file_example_MP3_2MG.mp3" type="audio/mp3">
-        </audio>
-    </div>
+	<h1>Audio WAV</h1>
+	<div class="audio-test js-player-audio" data-src="files/preamble.wav">
+	</div>
+
+	<h1>Audio MP3</h1>
+	<div class="audio-test js-player-audio" data-src="files/file_example_MP3_2MG.mp3">
+	</div>
 
 	<!-- <h1>Livestream N24</h1>
 	<video playsinline class="player js-player-1" poster="images/Foto_171.jpg">
@@ -70,25 +68,26 @@
 		<track kind="subtitles" label="English" srclang="en" src="files/english.vtt">
 	</video>
 
-    <h1>Extern mp4</h1>
-    <video playsinline class="player js-player-self" poster="images/Foto_171.jpg">
-        <source data-src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
-    </video>
+	<h1>Extern mp4</h1>
+	<video playsinline class="player js-player-self" poster="images/Foto_171.jpg">
+		<source data-src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+			type="video/mp4">
+	</video>
 
 
-    <h1>Youtube iFrame</h1>
-    <div class="cb-player player js-player-iframe" data-src="https://www.youtube.com/watch?v=sX1Y2JMK6g8"></div>
+	<h1>Youtube iFrame</h1>
+	<div class="cb-player player js-player-iframe" data-src="https://www.youtube.com/watch?v=sX1Y2JMK6g8"></div>
 
-    <h1>Youtube iFrame 2</h1>
-    <div class="cb-player player js-player-iframe" data-src="https://www.youtube.com/watch?v=49eIoaY8pVM"></div>
+	<h1>Youtube iFrame 2</h1>
+	<div class="cb-player player js-player-iframe" data-src="https://www.youtube.com/watch?v=49eIoaY8pVM"></div>
 
-    <h1>Vimeo iFrame</h1>
+	<h1>Vimeo iFrame</h1>
 	<div class="cb-player player js-player-iframe" data-src="https://vimeo.com/40648169"></div>
 
-    <h1>Vimeo iFrame background mode</h1>
-    <div class="cb-player player js-player-iframe-background" data-src="https://vimeo.com/162427937"></div>
+	<h1>Vimeo iFrame background mode</h1>
+	<div class="cb-player player js-player-iframe-background" data-src="https://vimeo.com/162427937"></div>
 
-    <h1>Vimeo iFrame special format</h1>
+	<h1>Vimeo iFrame special format</h1>
 	<div class="cb-player player js-player-iframe" data-src="https://vimeo.com/310197402"></div>
 
 	<!-- <h1>File not exist</h1>
@@ -105,4 +104,5 @@
 	<script type="text/javascript" src="scripts/cbplayer.js"></script>
 	<script type="text/javascript" src="scripts/main.js"></script>
 </body>
+
 </html>

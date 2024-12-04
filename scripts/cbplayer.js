@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.9.3
- * 2024-06-27
+ * jQuery CBplayer 1.10.0
+ * 2024-12-04
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ; (function ($, window, document, undefined) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.9.2',
+		playerVersion = '1.10.0',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -509,7 +509,7 @@
 				return;
 			})
 
-		} else if (source.mediaSrc.toLowerCase().match(/(.mp3)/) || source.mediaSrc.toLowerCase().match(/(.wav)/)) {
+		} else if (source.mediaSrc.toLowerCase().match(/(.mp3)/) || source.mediaSrc.toLowerCase().match(/(.wav)/) || source.mediaSrc.toLowerCase().match(/(.m4a)/)) {
 
 			fileExist(source.mediaSrc).then(function (e) {
 				source.mediaSrcEl.attr("src", source.mediaSrc);
@@ -1470,28 +1470,33 @@
 	function getProvider(url) {
 		// YouTube
 		if (/^(https?:\/\/)?(www\.)?(youtube\.com|youtube-nocookie\.com|youtu\.?be)\/.+$/.test(url)) {
-			return "youtube";
+			return 'youtube'
 		}
 
 		// Vimeo
 		if (/^https?:\/\/(player.vimeo.com\/video\/|vimeo.com)\d{0,9}(?=\b|\/)/.test(url)) {
-			return "vimeo";
+			return "vimeo"
 		}
 
 		if (url.toLowerCase().match(/(.mp4)/)) {
-			return "mp4";
+			return 'video/mp4'
 		}
 
 		if (url.toLowerCase().match(/(.m3u8)/)) {
-			return "stream";
+			return "stream"
 		}
 
+		// Audio
 		if (url.toLowerCase().match(/(.mp3)/)) {
-			return "mp3";
+			return 'audio/mp3'
 		}
 
 		if (url.toLowerCase().match(/(.wav)/)) {
-			return "wav";
+			return 'audio/wav'
+		}
+
+		if (url.toLowerCase().match(/(.m4a)/)) {
+			return 'audio/mp4'
 		}
 
 		return null;
@@ -2213,25 +2218,27 @@
 			let provider = getProvider(source.mediaSrc)
 
 			//check video/audio element exist
-			if ((provider == 'stream' || provider == 'mp4' || provider == 'mp3' || provider == 'wav') && (!wrap.find('video').length && !wrap.find('audio').length)) {
+			if ((provider == 'stream' || provider == 'video/mp4' || provider == 'audio/mp3' || provider == 'audio/wav' || provider == 'audio/mp4') && (!wrap.find('video').length && !wrap.find('audio').length)) {
 				el.remove();
 
 				let sourceType,
 					targetType;
 
-				if (provider == 'stream' || provider == 'mp4') {
+				if (provider == 'stream') {
+					targetType = 'video';
+					sourceType = 'application/x-mpegURL';
+				} else if (provider == 'video/mp4') {
 					targetType = 'video';
 					sourceType = 'video/mp4'
-					if (provider == 'stream') {
-						sourceType = 'application/x-mpegURL';
-					}
-
-				} else if (provider == 'mp3') {
+				} else if (provider == 'audio/mp3') {
 					targetType = 'audio';
 					sourceType = 'audio/mp3';
-				} else if (provider == 'wav') {
+				} else if (provider == 'audio/wav') {
 					targetType = 'audio';
 					sourceType = 'audio/wav';
+				} else if (provider == 'audio/mp4') {
+					targetType = 'audio';
+					sourceType = 'audio/mp4';
 				}
 
 				let media = wrap.find('.cb-player-media')
