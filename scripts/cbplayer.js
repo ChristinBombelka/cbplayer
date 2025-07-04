@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.10.0
- * 2024-12-04
+ * jQuery CBplayer 1.10.1
+ * 2025-07-04
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ; (function ($, window, document, undefined) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.10.0',
+		playerVersion = '1.10.1',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -36,7 +36,7 @@
 				{name: 'time', value: ['current']},
 				{name: 'progress'},
 				{name: 'time', value: ['duration']},
-				{name: 'mute'},
+				{name: 'sound'},
 				{name: 'subtitle'},
 				{name: 'fullscreen'}
 			]
@@ -55,6 +55,8 @@
 		/* enable/disable tooltip on progress bar */
 		controlFullscreen: true,
 		/* enable/disable fullscreen button */
+		controlMute: true,
+		/* enable/disable mute button */
 		controlVolume: true,
 		/* enable/disable volume bar */
 		overlayButton: true,
@@ -2197,8 +2199,9 @@
 			const tpl_time_duration = $('<span class="cb-player-time-duration">00:00</span>')
 			const tpl_progress = $('<div class="cb-player-progress"><div class="cb-player-progress-slider"></div><div class="cb-player-progress-play"></div><div class="cb-player-progress-load"></div></div>')
 			const tpl_tooltip = $('<div class="cb-player-progress-tooltip"></div>')
-			const tpl_mute = $('<div class="cb-player-volume-wrap"><button class="cb-player-sound"><span class="cb-player-sound-on"></span><span class="cb-player-sound-off"></span></button></div>')
-			const tpl_volume = $('<div class="cb-player-volume"><span class="cb-player-volume-container"><div class="cb-player-volume-slider"></div><div class="cb-player-volume-bar"></div></span></div>')
+			const tpl_volume_wrapper = $('<div class="cb-player-volume-wrap"></div>')
+			const tpl_volume_button = $('<button class="cb-player-sound"><span class="cb-player-sound-on"></span><span class="cb-player-sound-off"></span></button>')
+			const tpl_volume_slider = $('<div class="cb-player-volume"><span class="cb-player-volume-container"><div class="cb-player-volume-slider"></div><div class="cb-player-volume-bar"></div></span></div>')
 			const tpl_fullscreen = $('<button class="cb-player-fullscreen cb-player-toggle-fullscreen"><span class="cb-player-button-fullscreen-on"></span><span class="cb-player-button-fullscreen-off"></span></button>')
 			const tpl_subtitle = $('<div class="cb-player-subtitle"><button class="cb-player-subtitle-button"></button></div>')
 
@@ -2206,9 +2209,13 @@
 				tpl_tooltip.prependTo(tpl_progress);
 			}
 
+			if (settings.controlMute) {
+				tpl_volume_button.appendTo(tpl_volume_wrapper)
+			}
+
 			if (settings.controlVolume) {
-				tpl_mute.addClass('cb-player-volume-wrap--' + settings.volumeOrientation)
-				tpl_volume.appendTo(tpl_mute);
+				tpl_volume_wrapper.addClass('cb-player-volume-wrap--' + settings.volumeOrientation)
+				tpl_volume_slider.appendTo(tpl_volume_wrapper);
 			}
 
 			if (settings.controlLoadButton) {
@@ -2311,8 +2318,8 @@
 						}
 					} else if (element.name == 'progress') {
 						control.append(tpl_progress);
-					} else if (element.name == 'mute') {
-						control.append(tpl_mute);
+					} else if (element.name == 'volume') {
+						control.append(tpl_volume_wrapper);
 					} else if (element.name == 'subtitle' && el.find('track').length) {
 						control.append(tpl_subtitle);
 					} else if (element.name == 'fullscreen') {
@@ -2342,7 +2349,7 @@
 					control.append(tpl_progress);
 				}
 
-				control.append(tpl_mute);
+				control.append(tpl_sound_wrapper);
 
 				if (!el.is("audio") && settings.controlFullscreen) {
 					control.append(tpl_fullscreen);
