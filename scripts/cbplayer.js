@@ -2349,7 +2349,9 @@
 					control.append(tpl_progress);
 				}
 
-				control.append(tpl_sound_wrapper);
+				if (settings.controlMute || settings.controlVolume) {
+					control.append(tpl_volume_wrapper);
+				}
 
 				if (!el.is("audio") && settings.controlFullscreen) {
 					control.append(tpl_fullscreen);
