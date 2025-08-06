@@ -1,13 +1,13 @@
 /*!
  * jQuery CBplayer 1.10.1
- * 2025-07-04
+ * 2025-08-06
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ; (function ($, window, document, undefined) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.10.1',
+		playerVersion = '1.10.2',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -1505,8 +1505,14 @@
 	}
 
 	function getYoutubeId(url) {
-		var regex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-		return url.match(regex) ? RegExp.$2 : url;
+		const regex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtube-nocookie\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|shorts\/|u\/\w\/|.+\?v=)?([^#&?]{11})/;
+		const match = url.match(regex);
+		return match ? match[1] : null;
+	}
+
+	function isYouTubeShortsUrl(url){
+		const regex = /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/[\w-]{11}/;
+  		return regex.test(url);
 	}
 
 	function setDuration(container) {
@@ -1669,12 +1675,17 @@
 			},
 			ready: function ready() {
 
-				videoId = getYoutubeId(source.mediaSrc);
+				const videoId = getYoutubeId(source.mediaSrc);
+				const isShort = isYouTubeShortsUrl(source.mediaSrc);
 
-				var id = uniqid(),
-					media = wrap.find('.cb-player-media'),
-					ytTimer,
-					ytBufferTimer;
+				if(isShort){
+					wrap.addClass('cb-player--youtube-short')
+				}
+
+				let id = uniqid()
+				let media = wrap.find('.cb-player-media')
+				let ytTimer
+				let ytBufferTimer
 
 				let mediaContainer = $('<div class="cb-player-media-container"></div>')
 				mediaContainer.appendTo(media)
