@@ -628,11 +628,11 @@
 		}
 	}
 
-	function videoStop(container, player) {
+	function videoStop(container, player, forced = false) {
 		let settings = container.data('settings')
 
 		// Disable pause on background videos by call mediaPause
-		if (container.data('backgroundMode')) {
+		if (container.data('backgroundMode') && !forced) {
 			return
 		}
 
@@ -3386,7 +3386,7 @@
 
 				const media = container.find('.cb-player-media-source')[0];
 
-				videoStop(container, media);
+				videoStop(container, media, true);
 				return;
 			}
 
