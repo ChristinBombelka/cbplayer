@@ -1807,8 +1807,13 @@
 							wrap.data('duration', instance.getDuration());
 
 							//set video ratio
-							if (instance.i.h) {
-								wrap.data('ratio', instance.i.h.width / instance.i.h.height)
+							if (instance.options) {
+								// Fix shorts has wrong sizes
+								if(isShort){
+									wrap.data('ratio', 56.25)
+								}else{
+									wrap.data('ratio', instance.options.width / instance.options.height)
+								}
 							}
 
 							if (settings.backgroundMode) {
