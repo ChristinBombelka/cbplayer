@@ -1603,13 +1603,13 @@
 		if (container.data('ratio') && container.data('iframe')) {
 			const containerHeight = container.height()
 			const containerWidth = container.width()
-			const containerRatio = containerWidth / containerHeight
+			const containerRatio = (containerWidth / containerHeight).toFixed(4)
 			const media = container.find('.cb-player-media-container')
 			const settings = container.data('settings');
 
 			if ((container.data('iframe') == 'vimeo' && settings.vimeo.fitIframe) || container.data('iframe') == 'youtube') {
 				// Ratio is not 16/9
-				if (container.data('ratio') && container.data('ratio').toFixed(4) != 1.7778) {
+				if (container.data('ratio') && container.data('ratio').toFixed(4) != containerRatio) {
 					const newPadding = 1 / container.data('ratio') * 100
 					container.find('.cb-player-media').css('padding-bottom', newPadding + '%')
 				}
@@ -1810,7 +1810,7 @@
 							if (instance.options) {
 								// Fix shorts has wrong sizes
 								if(isShort){
-									wrap.data('ratio', 56.25)
+									wrap.data('ratio', 0.5625)
 								}else{
 									wrap.data('ratio', instance.options.width / instance.options.height)
 								}
