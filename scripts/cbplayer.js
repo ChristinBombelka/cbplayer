@@ -1,6 +1,6 @@
 /*!
- * jQuery CBplayer 1.10.1
- * 2025-08-06
+ * jQuery CBplayer 1.10.2
+ * 2025-09-01
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
@@ -215,25 +215,48 @@
 
 	function fileExist(src, done) {
 		return new Promise(function (resolve, reject) {
-			let xhr = new XMLHttpRequest();
+			try {
+      		const url = new URL(src, window.location.href);
 
-			xhr.open('HEAD', src, true);
-			xhr.onload = function () {
-				if (xhr.status >= 200 && xhr.status < 300) {
-					resolve(xhr.response)
-				} else {
-					reject({
-						status: xhr.status
-					})
+				if (url.hostname === window.location.hostname) {
+					// Same domain 
+					let xhr = new XMLHttpRequest();
+					xhr.open('HEAD', src, true);
+					xhr.onload = function () {
+						if (xhr.status >= 200 && xhr.status < 300) {
+							resolve(xhr.response)
+						} else {
+							reject({
+								status: xhr.status
+							})
+						}
+					}
+					xhr.onerror = function () {
+						reject({
+							status: xhr.status
+						})
+					}
+					xhr.send()
+				}else{
+					let media;
+					if (/\.(mp3|wav|m4a)$/i.test(src)) {
+						media = document.createElement('audio');
+					} else if (/\.(mp4|m3u8)$/i.test(src)) {
+						media = document.createElement('video');
+					} else {
+						reject(false);
+						return;
+					}
+
+					media.src = src + (src.includes('?') ? '&' : '?') + 'cb=' + Date.now();
+					media.onloadeddata = () => resolve(true);
+					media.onerror = () => reject(false);
+					media.load();
 				}
+				
+			} catch (err) {
+				reject(err);
 			}
-			xhr.onerror = function () {
-				reject({
-					status: xhr.status
-				})
-			}
-
-			xhr.send()
 		})
 	}
 
