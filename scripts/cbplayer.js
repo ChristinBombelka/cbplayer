@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.10.2
- * 2025-09-01
+ * jQuery CBplayer 1.10.3
+ * 2025-10-24
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ; (function ($, window, document, undefined) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.10.2',
+		playerVersion = '1.10.3',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -36,7 +36,7 @@
 				{name: 'time', value: ['current']},
 				{name: 'progress'},
 				{name: 'time', value: ['duration']},
-				{name: 'sound'},
+				{name: 'volume'},
 				{name: 'subtitle'},
 				{name: 'fullscreen'}
 			]
@@ -608,7 +608,10 @@
 		if (container.data('iframe') && container.data('iframe') == 'youtube') {
 			container.data('instance').playVideo()
 
-			container.find('.cb-player-play').attr('aria-label', settings.labels.pause)
+			container.find('.cb-player-play')
+				.attr('aria-label', settings.labels.pause)
+				.attr('aria-pressed', true)
+
 		} else {
 
 			let saveVolume = false
@@ -634,7 +637,9 @@
 						stopPlayingAll(container);
 					}
 
-					container.find('.cb-player-play').attr('aria-label', settings.labels.pause)
+					container.find('.cb-player-play')
+						.attr('aria-label', settings.labels.pause)
+						.attr('aria-pressed', true)
 
 					// Restore volume
 					if (saveVolume !== false) {
@@ -673,13 +678,17 @@
 				clearInterval(watchProgress);
 			}
 
-			container.find('.cb-player-play').attr('aria-label', settings.labels.play)
+			container.find('.cb-player-play')
+				.attr('aria-label', settings.labels.play)
+				.attr('aria-pressed', false)
 
 		} else {
 			player.pause();
 			clearInterval(watchProgress);
 
-			container.find('.cb-player-play').attr('aria-label', settings.labels.play)
+			container.find('.cb-player-play')
+				.attr('aria-label', settings.labels.play)
+				.attr('aria-pressed', false)
 		}
 	}
 
@@ -830,7 +839,9 @@
 			container.addClass("cb-player--media-muted")
 
 			if (soundButton.length) {
-				soundButton.attr('aria-label', settings.labels.unmute)
+				soundButton
+					.attr('aria-label', settings.labels.unmute)
+					.attr('aria-pressed', true)
 			}
 
 			if (container.data('iframe')) {
@@ -845,7 +856,9 @@
 			container.removeClass("cb-player--media-muted");
 
 			if (soundButton.length) {
-				soundButton.attr('aria-label', settings.labels.mute)
+				soundButton
+					.attr('aria-label', settings.labels.mute)
+					.attr('aria-pressed', false)
 			}
 
 			if (container.data('iframe')) {
@@ -1176,7 +1189,9 @@
 						let settings = nativeFullscreen.data('settings')
 
 						nativeFullscreen.removeClass('cb-player--fullscreen-native')
-						nativeFullscreen.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOff)
+						nativeFullscreen.find('.cb-player-fullscreen')
+							.attr('aria-label', settings.labels.fullscreenOff)
+							.attr('aria-pressed', false)
 						clearInterval(watchFullscreen)
 					}
 				});
@@ -1188,7 +1203,9 @@
 			controlsToggle(container, false);
 
 			container.removeClass('cb-player--fullscreen');
-			container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOff)
+			container.find('.cb-player-fullscreen')
+				.attr('aria-label', settings.labels.fullscreenOff)
+				.attr('aria-pressed', false)
 
 			clearInterval(watchFullscreen);
 		}
@@ -1236,7 +1253,9 @@
 						watchFullscreen = setInterval(watchFullscreenActive, 250)
 
 						container.addClass('cb-player--fullscreen-native');
-						container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOn)
+						container.find('.cb-player-fullscreen')
+							.attr('aria-label', settings.labels.fullscreenOn)
+							.attr('aria-pressed', true)
 					})
 				} else if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 					// Fallback fullscreen 
@@ -1258,7 +1277,9 @@
 				watchFullscreen = setInterval(watchFullscreenActive, 250)
 
 				container.addClass('cb-player--fullscreen')
-				container.find('.cb-player-fullscreen').attr('aria-label', settings.labels.fullscreenOn)
+				container.find('.cb-player-fullscreen')
+					.attr('aria-label', settings.labels.fullscreenOn)
+					.attr('aria-pressed', true)
 			}
 
 		} else {
@@ -2496,7 +2517,9 @@
 			// Set play attributes
 			let overlayerButtonAttr = wrap.find('.cb-player-overlayer-button')
 			if (overlayerButtonAttr.length) {
-				overlayerButtonAttr.attr('aria-label', settings.labels.play)
+				overlayerButtonAttr
+					.attr('aria-label', settings.labels.play)
+					.attr('aria-pressed', false)
 
 				if (videoTitle) {
 					overlayerButtonAttr.attr('aria-valuetext', videoTitle)
@@ -2506,7 +2529,9 @@
 			// Set play attributes
 			let playButton = wrap.find('.cb-player-play')
 			if (playButton.length) {
-				playButton.attr('aria-label', settings.labels.play)
+				playButton
+					.attr('aria-label', settings.labels.play)
+					.attr('aria-pressed', false)
 
 				if (videoTitle) {
 					playButton.attr('aria-valuetext', videoTitle)
@@ -2527,9 +2552,13 @@
 			let muteButton = wrap.find('.cb-player-sound')
 			if (muteButton.length) {
 				if (volume == 0) {
-					muteButton.attr('aria-label', settings.labels.unmute)
+					muteButton
+						.attr('aria-label', settings.labels.unmute)
+						.attr('aria-pressed', false)
 				} else {
-					muteButton.attr('aria-label', settings.labels.mute)
+					muteButton
+						.attr('aria-label', settings.labels.mute)
+						.attr('aria-pressed', true)
 				}
 			}
 
@@ -2552,7 +2581,9 @@
 			// Set fullscreen attributes
 			let fullscreenButton = wrap.find('.cb-player-fullscreen')
 			if (fullscreenButton.length) {
-				fullscreenButton.attr('aria-label', settings.labels.fullscreenOn)
+				fullscreenButton
+					.attr('aria-label', settings.labels.fullscreenOn)
+					.attr('aria-pressed', true)
 			}
 
 			if (settings.backgroundMode) {
