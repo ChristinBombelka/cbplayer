@@ -2388,7 +2388,7 @@
 						control.append(tpl_progress);
 					} else if (element.name == 'volume') {
 						control.append(tpl_volume_wrapper);
-					} else if (element.name == 'subtitle' && el.find('track').length) {
+					} else if (element.name == 'subtitle' && wrap.find('track').length) {
 						control.append(tpl_subtitle);
 					} else if (element.name == 'fullscreen') {
 						control.append(tpl_fullscreen);
@@ -2439,6 +2439,16 @@
 
 			if (settings.overlaySpinner && !wrap.find('.cb-player-spinner-wrap').length) {
 				spinner.prependTo(wrap);
+			}
+
+			// Check if traks exist and are located in the video tag
+			let tracksOutside = wrap.find('track')
+			if(tracksOutside.length){
+				tracksOutside.each((i, e) => {
+					if(!el[0].contains(e)){
+						el.append(e)
+					}
+				})
 			}
 
 			let tracks = el.find('track')
