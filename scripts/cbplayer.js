@@ -214,6 +214,13 @@
 	}
 
 	function fileExist(src, done) {
+
+		if(isVimeoProgressive(src)){
+			return new Promise(function (resolve, reject) {
+				resolve(true);
+			})
+		}
+
 		return new Promise(function (resolve, reject) {
 			try {
       		const url = new URL(src, window.location.href);
@@ -239,9 +246,10 @@
 					xhr.send()
 				}else{
 					let media;
+
 					if (/\.(mp3|wav|m4a)$/i.test(src)) {
 						media = document.createElement('audio');
-					} else if (/\.(mp4|m3u8)$/i.test(src)) {
+					} else if (/\.(mp4|m3u8)(\?.*)?$/i.test(src)) {
 						media = document.createElement('video');
 					} else {
 						reject(false);
@@ -1581,7 +1589,7 @@
 
 	function isVimeoProgressive(url) {
 		var regex = /^.*(player.vimeo.com\/progressive_redirect\/playback\/(\d+)\/rendition\/(\d+[p])).*/;
-		return url.match(regex) ? RegExp.$2 : false;
+		return url.match(regex) ? true : false;
 	}
 
 	function getVimeoId(url) {
