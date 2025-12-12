@@ -20,7 +20,7 @@ $(function () {
 			{ name: 'time', value: ['current'] },
 			{ name: 'progress' },
 			{ name: 'time', value: ['duration'] },
-			{ name: 'mute' },
+			{ name: 'volume' },
 			{ name: 'subtitle' },
 			{ name: 'fullscreen' }
 		],

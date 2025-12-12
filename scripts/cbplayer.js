@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.10.4
- * 2025-12-11
+ * jQuery CBplayer 1.10.5
+ * 2025-12-12
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ; (function ($, window, document, undefined) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.10.4',
+		playerVersion = '1.10.5',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -376,7 +376,6 @@
 			hls.loadSource(source.mediaSrc)
 
 			container.addClass('cb-player--media-ready')
-			container.removeClass('cb-player--control-force-visibile')
 
 			hls.on(Hls.Events.ERROR, function (event, data) {
 				if (container.hasClass('cb-player--media-playing')) {
@@ -517,7 +516,6 @@
 
 					container.addClass('cb-player--media-ready')
 					container.removeClass('cb-player--initialized')
-					container.removeClass('cb-player--control-force-visibile')
 					container.find('.cb-player-progress-slider').attr('tabindex', 0)
 
 					container.data({
@@ -558,7 +556,6 @@
 
 					container.addClass('cb-player--media-ready')
 					container.removeClass('cb-player--initialized')
-					container.removeClass('cb-player--control-force-visibile')
 					container.find('.cb-player-progress-slider').attr('tabindex', 0)
 
 					container.data({
@@ -2159,7 +2156,7 @@
 	}
 
 	function createTrackItem(id, lang, label) {
-		let item = $('<li>')
+		let item = $('<div>')
 
 		item.addClass('cb-player-subtitle-track')
 			.attr('data-lang', lang)
@@ -2330,6 +2327,7 @@
 			}
 
 			if (el.is("video")) {
+				wrap.addClass('cb-player--video');
 				wrap.append(context);
 			}
 
@@ -2462,7 +2460,7 @@
 				}
 
 				if (!subtitleList.length) {
-					subtitleList = $('<ul class="cb-player-subtitle-tracks"></ul>');
+					subtitleList = $('<div class="cb-player-subtitle-tracks"></div>');
 					subtitlesContainer.append(subtitleList);
 				}
 
@@ -2787,7 +2785,7 @@
 
 			if (provider == 'youtube' || provider == 'vimeo') {
 				wrap.data('iframe', provider);
-				wrap.addClass('cb-player--' + provider);
+				wrap.addClass('cb-player--video cb-player--' + provider);
 
 				initIframes(wrap, _this)
 			} else {
@@ -2883,8 +2881,6 @@
 				}
 
 				if (e.type == 'keydown' && !container.data('iframe')) {
-					container.addClass('cb-player--control-force-visibile')
-
 					setTimeout(function () {
 						container.find('.cb-player-play').focus()
 					}, 50)
@@ -3202,7 +3198,7 @@
 				return false
 			});
 
-			container.on('mouseleave', '.cb-player-subtitle', function () {
+			container.on('mouseleave', function () {
 				container.removeClass('cb-player--show-subtitles')
 				container.find('.cb-player-subtitle-button').attr('aria-expanded', false)
 			})

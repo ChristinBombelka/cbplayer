@@ -1,10 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 426.7 323.5" style="enable-background:new 0 0 426.7 323.5;" xml:space="preserve">
-<path fill="#FFFFFF" d="M426.7,0H0v323.5h426.7V0z M42.7,152.8H128v42.7H42.7V152.8z M256,280.8H42.7v-42.7H256V280.8z M384,280.8
-	h-85.3v-42.7H384V280.8z M384,195.5H170.7v-42.7H384V195.5z"/>
-<rect x="42.7" y="152.8" width="85.3" height="42.7"/>
-<rect x="170.7" y="152.8" width="213.3" height="42.7"/>
-<rect x="42.7" y="238.1" width="213.3" height="42.7"/>
-<rect x="298.7" y="238.1" width="85.3" height="42.7"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 20 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(0.0410536,0,0,0.0410536,-4.01364,3.34833)">
+        <rect x="170.7" y="152.8" width="213.3" height="42.7" style="fill:white;"/>
+    </g>
+    <g transform="matrix(0.0410536,0,0,0.0410536,11.7509,3.34833)">
+        <rect x="42.7" y="152.8" width="85.3" height="42.7" style="fill:white;"/>
+    </g>
+    <g transform="matrix(0.0410536,0,0,0.0410536,1.24122,0.727013)">
+        <rect x="170.7" y="152.8" width="213.3" height="42.7" style="fill:white;"/>
+    </g>
+    <g transform="matrix(0.0410536,0,0,0.0410536,1.24122,0.727013)">
+        <rect x="42.7" y="152.8" width="85.3" height="42.7" style="fill:white;"/>
+    </g>
+    <rect x="0" y="0" width="20" height="14" style="fill:rgb(235,235,235);fill-opacity:0;"/>
+    <path d="M20,0L0,0L0,14L20,14L20,0ZM18.75,1.25L18.75,12.75C18.75,12.75 1.25,12.75 1.25,12.75C1.25,12.75 1.25,1.25 1.25,1.25L18.75,1.25Z" style="fill:white;"/>
 </svg>
