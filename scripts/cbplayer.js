@@ -1,13 +1,13 @@
 /*!
- * jQuery CBplayer 1.10.5
- * 2025-12-12
+ * jQuery CBplayer 1.10.6
+ * 2025-12-16
  * Copyright Christin Bombelka
  * https://github.com/ChristinBombelka/cbplayer
  */
 
 ; (function ($, window, document, undefined) {
 	var pluginName = 'cbplayer',
-		playerVersion = '1.10.5',
+		playerVersion = '1.10.6',
 		hls,
 		watchProgress,
 		watchFullscreen,
@@ -839,12 +839,12 @@
 			progress.css('width', volume + '%')
 		}
 
-		let soundButton = container.find('.cb-player-sound')
+		let ButtonMute = container.find('.cb-player-mute')
 		if (volume == 0) {
 			container.addClass("cb-player--media-muted")
 
-			if (soundButton.length) {
-				soundButton
+			if (ButtonMute.length) {
+				ButtonMute
 					.attr('aria-label', settings.labels.unmute)
 					.attr('aria-pressed', true)
 			}
@@ -860,8 +860,8 @@
 		} else {
 			container.removeClass("cb-player--media-muted");
 
-			if (soundButton.length) {
-				soundButton
+			if (ButtonMute.length) {
+				ButtonMute
 					.attr('aria-label', settings.labels.mute)
 					.attr('aria-pressed', false)
 			}
@@ -2265,8 +2265,8 @@
 			const tpl_progress = $('<div class="cb-player-progress"><div class="cb-player-progress-slider"></div><div class="cb-player-progress-play"></div><div class="cb-player-progress-load"></div></div>')
 			const tpl_tooltip = $('<div class="cb-player-progress-tooltip"></div>')
 			const tpl_volume_wrapper = $('<div class="cb-player-volume-wrap"></div>')
-			const tpl_volume_button = $('<button class="cb-player-sound"><span class="cb-player-sound-on"></span><span class="cb-player-sound-off"></span></button>')
-			const tpl_volume_slider = $('<div class="cb-player-volume"><span class="cb-player-volume-container"><div class="cb-player-volume-slider"></div><div class="cb-player-volume-bar"></div></span></div>')
+			const tpl_button_mute = $('<button class="cb-player-mute"><span class="cb-player-mute__on"></span><span class="cb-player-mute__off"></span></button>')
+			const tpl_slider_volume = $('<div class="cb-player-volume"><span class="cb-player-volume-container"><div class="cb-player-volume-slider"></div><div class="cb-player-volume-bar"></div></span></div>')
 			const tpl_fullscreen = $('<button class="cb-player-fullscreen cb-player-toggle-fullscreen"><span class="cb-player-button-fullscreen-on"></span><span class="cb-player-button-fullscreen-off"></span></button>')
 			const tpl_subtitle = $('<div class="cb-player-subtitle"><button class="cb-player-subtitle-button"></button></div>')
 
@@ -2275,12 +2275,12 @@
 			}
 
 			if (settings.controlMute) {
-				tpl_volume_button.appendTo(tpl_volume_wrapper)
+				tpl_button_mute.appendTo(tpl_volume_wrapper)
 			}
 
 			if (settings.controlVolume) {
 				tpl_volume_wrapper.addClass('cb-player-volume-wrap--' + settings.volumeOrientation)
-				tpl_volume_slider.appendTo(tpl_volume_wrapper);
+				tpl_slider_volume.appendTo(tpl_volume_wrapper);
 			}
 
 			if (settings.controlLoadButton) {
@@ -2565,7 +2565,7 @@
 			}
 
 			// Set sound attributes
-			let muteButton = wrap.find('.cb-player-sound')
+			let muteButton = wrap.find('.cb-player-mute')
 			if (muteButton.length) {
 				if (volume == 0) {
 					muteButton
@@ -3023,7 +3023,7 @@
 				return false
 			});
 
-			container.on('touchstart click', '.cb-player-sound', function () {
+			container.on('touchstart click', '.cb-player-mute', function () {
 				var player = container.find('.cb-player-media-source'),
 					volumevalue;
 
@@ -3206,7 +3206,7 @@
 			let targetsFocus = [
 				'.cb-player-play',
 				'.cb-player-progress-slider',
-				'.cb-player-sound',
+				'.cb-player-mute',
 				'.cb-player-volume-slider',
 				'.cb-player-subtitle-button',
 				'.cb-player-subtitle-track',
@@ -3232,7 +3232,7 @@
 			container.on('focus', targetsFocus.join(','), function (e) {
 				let target = $(e.target)
 
-				if (target.hasClass('cb-player-sound')) {
+				if (target.hasClass('cb-player-mute')) {
 					container.addClass('cb-player--focus-mute')
 				} else if (target.hasClass('cb-player-volume-slider')) {
 					container.addClass('cb-player--focus-volume')
@@ -3247,7 +3247,7 @@
 			container.on('blur', targetsFocus.join(','), function (e) {
 				let target = $(e.target)
 
-				if (target.hasClass('cb-player-sound')) {
+				if (target.hasClass('cb-player-mute')) {
 					container.removeClass('cb-player--focus-mute')
 				} else if (target.hasClass('cb-player-volume-slider')) {
 					container.removeClass('cb-player--focus-volume')
